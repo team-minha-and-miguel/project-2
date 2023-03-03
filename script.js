@@ -10,16 +10,10 @@ app.apiUrl = 'https://api.tvmaze.com/search/shows';
 
 app.userInput = document.getElementsByClassName('userInput');
 app.userSubmit = document.querySelector('form').addEventListener('submit', function () {
-   console.log('it worked!',);
+   // console.log('it worked!',);
    app.getTvShows();
 });
 
-// what the user inputs in the search bar 
-
-// app.userSubmit.addEventListener('submit', function(){
-//    console.log('it works');
-// });
-// 
 
 // calling fetch to make GET request
 app.getTvShows = () => {
@@ -44,37 +38,14 @@ app.getTvShows = () => {
 
 // method that displays shows
 app.displayTvShows = (tvShowArray) => {
-   // console.log(tvShowArray);
-   // app.gallery.innerHTML = ``;
+   // identify target for appending
    const gallery = document.querySelector('.gallery');
+   // clear gallery before displaying new search results
    gallery.innerHTML = ``;
    tvShowArray.forEach(tvShow => {
+      // for each tv show, create an entry (an li)
       const newListItem = document.createElement('li');
-      console.log(tvShow);
-      // const listItem = document.createElement ('li');
-      // // create image element
-      // const image = document.createElement ('img');
-      // image.src = tvShow.show.image.original;
-      // image.alt = tvShow.show.name;
-      // // create h2 element
-      // const title = document.createElement ('h2');
-      // const showName = tvShow.show.name;
-
-
-      // // put show name inside h2
-      // title.innerHTML = showName;
-
-
-
-      // console.log(title);
-      // // put image and title inside li
-      // listItem.appendChild(image,title);
-
-      // // append image to gallery
-      // gallery.appendChild(listItem);
-      // // gallery.appendChild(title);
-
-      // create a new element
+      // add HTML to that element so that each entry displays the title of the show, the tv show image, a summary, and an average rating
       newListItem.innerHTML = `
       <h2>${tvShow.show.name}</h2>
       <div class="imgContainer"><img src="${tvShow.show.image.original}" /></div>
@@ -82,26 +53,22 @@ app.displayTvShows = (tvShowArray) => {
       <p>${tvShow.show.rating.average}</p>
       `;
 
+      // append each entry to the gallery
       gallery.appendChild(newListItem);
+
+      // console.log(tvShow);
+
    });
-   // here we will be filtering which shows we want to show. 
-   // or randomly select a show via mathrandom x mathfloor. 
-   // tvShowArray[0].genres
-   // tvShowArray[0].name
-   // tvShowArray[0].averageRuntime  (ex: >= 60 filter )
-   // tvShowArray[0].summary
-   // tvShowArray[0].ratings
-   // tvShowArray[0].image.original
-   //
+
 };
 
 
-
+// create init method
 app.init = () => {
    app.getTvShows();
 };
 
-
+// call our init function to set up the page
 app.init();
 
 // PSEUDO CODE:
