@@ -20,6 +20,8 @@ app.userSubmit = document.querySelector('form').addEventListener('submit', funct
 //    console.log('it works');
 // });
 // 
+
+// calling fetch to make GET request
 app.getTvShows = () => {
    let userSearch = app.userInput[0].value;
    // let userInput = '';
@@ -27,21 +29,61 @@ app.getTvShows = () => {
    url.search = new URLSearchParams({
       q: userSearch
    });
-   console.log(url);
+   // console.log(url);
 
    fetch(url)
       .then(response => {
-         console.log(response)
+         // console.log(response)
          return response.json();
       })
       .then(function (jsonResult) {
-         console.log(jsonResult);
+         // console.log(jsonResult);
          app.displayTvShows(jsonResult);
       });
 };
 
+// method that displays shows
 app.displayTvShows = (tvShowArray) => {
-   console.log(tvShowArray);
+   // console.log(tvShowArray);
+   // app.gallery.innerHTML = ``;
+   const gallery = document.querySelector('.gallery');
+   gallery.innerHTML = ``;
+   tvShowArray.forEach(tvShow => {
+      const newListItem = document.createElement('li');
+      console.log(tvShow);
+      // const listItem = document.createElement ('li');
+      // // create image element
+      // const image = document.createElement ('img');
+      // image.src = tvShow.show.image.original;
+      // image.alt = tvShow.show.name;
+      // // create h2 element
+      // const title = document.createElement ('h2');
+      // const showName = tvShow.show.name;
+
+
+      // // put show name inside h2
+      // title.innerHTML = showName;
+
+
+
+      // console.log(title);
+      // // put image and title inside li
+      // listItem.appendChild(image,title);
+
+      // // append image to gallery
+      // gallery.appendChild(listItem);
+      // // gallery.appendChild(title);
+
+      // create a new element
+      newListItem.innerHTML = `
+      <h2>${tvShow.show.name}</h2>
+      <div class="imgContainer"><img src="${tvShow.show.image.original}" /></div>
+      <p>${tvShow.show.summary}</p>
+      <p>${tvShow.show.rating.average}</p>
+      `;
+
+      gallery.appendChild(newListItem);
+   });
    // here we will be filtering which shows we want to show. 
    // or randomly select a show via mathrandom x mathfloor. 
    // tvShowArray[0].genres
@@ -52,6 +94,7 @@ app.displayTvShows = (tvShowArray) => {
    // tvShowArray[0].image.original
    //
 };
+
 
 
 app.init = () => {
