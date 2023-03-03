@@ -50,7 +50,7 @@ app.displayTvShows = (tvShowArray) => {
    gallery.innerHTML = ``;
    tvShowArray.forEach(tvShow => {
       const newListItem = document.createElement('li');
-      // console.log(tvShow);
+      console.log(tvShow);
       // const listItem = document.createElement ('li');
       // // create image element
       // const image = document.createElement ('img');
@@ -77,7 +77,9 @@ app.displayTvShows = (tvShowArray) => {
       // create a new element
       newListItem.innerHTML = `
       <h2>${tvShow.show.name}</h2>
-      <img src="${tvShow.show.image.original}" />
+      <div class="imgContainer"><img src="${tvShow.show.image.original}" /></div>
+      <p>${tvShow.show.summary}</p>
+      <p>${tvShow.show.rating.average}</p>
       `;
 
       gallery.appendChild(newListItem);
