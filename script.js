@@ -33,12 +33,23 @@ app.getTvShows = () => {
 
    fetch(url)
       .then(response => {
-         // console.log(response)
-         return response.json();
+         if(response.ok === true) {
+            // console.log(response)
+            return response.json();
+         } else {
+            throw new Error(response.statusText);
+         };
       })
       .then(function (jsonResult) {
          // console.log(jsonResult);
          app.displayTvShows(jsonResult);
+      })
+      .catch((error)=> {
+         if(error.message === "Not Found") {
+            alert('does not exist, something went wrong');
+         } else {
+            alert ('something went wrong');
+         };
       });
 };
 
