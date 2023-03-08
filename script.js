@@ -1,5 +1,3 @@
-// console.log('hello world');
-
 // name spaced app 
 const app = {};
 
@@ -14,6 +12,7 @@ app.userSubmit = document.querySelector('form').addEventListener('submit', funct
    app.getTvShows();
 });
 
+// what the user inputs in the search bar 
 
 // calling fetch to make GET request
 app.getTvShows = () => {
@@ -27,28 +26,51 @@ app.getTvShows = () => {
 
    fetch(url)
       .then(response => {
-         // console.log(response)
-         return response.json();
+         console.log(response)
+         if(response.ok === true) {
+            // console.log(response)
+            return response.json();
+         } else {
+            throw new Error(response.statusText);
+         };
       })
       .then(function (jsonResult) {
          // console.log(jsonResult);
          app.displayTvShows(jsonResult);
+      })
+      .catch((error)=> {
+         if(error.message === "Not Found") {
+            alert('does not exist, something went wrong');
+         } else {
+            alert ('something went wrong');
+         };
       });
 };
 
 // method that displays shows
 app.displayTvShows = (tvShowArray) => {
-   // identify target for appending
+   // console.log(tvShowArray);
    const gallery = document.querySelector('.gallery');
    // clear gallery before displaying new search results
    gallery.innerHTML = ``;
    tvShowArray.forEach(tvShow => {
-      // for each tv show, create an entry (an li)
+      // create li element stored in a variable
       const newListItem = document.createElement('li');
-      // add HTML to that element so that each entry displays the title of the show, the tv show image, a summary, and an average rating
+      // image path variable for use in new element creation, includes conditions for null image
+      const imagePath = tvShow.show.image ? tvShow.show.image.original : 'https://placekitten.com/200/300';
+      // alt text path variable for use in new element creation, includes conditions for placeholder image
+      let altPath; 
+      if (tvShow.show.image != null) {
+         altPath = `Poster for ${tvShow.show.name}`;
+      } else {
+         altPath = 'placeholder image';
+      };
+      console.log(tvShow);
+
+      // create a new element
       newListItem.innerHTML = `
       <h2>${tvShow.show.name}</h2>
-      <div class="imgContainer"><img src="${tvShow.show.image.original}" /></div>
+      <div class="imgContainer"><img src="${imagePath}" alt="${altPath}" /></div>
       <p>${tvShow.show.summary}</p>
       <p>${tvShow.show.rating.average}</p>
       `;
@@ -60,15 +82,10 @@ app.displayTvShows = (tvShowArray) => {
 
    });
 
-};
-
-
-// create init method
 app.init = () => {
    app.getTvShows();
 };
 
-// call our init function to set up the page
 app.init();
 
 // PSEUDO CODE:
@@ -123,4 +140,6 @@ app.init();
 // second level tier of filtering after previous query search, allowing user to get a more detailed reccomendation. 
 
 
-// STRETCH GOAL: figuring out how to put an input as the query search params, allowing users to type what they want instead of clicking our given choices. 
+// STRETCH GOAL: figuring out how to put an input as the query search params, allowing users to type what they want instead of clicking our given choices.
+
+}
