@@ -1,5 +1,3 @@
-// console.log('hello world');
-
 // name spaced app 
 const app = {};
 
@@ -16,11 +14,6 @@ app.userSubmit = document.querySelector('form').addEventListener('submit', funct
 
 // what the user inputs in the search bar 
 
-// app.userSubmit.addEventListener('submit', function(){
-//    console.log('it works');
-// });
-// 
-
 // calling fetch to make GET request
 app.getTvShows = () => {
    let userSearch = app.userInput[0].value;
@@ -33,6 +26,7 @@ app.getTvShows = () => {
 
    fetch(url)
       .then(response => {
+         console.log(response)
          if(response.ok === true) {
             // console.log(response)
             return response.json();
@@ -56,39 +50,26 @@ app.getTvShows = () => {
 // method that displays shows
 app.displayTvShows = (tvShowArray) => {
    // console.log(tvShowArray);
-   // app.gallery.innerHTML = ``;
    const gallery = document.querySelector('.gallery');
    gallery.innerHTML = ``;
    tvShowArray.forEach(tvShow => {
+      // create li element stored in a variable
       const newListItem = document.createElement('li');
+      // image path variable for use in new element creation, includes conditions for null image
+      const imagePath = tvShow.show.image ? tvShow.show.image.original : 'https://placekitten.com/200/300';
+      // alt text path variable for use in new element creation, includes conditions for placeholder image
+      let altPath; 
+      if (tvShow.show.image != null) {
+         altPath = `Poster for ${tvShow.show.name}`;
+      } else {
+         altPath = 'placeholder image';
+      };
       console.log(tvShow);
-      // const listItem = document.createElement ('li');
-      // // create image element
-      // const image = document.createElement ('img');
-      // image.src = tvShow.show.image.original;
-      // image.alt = tvShow.show.name;
-      // // create h2 element
-      // const title = document.createElement ('h2');
-      // const showName = tvShow.show.name;
-
-
-      // // put show name inside h2
-      // title.innerHTML = showName;
-
-
-
-      // console.log(title);
-      // // put image and title inside li
-      // listItem.appendChild(image,title);
-
-      // // append image to gallery
-      // gallery.appendChild(listItem);
-      // // gallery.appendChild(title);
 
       // create a new element
       newListItem.innerHTML = `
       <h2>${tvShow.show.name}</h2>
-      <div class="imgContainer"><img src="${tvShow.show.image.original}" /></div>
+      <div class="imgContainer"><img src="${imagePath}" alt="${altPath}" /></div>
       <p>${tvShow.show.summary}</p>
       <p>${tvShow.show.rating.average}</p>
       `;
@@ -106,12 +87,9 @@ app.displayTvShows = (tvShowArray) => {
    //
 };
 
-
-
 app.init = () => {
    app.getTvShows();
 };
-
 
 app.init();
 
