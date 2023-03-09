@@ -7,10 +7,6 @@ app.apiUrl = 'https://api.tvmaze.com/search/shows';
 // call get tv show function, inside form submission. 
 
 app.userInput = document.getElementsByClassName('userInput');
-app.userSubmit = document.querySelector('form').addEventListener('submit', function () {
-   console.log('it worked!',);
-   app.getTvShows();
-});
 
 // what the user inputs in the search bar 
 
@@ -88,7 +84,10 @@ app.displayTvShows = (tvShowArray) => {
 };
 
 app.init = () => {
-   app.getTvShows();
+   app.userSubmit = document.querySelector('form').addEventListener('submit', function () {
+      console.log('it worked!',);
+      app.getTvShows();
+   });
 };
 
 app.init();
