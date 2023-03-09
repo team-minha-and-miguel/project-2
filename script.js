@@ -19,7 +19,7 @@ app.addListeners = () => {
 app.getTvShows = () => {
    
    const input = document.querySelector('#showSearch');
-   console.log(input);
+   // console.log(input);
    // let userSearch = app.userInput[0].value;
    const url = new URL(app.apiUrl);
    url.search = new URLSearchParams({
@@ -88,7 +88,7 @@ app.displayTvShows = (tvShowArray) => {
 
 app.init = () => {
    // app.userSubmit = document.querySelector('form').addEventListener('submit', function () {
-      console.log('it worked!');
+   //    // console.log('it worked!');
    //    app.getTvShows();
    // });
    app.addListeners()
