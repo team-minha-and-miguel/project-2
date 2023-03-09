@@ -158,4 +158,4 @@ app.init();
 // second level tier of filtering after previous query search, allowing user to get a more detailed reccomendation. 
 
 
-// STRETCH GOAL: figuring out how to put an input as the query search params, allowing users to type what they want instead of clicking our given choices. 
+// STRETCH GOAL: figuring out how to put an input as the query search params, allowing users to type what they want instead of clicking our given choices.
