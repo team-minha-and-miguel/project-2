@@ -162,4 +162,3 @@ app.init();
 
 
 // STRETCH GOAL: figuring out how to put an input as the query search params, allowing users to type what they want instead of clicking our given choices.
-
