@@ -7,22 +7,25 @@ app.apiUrl = 'https://api.tvmaze.com/search/shows';
 // call get tv show function, inside form submission. 
 
 app.userInput = document.getElementsByClassName('userInput');
-app.userSubmit = document.querySelector('form').addEventListener('submit', function () {
-   // console.log('it worked!',);
-   app.getTvShows();
-});
-
+app.addListeners = () => {
+   app.userSubmit = document.querySelector('form').addEventListener('submit', function () {
+      // console.log('it worked!',);
+      app.getTvShows();
+   });
+}
 // what the user inputs in the search bar 
 
 // calling fetch to make GET request
 app.getTvShows = () => {
    
-   let userSearch = app.userInput[0].value;
+   const input = document.querySelector('#showSearch');
+   console.log(input);
+   // let userSearch = app.userInput[0].value;
    const url = new URL(app.apiUrl);
    url.search = new URLSearchParams({
-      q: userSearch
+      q: input.value
    });
-   // console.log(url);
+   // console.log(input);
 
    fetch(url)
       .then(response => {
@@ -81,9 +84,14 @@ app.displayTvShows = (tvShowArray) => {
       // console.log(tvShow);
 
    });
+}
 
 app.init = () => {
-   app.getTvShows();
+   // app.userSubmit = document.querySelector('form').addEventListener('submit', function () {
+      console.log('it worked!');
+   //    app.getTvShows();
+   // });
+   app.addListeners()
 };
 
 app.init();
@@ -155,4 +163,3 @@ app.init();
 
 // STRETCH GOAL: figuring out how to put an input as the query search params, allowing users to type what they want instead of clicking our given choices.
 
-}
