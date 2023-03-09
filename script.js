@@ -9,7 +9,6 @@ app.apiUrl = 'https://api.tvmaze.com/search/shows';
 app.userInput = document.getElementsByClassName('userInput');
 app.addListeners = () => {
    app.userSubmit = document.querySelector('form').addEventListener('submit', function () {
-      // console.log('it worked!',);
       app.getTvShows();
    });
 }
@@ -80,17 +79,12 @@ app.displayTvShows = (tvShowArray) => {
 
       // append each entry to the gallery
       gallery.appendChild(newListItem);
-
       // console.log(tvShow);
-
    });
 }
 
 app.init = () => {
-   // app.userSubmit = document.querySelector('form').addEventListener('submit', function () {
-      console.log('it worked!');
-   //    app.getTvShows();
-   // });
+   console.log('it worked!');
    app.addListeners()
 };
 
@@ -105,36 +99,6 @@ app.init();
 // api only gives out 10 recommendations per search, coincidence?? (find a way to display more than 10+ recco's)
 // limit the reccomendations to (maybe 5?)
 // STRETCH GOAL: adding additional input to filter by ratings. & maybe genre???
-
-
-
-
-// PSEUDO CODE:
-// giving the user 5 search terms, 
-// objective: to help recommend users the best television shows for them, filtering the API based on the users choices. 
-
-// Create an app object (_TV SHOW NAME_)
-
-// Initialize preset data in the dedicated properties
-// - apiURL
-// - apiKey
-// - userQuery
-
-// Create a method (TVShows) to make API calls, which takes the user input as a parameter (userQuery)
-
-// When the API call is successful, display the result by appending the data to the results div
-
-// user will click the start button and be directed to the next html page (or rather than creating an additional html page, make a event listener when user clicks start button, append information on to DOM
-
-// Create an init method to kick off the setup of the application
-// - add a 'change' event listener to call the local method (getUserQuery), to track user input
-
-// app.init calls and allows us to access the information from the API. 
-
-
-// add shows to wish list
-// genre
-
 
 
 
