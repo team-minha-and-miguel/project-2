@@ -16,8 +16,8 @@ app.userSubmit = document.querySelector('form').addEventListener('submit', funct
 
 // calling fetch to make GET request
 app.getTvShows = () => {
+   
    let userSearch = app.userInput[0].value;
-   // let userInput = '';
    const url = new URL(app.apiUrl);
    url.search = new URLSearchParams({
       q: userSearch
@@ -92,6 +92,19 @@ app.init = () => {
 };
 
 app.init();
+
+
+// *** NEXT STEPS ***
+// error handling the forms for any incorrect user inputs
+// pop up if there are no results. 
+// API considers & appends anything remotely close to the user input (i.e submit and gives "summit, sbit, sunmi, subat");
+// reset button (and display: none the search tab when a user searches once) MAYBEEE
+// api only gives out 10 recommendations per search, coincidence?? (find a way to display more than 10+ recco's)
+// limit the reccomendations to (maybe 5?)
+// STRETCH GOAL: adding additional input to filter by ratings. & maybe genre???
+
+
+
 
 // PSEUDO CODE:
 // giving the user 5 search terms, 
