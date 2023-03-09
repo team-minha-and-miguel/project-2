@@ -16,7 +16,7 @@ app.userSubmit = document.querySelector('form').addEventListener('submit', funct
 
 // calling fetch to make GET request
 app.getTvShows = () => {
-
+   
    let userSearch = app.userInput[0].value;
    const url = new URL(app.apiUrl);
    url.search = new URLSearchParams({
@@ -27,7 +27,7 @@ app.getTvShows = () => {
    fetch(url)
       .then(response => {
          console.log(response)
-         if (response.ok === true) {
+         if(response.ok === true) {
             // console.log(response)
             return response.json();
          } else {
@@ -38,11 +38,11 @@ app.getTvShows = () => {
          // console.log(jsonResult);
          app.displayTvShows(jsonResult);
       })
-      .catch((error) => {
-         if (error.message === "Not Found") {
+      .catch((error)=> {
+         if(error.message === "Not Found") {
             alert('does not exist, something went wrong');
          } else {
-            alert('something went wrong');
+            alert ('something went wrong');
          };
       });
 };
@@ -58,7 +58,7 @@ app.displayTvShows = (tvShowArray) => {
       // image path variable for use in new element creation, includes conditions for null image
       const imagePath = tvShow.show.image ? tvShow.show.image.original : 'https://placekitten.com/200/300';
       // alt text path variable for use in new element creation, includes conditions for placeholder image
-      let altPath;
+      let altPath; 
       if (tvShow.show.image != null) {
          altPath = `Poster for ${tvShow.show.name}`;
       } else {
@@ -158,4 +158,4 @@ app.init();
 // second level tier of filtering after previous query search, allowing user to get a more detailed reccomendation. 
 
 
-// STRETCH GOAL: figuring out how to put an input as the query search params, allowing users to type what they want instead of clicking our given choices. 
+// STRETCH GOAL: figuring out how to put an input as the query search params, allowing users to type what they want instead of clicking our given choices.
