@@ -5,40 +5,51 @@ const app = {};
 app.apiUrl = 'https://api.tvmaze.com/search/shows';
 
 // call get tv show function, inside form submission. 
-
-app.userInput = document.getElementsByClassName('userInput');
+// app.userInput = document.getElementsByClassName('userInput');
 app.addListeners = () => {
-   app.userSubmit = document.querySelector('form').addEventListener('submit', function () {
+
+   document.querySelector('form').addEventListener('submit', function (e) {
+      e.preventDefault();
       app.getTvShows();
    });
 }
+
+
 // what the user inputs in the search bar 
 
 // calling fetch to make GET request
 app.getTvShows = () => {
    
    const input = document.querySelector('#showSearch');
-   console.log(input);
+   // console.log(input);
    // let userSearch = app.userInput[0].value;
    const url = new URL(app.apiUrl);
    url.search = new URLSearchParams({
       q: input.value
    });
-   // console.log(input);
+   app.checkForm(input.value, url, url.search)
 
-   fetch(url)
+
+};
+
+app.fetch = (url) => {
+      fetch(url)
       .then(response => {
-         console.log(response)
+         // console.log(response)
          if(response.ok === true) {
-            // console.log(response)
             return response.json();
          } else {
             throw new Error(response.statusText);
          };
       })
       .then(function (jsonResult) {
-         // console.log(jsonResult);
+         
+         console.log(jsonResult);
          app.displayTvShows(jsonResult);
+         // if (jsonResult = false) {
+         //    console.log("no response");
+         // };
+         // app.checkForm(input.value, jsonResult)
       })
       .catch((error)=> {
          if(error.message === "Not Found") {
@@ -47,7 +58,23 @@ app.getTvShows = () => {
             alert ('something went wrong');
          };
       });
-};
+}
+
+app.checkForm = (form, url, search) => {
+   console.log(form)
+   if(form == '') {
+      alert(`Error: Input is empty!`);
+      // return false;
+   }
+   const spec = /^[\w ]+$/;
+   if(!spec.test(form))  {
+      alert(`Error: Input contains invalid characters!`);
+      // return false;
+   } else {
+      app.fetch(url)
+   }
+   // return true;
+}
 
 // method that displays shows
 app.displayTvShows = (tvShowArray) => {
@@ -55,11 +82,14 @@ app.displayTvShows = (tvShowArray) => {
    const gallery = document.querySelector('.gallery');
    // clear gallery before displaying new search results
    gallery.innerHTML = ``;
+
    tvShowArray.forEach(tvShow => {
+
       // create li element stored in a variable
       const newListItem = document.createElement('li');
       // image path variable for use in new element creation, includes conditions for null image
       const imagePath = tvShow.show.image ? tvShow.show.image.original : 'https://placekitten.com/200/300';
+
       // alt text path variable for use in new element creation, includes conditions for placeholder image
       let altPath; 
       if (tvShow.show.image != null) {
@@ -79,13 +109,16 @@ app.displayTvShows = (tvShowArray) => {
 
       // append each entry to the gallery
       gallery.appendChild(newListItem);
-      // console.log(tvShow);
+
    });
 }
 
 app.init = () => {
-   console.log('it worked!');
-   app.addListeners()
+   // app.userSubmit = document.querySelector('form').addEventListener('submit', function () {
+   //    console.log('it worked!');
+   //    // app.getTvShows();
+   // });
+   app.addListeners();
 };
 
 app.init();
@@ -100,9 +133,6 @@ app.init();
 // limit the reccomendations to (maybe 5?)
 // STRETCH GOAL: adding additional input to filter by ratings. & maybe genre???
 
-
-
-// ---------------------------------------------------------
 
 // PSUEDO CODE MVP: 
 
