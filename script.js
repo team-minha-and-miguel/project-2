@@ -13,20 +13,27 @@ app.addListeners = () => {
       app.getTvShows();
    });
 }
+
+
 // what the user inputs in the search bar 
 
 // calling fetch to make GET request
 app.getTvShows = () => {
    
    const input = document.querySelector('#showSearch');
-   console.log(input);
+   // console.log(input);
    // let userSearch = app.userInput[0].value;
    const url = new URL(app.apiUrl);
    url.search = new URLSearchParams({
       q: input.value
    });
+   app.checkForm(input.value, url, url.search)
 
-   fetch(url)
+
+};
+
+app.fetch = (url) => {
+      fetch(url)
       .then(response => {
          // console.log(response)
          if(response.ok === true) {
@@ -36,8 +43,13 @@ app.getTvShows = () => {
          };
       })
       .then(function (jsonResult) {
-         // console.log(jsonResult);
+         
+         console.log(jsonResult);
          app.displayTvShows(jsonResult);
+         // if (jsonResult = false) {
+         //    console.log("no response");
+         // };
+         // app.checkForm(input.value, jsonResult)
       })
       .catch((error)=> {
          if(error.message === "Not Found") {
@@ -46,7 +58,23 @@ app.getTvShows = () => {
             alert ('something went wrong');
          };
       });
-};
+}
+
+app.checkForm = (form, url, search) => {
+   console.log(form)
+   if(form == '') {
+      alert(`Error: Input is empty!`);
+      // return false;
+   }
+   const spec = /^[\w ]+$/;
+   if(!spec.test(form))  {
+      alert(`Error: Input contains invalid characters!`);
+      // return false;
+   } else {
+      app.fetch(url)
+   }
+   // return true;
+}
 
 // method that displays shows
 app.displayTvShows = (tvShowArray) => {
