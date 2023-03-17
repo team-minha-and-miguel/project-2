@@ -12,15 +12,24 @@ app.apiUrl = 'https://api.tvmaze.com/search/shows';
 
 app.addListeners = (jsonResult) => {
    // connecting class in html to variable which then listens for a submit, and calls function()
+
+   app.languageForm = document.querySelector('#languageFilter');
+   // app.languageForm.classList.add('displayNone');
+
+   // connecting the language id in html to a variable
+   app.selectElement = document.querySelector(`#language`);
+
    document.querySelector('form').addEventListener('submit', function (e) {
       // prevents app from refreshing on submit.
       e.preventDefault();
+      app.languageForm.classList.remove('displayNone');
+      app.selectElement.value = "all";
       // calling function
       app.getTvShows();
    });
 
-   // connecting the language id in html to a variable
-   app.selectElement = document.querySelector(`#language`);
+   // // connecting the language id in html to a variable
+   // app.selectElement = document.querySelector(`#language`);
    // event listener that calls checkLanguage() on any user changes
    app.selectElement.addEventListener(`change`, function () {
       if(jsonResult){
@@ -239,7 +248,7 @@ app.init();
 
 // 1. COMPLETED: find out why the second if statement is true, passes information, but does not clear the gallery like the "english" statement does
 
-// 2. fix the language form to always be at "all results", with every search & even when you refresh. 
+// 2. COMPLETED: fix the language form to always be at "all results", with every search & even when you refresh. 
 
 // 3. COMPLETED - add a "how many results have shown : ${results}" shown on the DOM to let users know what was found. 
 // 3a. COMPLETED - written twice in both displayLanguageShows & displayTvShows (maybe create a function to append results, to keep code clean?)
@@ -252,6 +261,9 @@ app.init();
 // 6. we have the skeleton for creating a form to filter through any type of value in the API array, we could create it for others (i.e genre, etc)
 
 // 6. possible fetch a new end point and see what we can add to our app with specific end point.
+
+// 7. on submit, input value = ""
+// 7a. change "total results found" to include input value
 
 // Last - styling via SCSS. 
 
