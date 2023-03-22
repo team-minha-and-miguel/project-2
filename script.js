@@ -1,105 +1,202 @@
-// name spaced app
+// ~ name spaced app ~ //
 const app = {};
-// variable that stores and connects to a html element
+
+// globally scoped variable that stores and connects to a html element //
 const gallery = document.querySelector('.gallery');
 
 
-
-// url endpoint in a variable
+// url endpoints stored in a variable //
 app.apiUrl = 'https://api.tvmaze.com/search/shows';
+app.apiUrlTwo = 'https://proxy.junocollege.com/https://api.tvmaze.com/shows';
+
+
+// storing url in a new URL to manipulate data within //
+const url = new URL(app.apiUrl);
+const urlTwo = new URL(app.apiUrlTwo);
 
 
 
-// add listeners function that is called and waits for user change
-app.addListeners = (jsonResult, form) => {
 
-   // connecting class in html to variable
+
+// ~ add listeners function that is called and waits for user change ~ //
+app.addListeners = (jsonResult, form, array) => {
+   // counter variable 
+   let counter = 0;
+   // connecting class in html to variable //
    app.languageForm = document.querySelector('#languageFilter');
-   // connecting the language id in html to a variable
-   app.selectElement = document.querySelector(`#language`);
+   app.ratingForm = document.querySelector('#ratingFilter');
+   app.showCounter = document.querySelector('#showFilter');
+   // connecting the language id in html to a variable //
+   app.selectLanguage = document.querySelector(`#language`);
+   // connecting the rating id in html to a variable //
+   app.selectRating = document.querySelector(`#rating`);
+   // connecting the showCounter id in html to a variable //
+   app.selectCounter = document.querySelector(`#showCounter`);
+   
 
+   // event listener that waits for user submission //
    document.querySelector('form').addEventListener('submit', function (e) {
-      // prevents app from refreshing on submit.
+      // add 1 to the counter for loop break use.
+      counter = counter + 1;
+      console.log(counter)
+      // if counter reaches 1, stop the loop and possible alert in checkForm();
+      if (counter > 1) {
+         return;
+      }
+      // prevents app from refreshing on submit //
       e.preventDefault();
-      // creating a class list that removes displayNone from form element.
-      app.languageForm.classList.remove('displayNone');
-      // on submit that always changes the form selection to its original "all results" selection.
-      app.selectElement.value = "all";
-      // calling function
+
+      // on submit that always changes the form selection to its original "all results" selection //
+      app.selectLanguage.value = `all`;
+      app.selectRating.value = `all`;
+
+      // calling function to getTvShows //
       app.getTvShows();
    });
 
-   // event listener that calls checkLanguage() on any user changes if theres data in the parameter.
-   app.selectElement.addEventListener(`change`, function () {
+   // event listener that calls checkLanguage() on any user changes if theres data in the parameter //
+   app.selectLanguage.addEventListener(`change`, function () {
+
       if(jsonResult){
          app.checkLanguage(jsonResult, this.value, form);
       };
    });
+   
+   // show how many shows in a page event listener // `
+   app.selectCounter.addEventListener(`change`, function(){
+
+      // function call that fetches for data with new arguements
+      app.fetchAllShows(urlTwo, this.value, urlTwo.search);
+   });
+   
+   // event listener that calls checkRating() on any user change if theres data in the parameter //
+   app.selectRating.addEventListener(`change`, function(){
+
+      // if data is available, call checkRating() //
+      if (jsonResult) {
+         app.checkRating(jsonResult, this.value, form);
+      };
+   });
+   
+};
+
+
+// ~ check rating changes the search depending on users choice of highest or lowest rated shows ~ //
+app.checkRating = (jsonResult, userInput, form) => {
+
+   // if statement that checks to see what user selected //
+   if (userInput === 'highest') {
+      // sort method that arranges array according to highest-lowest
+      jsonResult.sort((a, b) => {
+         return b.show.rating.average - a.show.rating.average;
+      });
+   } else if (userInput === 'lowest') {
+      // sort method that arranges array according to lowest-highest
+      jsonResult.sort((a, b) => {
+         return a.show.rating.average - b.show.rating.average;
+      });
+   } else if (that === 'all') {
+      return jsonResult;
+   }
+
+   // clearing gallery in the DOM //
+   gallery.innerHTML = ``;
+
+   // ** CANNOT FIGURE OUT THE IF STATEMENT TO WORK. ** // 
+
+   // if statement to see if we have an array, then use that info to the appendToDom() //
+   // if (array[0].show.language === 'English') {
+   //    console.log('yay')
+   //    app.showUserResults(array, form)
+   //    array.forEach((tvShow) => {
+   //       // console.log(`${tvShow.show.rating.average}`, array);
+   //       app.appendToDom(tvShow)
+   //    });
+   // } else {
+
+   // show user result with next function, using data as arguements.
+   app.showUserResults(jsonResult, form);
+
+   // forEach method which will loop through array and append each to next function
+   jsonResult.forEach((tvShow) => {
+
+      app.appendToDom(tvShow);
+   });
+   // };
 };
 
 
 
 
-
-// function contains key API information which is used throughout app. 
+// ~ function contains key API information which is used throughout app ~ //
 app.getTvShows = () => {
-   // storing input tag in a variable
+   // storing input tag in a variable //
    const input = document.querySelector('#showSearch');
-   // storing url in a new URL to manipulate data within
-   const url = new URL(app.apiUrl);
-   // new search params
+
+   // new search params //
    url.search = new URLSearchParams({
       q: input.value
    });
+   console.log(input.value)
 
-   // call check form to determine if user search matches what is needed for correct search
-   app.checkForm(input.value, url, url.search);
+   // call check form to determine if user search matches what is needed for correct search //
+   app.checkUserForm(input.value, url);
 
-   // clears out search bar after submit after we have passed the data to the next function. 
+   // clears out search bar after submit after we have passed the data to the next function //
    input.value = ``;
 };
 
 
 
 
-// check form function that checks for any special characters or no entry in the form.
-app.checkForm = (form, url, search) => {
+// ~ check form function that checks for any special characters or no entry in the form ~ //
+app.checkUserForm = (form, url) => {
+   // counter = counter + 1;
+   // console.log(form, counter)
+   // variable that contains regex for all special characters // 
    const spec = /^[\w ]+$/;
-   // if statement to check for no user entry
+
+   // if statement to check for no user entry //
    if (form == '') {
       alert(`Error: Input is empty!`);
    }
-   // if statement to check for any special characters, not accepted.
+   // if statement to check for any special characters, not accepted //
    else if (!spec.test(form)) {
       alert(`Error: Input contains invalid characters!`);
    } else {
-      // if all above is true, then call fetch function
-      app.fetch(url, form, search);
+      // if all above is true, then call fetch function //
+      app.fetch(url, form);
+
+      // creating a class list that removes displayNone from form elements to make it appear to DOM //
+      app.languageForm.classList.remove('displayNone');
+      app.ratingForm.classList.remove('displayNone');
    };
 };
 
 
 
 
-// fetching information from the API
-app.fetch = (url, form, search) => {
+
+// ~ fetching information from the API ~ //
+app.fetch = (url, form) => {
+
    fetch(url)
       .then(response => {
-         // if statement that checks to see if theres an error, or returns json version
+         // if statement that checks to see if theres an error, or returns json version //
          if (response.ok === true) {
             return response.json();
          } else {
             throw new Error(response.statusText);
          };
       })
-      // then() that calls functions with passed API data
+      // then() that calls functions with passed API data //
       .then(function (jsonResult) {
-         // calls add listeners function to pass jsonResults over for manipulation
-         app.addListeners(jsonResult, form)
-         // calls displayTvShows using the jsonResult data. 
+         // calls add listeners function to pass jsonResults over for manipulation //
+         app.addListeners(jsonResult, form);
+         // calls displayTvShows using the jsonResult data //
          app.displayTvShows(jsonResult, form);
       })
-      // catch function that alerts user depending on the type of error
+      // catch function that alerts user depending on the type of error //
       .catch((error) => {
          if (error.message === "Not Found") {
             alert('does not exist, something went wrong');
@@ -107,44 +204,51 @@ app.fetch = (url, form, search) => {
             alert('something went wrong');
          };
       });
-};
+   };
 
 
 
 
-// function that checks to see which the language is selected by the user and creates an array, to push to the next function.
+
+
+// ~ function that checks to see which the language is selected by the user and creates an array, to push to the next function ~ //
 app.checkLanguage = (jsonResult, that, form) => {
+   // counter = 0;
 
-   // setting an empty array for use below
+   // setting an empty array for use below //
    const englishArray = [];
    const noEnglishArray = [];
 
-   // forEach method that loops through jsonResult data and pushes the correct object to the designated array
+   // forEach method that loops through jsonResult data and pushes the correct object to the designated array //
    jsonResult.forEach((tvShowArray) => {
-      // destructured variable for use
+      // counter = counter +1;
+      // destructured variable for use //
       const { show } = tvShowArray;
-      // if statement that separates objects by english and non-english shows
+
+      // if statement that separates objects by english and non-english shows //
       if (show.language !== 'English') {
-         // pushing non-english shows to an initially empty array
+         // pushing non-english shows to an initially empty array //
          noEnglishArray.push(tvShowArray);
       } else if (show.language === 'English') {
-         // pushing english shows to an initally empty array
+         // pushing english shows to an initally empty array //
          englishArray.push(tvShowArray);
-      } else {
-         // if neither above are true, which it shouldn't, then do nothing. // maybe we dont need this. 
-         console.log(tvShowArray);
       };
-   });
-
-   // if statement that checks to see what language user has selected
-   if (that === 'noEnglish') {
-      // calls function with array of non english shows passed as an arguement
-      app.displayLanguageShows(noEnglishArray, form);
-   } else if (that === 'english') {
-      // calls function with array of english shows passed as an arguement
-      app.displayLanguageShows(englishArray, form);
+      //  else {
+         //    console.log(tvShowArray);
+         // };
+      });
+      
+      // if statement that checks to see what language user has selected //
+      if (that === 'noEnglish') {
+         // calls function with array of non english shows passed as an arguement //
+         app.displayLanguageShows(noEnglishArray, form, jsonResult, that);
+         // app.addListeners(jsonResult, form, noEnglishArray)
+      } else if (that === 'english') {
+         // calls function with array of english shows passed as an arguement //
+         app.displayLanguageShows(englishArray, form, jsonResult, that);
+         // app.addListeners(jsonResult, form, englishArray);
    } else {
-      // if user does not select english or noEnglish, then call the original displayTvShows function
+      // if user does not select english or noEnglish, then call the original displayTvShows function //
       app.displayTvShows(jsonResult, form);
    };
    
@@ -153,19 +257,25 @@ app.checkLanguage = (jsonResult, that, form) => {
 
 
 
-// displays the tv shows according to the language chosen by the user. 
-app.displayLanguageShows = (tvShows, form) => {
+
+
+
+// ~ displays the tv shows according to the language chosen by the user ~ //
+app.displayLanguageShows = (tvShows, form, jsonResult, that) => {
+
+   // tv show counter variable //
    const tvResults = tvShows.length;
    
-   // clear the gallery
+   // clear the gallery //
    gallery.innerHTML = ``;
 
-   // showing total results appended to the DOM for user view
+   // showing total results appended to the DOM for user view //
    app.showUserResults(tvShows, form);
 
-   // for loop to append each show to the DOM 
+   // for loop to append each show to the DOM //
    for (let i = 0; i < tvResults; i++) {
       app.appendToDom(tvShows[i]);
+      console.log(tvShows[i], tvShows.length);
    };
 };
 
@@ -173,17 +283,18 @@ app.displayLanguageShows = (tvShows, form) => {
 
 
 
-// function that displays shows to the DOM
+// ~ function that displays shows to the DOM ~ //
 app.displayTvShows = (tvShowArray, form) => {
-   // clear gallery before displaying new search results
+
+   // clear gallery before displaying new search results //
    gallery.innerHTML = ``;
 
-   // showing total tv show results, appended to the DOM 
+   // showing total tv show results, appended to the DOM //
    app.showUserResults(tvShowArray, form);
    
-   // forEach method that loops through every object in tvShowArray
+   // forEach method that loops through every object in tvShowArray //
    tvShowArray.forEach(tvShow => {
-      //  function that called and passes every tvShow object as an arguement 
+      // function that called and passes every tvShow object as an arguement //
       app.appendToDom(tvShow);
    });
 };
@@ -191,47 +302,31 @@ app.displayTvShows = (tvShowArray, form) => {
 
 
 
-// function that shows user search total results
-app.showUserResults = (tvShows, form) => {
-   // storing the users input into a variable while capitalizing the first letter
-   const userSearch = form[0].toUpperCase() + form.substring(1);
-   // storing the array length in variable
-   const tvResults = tvShows.length;
-   // creating a variable and storing a new p element tag in it
-   const totalResults = document.createElement('p');
-   // appending html into variable with p tag
-   totalResults.innerHTML = `
-   Total Results for "<span class="bold">${userSearch}</span>" Found: ${tvResults}
-   `;
-   // appending totalResults p tag element as a child to gallery.
-   gallery.appendChild(totalResults);
-};
 
 
-
-
-
-// appends the data to the dom every time the loop runs in the previous function
+// ~ appends the data to the dom every time the loop runs in the previous function ~ //
 app.appendToDom = (tvShow) => {
-   // destructured objects from tvShow array
+
+   // destructured objects from tvShow array //
    const { show } = tvShow;
    const { image, name, summary, rating, genres, averageRuntime, status, language } = show;
 
-   // create li element stored in a variable
+   // create li element stored in a variable //
    const newListItem = document.createElement('li');
-   // image path variable for use in new element creation, includes conditions for null image
+
+   // image path variable for use in new element creation, includes conditions for null image //
    const imagePath = image ? image.original : 'https://placekitten.com/200/300';
 
-   // alt text path variable for use in new element creation, includes conditions for placeholder image
+   // alt text path variable for use in new element creation, includes conditions for placeholder image //
    let altPath;
-   // if statement that checks to see and adds placeholder if the object image is null
+   // if statement that checks to see and adds placeholder if the object image is null //
    if (image != null) {
       altPath = `Poster for ${name}`;
    } else {
       altPath = 'placeholder image';
    };
 
-   // adding content into the li variable
+   // adding content into the li variable //
    newListItem.innerHTML = `
       <h2>${name}</h2>
       <div class="imgContainer"><img src="${imagePath}" alt="${altPath}" /></div>
@@ -243,24 +338,307 @@ app.appendToDom = (tvShow) => {
       <p>Show Current Status: ${status} </p>
       `;
 
-   // append each entry to the gallery
+   // append each entry to the gallery //
    gallery.appendChild(newListItem);
-}
+};
 
 
 
 
-// init function that loads the page. 
+
+// ~ function that shows user search total results ~ //
+app.showUserResults = (tvShows, form) => {
+
+   // storing the users input into a variable while capitalizing the first letter //
+   const userSearch = form[0].toUpperCase() + form.substring(1);
+
+   // storing the array length in variable //
+   const tvResults = tvShows.length;
+
+   // creating a variable and storing a new p element tag in it //
+   const totalResults = document.createElement('p');
+
+   // appending html into variable with p tag //
+   totalResults.innerHTML = `
+   Total Results for "<span class="bold">${userSearch}</span>" Found: ${tvResults}
+   `;
+
+   // appending totalResults p tag element as a child to gallery //
+   gallery.appendChild(totalResults);
+};
+
+
+
+
+
+
+
+// ------ SHOW ALL TV SHOWS BY PAGES FEATURE BRANCH ------ // 
+
+
+
+
+// ~ globally scoped variables that connect to html elements ~ // 
+
+// search by name feature branch variables //
+const showSearchTitle = document.querySelector('.searchShowByName');
+const searchByName = document.querySelector('.searchByName');
+
+// show all shows in pages feature branch variables
+const showPageTitle = document.querySelector('.searchShowByPages');
+const showPagesButton = document.querySelector('.showAllPages');
+const pageNumberOne = document.querySelector('.pageNumberOne');
+const pageNumberTwo = document.querySelector('.pageNumberTwo');
+const pageNumberThree = document.querySelector('.pageNumberThree');
+
+
+
+// ~ show pages button that listens for user click, display:none elements and fetch's 2nd endpoint data ~ // 
+showPagesButton.addEventListener('click', function(){
+
+   // data needed for specific end point fetch //
+   const input = document.querySelector('#pageNumberOne');
+
+   // new search params with values based on user choice //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+   console.log(showPagesButton)
+
+   // fetching all shows function, with passed arguments //
+   app.fetchAllShows(urlTwo, input.value, urlTwo.search);
+
+   // storing search bar to a variable //
+   app.searchBar = document.querySelector(`#searchBar`);
+
+   // clearing the gallery in the DOM // 
+   gallery.innerHTML = ``;
+
+   // adding a class to html elements //
+   app.searchBar.classList.add('displayNone');
+   app.languageForm.classList.add('displayNone');
+   app.ratingForm.classList.add('displayNone');
+   showPagesButton.classList.add('displayNone');
+   showSearchTitle.classList.add('displayNone');
+
+   // removing a class to html elements //
+   searchByName.classList.remove('displayNone');
+   pageNumberOne.classList.remove('displayNone');
+   pageNumberTwo.classList.remove('displayNone');
+   pageNumberThree.classList.remove('displayNone');
+   showPageTitle.classList.remove('displayNone');
+   app.showCounter.classList.remove('displayNone');
+});
+
+
+
+// ~ search by name button that appears when show all page button is clicked, when searchByName is clicked by user, clear gallery, and return app to original state ~ //
+searchByName.addEventListener('click', function(){
+   // clear the gallery in the DOM //
+   gallery.innerHTML = ``;
+
+   // adding a class to html elements //
+   searchByName.classList.add('displayNone');
+   pageNumberOne.classList.add('displayNone');
+   pageNumberTwo.classList.add('displayNone');
+   pageNumberThree.classList.add('displayNone');
+   app.showCounter.classList.add('displayNone');
+
+   // removing a class to html elements //
+   app.searchBar.classList.remove('displayNone');
+   showPagesButton.classList.remove('displayNone');
+});
+
+
+
+// ~ 1st page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ //
+pageNumberOne.addEventListener('click', function(){
+
+   // storing html button element in variable 
+   const input = document.querySelector('#pageNumberOne');
+
+   // new search params
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+
+// ~ 2nd page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ //
+pageNumberTwo.addEventListener('click', function(){
+
+   // storing html button element in variable //
+   const input = document.querySelector('#pageNumberTwo');
+
+   // new search params
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+
+// ~ 3rd page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberThree.addEventListener('click', function(){
+
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberThree');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+// ** CAN CONTINUE ADDING PAGES USING THIS DATA ABOVE ^ ** //
+// ** JUST NEED TO ADD BUTTONS IN HTML ** // 
+
+
+
+// ~ fetch function that gathers data using the 2nd endpoint ~ //
+app.fetchAllShows = (urlTwo, form) => {
+   // second fetch for additonal data. 
+   fetch(urlTwo)
+      .then(response => {
+         if (response.ok === true) {
+            return response.json();
+         } else {
+            throw new Error(response.statusText);
+         };
+      })
+      .then(function (jsonResult) {
+
+         // calling secondary display function for the next app feature // 
+         app.displayAllShowPages(jsonResult, form);
+      });
+
+};
+
+
+
+// ~ displays tvShows in pages for the 2nd endpoint feature branch ~ //
+app.displayAllShowPages = (allShows, userInput) => {
+   // clear gallery in the DOM //
+   gallery.innerHTML = ``;
+
+   // creating a changable variable with a value of 0 //
+   let tvShowsCounter = 0;
+
+   // forEach method that appends the data to the DOM //
+   allShows.forEach((show) => {
+      // userInput is initially at a value of one, since we call the fetch before the page button click (which has the correct value), so if userInput is 1, then change it to 10 (the first selection value in the form) //
+      if (userInput == '1') {
+         // if tvShowCounter is larger than 10, stop loop, else keep calling function //
+         userInput = '10';
+         // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
+         if (tvShowsCounter > userInput) {
+            // stop the loop //
+            return;
+         } else {
+            app.appendAllShowsToDom(show);
+         };
+         // otherwise, if userInput is not = 1, then still check as usual.
+      } else {
+         if (tvShowsCounter > userInput) {
+            // stop the loop //
+            return;
+         } else {
+            app.appendAllShowsToDom(show);
+         };
+      }
+      
+      // stops the forEach method from continuing to append data after userChoice
+      if (tvShowsCounter === userInput) {
+         return;
+      }
+      
+      // add + 1 to the tvShowCounter // 
+      tvShowsCounter = tvShowsCounter + 1;
+      console.log(userInput)
+   });
+};
+
+
+
+// ~ creation of new html elements, and appending information to DOM ~ //
+app.appendAllShowsToDom = (show) => {
+
+   // creating an html element, storing it in a variable //
+   const newListItem = document.createElement('li');
+
+   // destructured objects // 
+   const { image, rating, summary, name, language, status, averageRuntime, genres } = show;
+
+   // image path variable for use in new element creation, includes conditions for null image //
+   const imagePath = image ? image.original : 'https://placekitten.com/200/300';
+
+   // alt text path variable for use in new element creation, includes conditions for placeholder image //
+   let altPath;
+   // if statement that checks to see and adds placeholder if the object image is null //
+   if (image != null) {
+      altPath = `Poster for ${name}`;
+   } else {
+      altPath = `placeholder image`;
+   };
+
+   // adding content to the li element // 
+   newListItem.innerHTML = `
+      <h2>${name}</h2>
+      <div class="imgContainer"><img src="${imagePath}" alt="${altPath}" /></div>
+      <p>Summary:${summary}</p>
+      <p>Rating: ${rating.average}</p>
+      <p>Language: ${language}</p>
+      <p>Genres: ${genres}</p>
+      <p>Episode Length: ${averageRuntime} mins</p>
+      <p>Show Current Status: ${status} </p>
+      `;
+
+   // append li element to the gallery in the DOM // 
+   gallery.appendChild(newListItem);
+};
+
+// ------ ** SHOW ALL SHOWS IN PAGES FEATURE BRANCH ENDS ** ------ //
+
+
+
+// init function that loads the page //
 app.init = () => {
    app.addListeners();
 };
 
 
 
-// initial function call. 
+
+// initial function call to start the app //
 app.init();
 
 
+
+// ------- ** ISSUES: ** ------- // 
+
+// 1. Filter by rating, does not allow you to filter by language first, it doesnt take the language filtered array and filter through that too 
+// ^ what it does is, it takes the original appended 10 shows, and changes by rating
+// Connect the two forms! what works: if user decides to click rating first, then language, it should filter both, by rating and by language
+
+
+// 2. when you freestyle and alternate/click all the buttons, eventually the app gets bogged down w/ so much data, that it slows the browser. it even requests you kill the app. Also happens on the fetch for the 2nd feature branch
+// example - it usually happens between the rating filter followed by the language filter. 
+
+// 2. OBSERVATIONS - for some reason when i console.log the tvShow.length, it shows more than the length, and i think it doubles every time its used. We need to stop that from happening. Theres a loop between app.addListeners & app.checkLanguage calling each other. But it shouldnt loop because the checkLanguage is only called in the eventListener. 
+
+// 3. COMPLETED - when you search multiple times after using the language rating, it puts empty string alert on check form, when theres a search on the submit. FIXED - took away the addListeners() in the checkLanguage(), 
+
+
+// 4. COMPLETED - show all tv shows in pages branch, when you click the button, it initially only appends 3 shows first, then adjusts when you click the change how many shows correctly. 
+// Reason : when you click show all pages button, there is no userInput value to use, and technically the input value is set to 1. so it will only append 2 shows.
+// SOLUTION: either decide to figure out a way to make the userInput value to 10, or create an additional html option set to 2 shows
 
 
 // -----------------------------------------------------
@@ -279,54 +657,62 @@ app.init();
 // 9. when language form appears on DOM (see 3.), user changes form and calls app.checkLanguage()
 // 10. app.checkLanguage() calls app.displayLanguageShows()
 // 11. app.displayLanguageShows calls app.showUserResults(), & calls app.appendToDom()
-// -- ** app ends & loops through these on user change ** -- 
+// -- ** app ends & loops through these on user change ** -- //
 
-// -------------------------------------------------------
+// ** NEW ** 
+// 12. onChange listener waits for user selection to change the rating. it then calls app.checkRating()
+// 13. app.checkRating() clears gallery, calls app.showUserResults, and then calls app.appendToDom()
 
-// LONG UNNECESSARY VERSION. 
+// -- ** 2nd feature branch : show tvShows in pages ** -- // 
 
-// 1. app.init() is called, which then calls app.addListeners()
-// 2. app.addListeners connects variables to html elements, & has EventListeners that waits for user change
-// 3. if user input a search, after submit, it prevents app from refreshing, allows the language form to appear, and calls getTvShow()
-// 4. getTvShow() then connects variable to input element, takes the user's search and embeds it into the search params, 
-// ^ calls the checkForm() with passed info, and then clears the user's search bar
-// 5. checkForm() error handles any user search that shouldnt be searched, if the user search works with the app then it calls the app.fetch()
-// 6. app.fetch() takes the data passed from checkForm(), and fetches the API info, parses data into json(), 
-// then passes the info into both the app.addListeners() & also calls app.displayTvShows()
-// 7. app.displayTvShows() takes the array and the user input as arguements, clears the gallery, calls app.showUserResults(), 
-// and calls the app.appendToDom() every time it loops through the tvShowArray objects
-// 8. app.showUserResults() takes the tvShowArray and user input, to append the # of results found in the search to the gallery in the DOM
-// 9. app.appendToDom() takes the tvShow object, creates an li, and checks and adds placeholders if image is null, 
-// once placeholders have been added to images, we append information into the li element, and then append it as a child to the gallery in the DOM
-// 10. When the language form appears to the DOM, the addListeners waits for a form change which then 
-// calls app.checkLanguage() if theres data being passed to it, and passes the jsonResult, user language selection value, and the user input
-// 11. app.checkLanguage() takes the data passed, creates empty arrays, and using a forEach, loop through the objects 
-// and pushes the object to the correct array. Once the arrays are completed, we use an if statement to check which language user has selected
-// and then calls app.displayLanguageShows() 
-// 12. app.displayLanguageShows() takes the data passed, clears the gallery, calls app.showUserResults(), 
-// then uses for loop to go through every object in array, while calling app.appendToDom()
+// 14. on click event listener that takes api data, and calls app.fetchAllShows()
+// 15. app.fetchAllShows() get API data, & calls app.displayAllTvShows()
+// 16. app.displayAllTvShows loops through the array, and calls app.appendAllShowsToDom();
+// 17. app.appendAllShowsToDom() takes the passed data and appends every tvShow in the loop
+
+// 18. page button addEventListener, waits for user click, and then fetches the API data with new search params, based on page #. It calls fetch, then displayAllTvShows, then appendAllShowsToDom.
+// 19. a tvCounter form is created, and has an onChange eventListener that waits for user selection. When changed, it calls fetchAllShows but takes the value of the counter and uses it as a counter stopper in an if statement. that way it cuts the loop once the counter and the userInput value match. 
+// 20. there for is appends number of shows user requests. 
 
 
-// -----------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ---------------------- ** OLD GOALS ** ----------------------------//
 
 
 // *** PHASE THREE - NEXT STEPS ***
 
 // POSSIBLE NEW GOAL: 
 
-// 1. Find out what else we want to append to DOM (average run time, genres, statue, ended, etc);
-
-// 2. we have the skeleton for creating a form to filter through any type of value in the API array, we could create it for others (i.e genre, etc)
-
-// 3. possible fetch a new end point and see what we can add to our app with specific end point.
-
+// 2. COMPLETED - we have the skeleton for creating a form to filter through any type of value in the API array, we could create it for others (i.e genre, etc)ALMOST COMPLETE! - adding a form that sorts by highest or lowest rating? we would need to take the array of objects, look at the rating, and sort() it
+// 3. COMPLETED possible fetch a new end point and see what we can add to our app with specific end point. Was able to get the second end point, showing pages of shows (242 shows per page). 
+// 4. COMPLETED - I was thinking of maybe adding a second page that appends all shows and it changes by user changing the page number. 
+// 5. COMPLETED - we would need to have a button thats like "all shows" when you click it, it either takes you to a new HTML page, orrrr
+// 6. COMPLETED - it display:nones all the html, and display: block the page number, while appending the first page of shows. 
+// 7. COMPLETED - then it waits for the onchange listener to change and append a new set of 242 shows to the DOM.
 // Last - styling via SCSS. 
 
 
 // -------------------------------------------------------
 
 // *** PHASE TWO - COMPLETED ***
-
+// 1. COMPLETED - Find out what else we want to append to DOM (average run time, genres, statue, ended, etc);
 // 4. COMPLETED: find out why the second if statement is true, passes information, but does not clear the gallery like the "english" statement does
 // 5. COMPLETED: fix the language form to always be at "all results", with every search & even when you refresh. 
 // 6. COMPLETED - add a "how many results have shown : ${results}" shown on the DOM to let users know what was found. 
@@ -335,34 +721,26 @@ app.init();
 // 8. COMPLETED - on submit, input value = ""
 // 8a. COMPLETED -  change "total results found" to include input value
 
-// ----------------------------------------------------------
+// ---------------------------------------------------------- //
 
 // *** PHASE ONE - OLD STEPS ***
-
 // ALMOST COMPLETED: STRETCH GOAL: adding additional input to filter by languages
-// DONE - error handling the forms for any incorrect user inputs 
-// DONE - pop up if there are no results.
+// COMPLETED - error handling the forms for any incorrect user inputs 
+// COMPLETED - pop up if there are no results.
 // NOT NEEDED - API considers & appends anything remotely close to the user input (i.e submit and gives "summit, sbit, sunmi, subat");
 // NOT NEEDED - reset button (and display: none the search tab when a user searches once) MAYBEEE
 // NOT POSSIBLE? - api only gives out 10 recommendations per search, coincidence?? (find a way to display more than 10+ recco's)
 // NO NEED, IT ONLY DISPLAYS 10 anyways - limit the reccomendations to (maybe 5?)
 
-// ----------------------------------------------------------
+// ----------------------** MVP **-------------------------------- //
 
 // ORIGINAL PSUEDO CODE MVP:
-
 // User gets to landing page, start button. ( no start button necessary )
-
 // when user clicks start button, several buttons with keywords will populate the DOM.
-
 // user will have options (created by us) to click which words they would like to choose from, which will then search the API according to that word.
-
 // app displays the first 5 results of search.
-
 // we will choose which key values to populate into each reccomendation (i.e. image, name, cast, etc).
-
 // button (disabled for now) will appear after recommendations have been given out, to reset the app and send user back to main start page.
-
 
 // *** STRETCH GOALS: ***
 // NOT NECESSARY - Rather than giving out 5 reccomendations, it will randomly spit out 1 choice using Math.floor + Math.random();

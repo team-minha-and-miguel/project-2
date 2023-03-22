@@ -5,20 +5,43 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>API Testing for Project 2</title>
+   <link rel="stylesheet" href="styles.css">
+   <title>TV Show APP</title>
 </head>
 
 <body>
    <header>
-      <h1>THE ULTIMATE WATCH LIST</h1>
-      <p>What's will you watch next?</p>
-      <form action="#">
-         <label for="showSearch">Search Anything</label>
+      <h1>THE ULTIMATE WATCH LIST APP </h1>
+      <p>What will you watch next?</p>
+
+      <h2 class="searchShowByName">Search show by Name:</h2>
+      <h2 class="searchShowByPages displayNone">Shows by Pages:</h2>
+      <button class="showAllPages" id="showAllPages">Show all shows by page</button>
+      <button class="searchByName displayNone" id="searchByName">Search By Show Name</button>
+
+      <button class="pageNumberOne displayNone" id="pageNumberOne" value="1">1</button>
+      <button class="pageNumberTwo displayNone" id="pageNumberTwo" value="2">2</button>
+      <button class="pageNumberThree displayNone" id="pageNumberThree" value="3">3</button>
+
+      <!-- search bar for user input  -->
+      <form action="#" id="searchBar">
+         <label for="showSearch">Search A Show: </label>
          <input type="text" id="showSearch" class="userInput" placeholder="search anything">
          <button type="submit" for="showSearch" id="showSearch">Submit</button>
       </form>
 
-      <form action="" id="languageFilter" class="displayNone">
+      <!-- rating form for user selection -->
+      <form action="#" id="ratingFilter" class="displayNone">
+         <label for="rating">Filter by Rating:</label>
+         <select name="rating" id="rating" autocomplete="off">
+            <option value="all" selected>All Results</option>
+            <option value="highest">High to Low</option>
+            <option value="lowest">Low To High</option>
+         </select>
+      </form>
+
+      <!-- language form for user selection -->
+      <form action="#" id="languageFilter" class="displayNone">
          <label for="language">Choose your Language:</label>
          <select name="language" id="language" autocomplete="off">
             <option value="all" selected>All Results</option>
@@ -27,6 +50,20 @@
          </select>
       </form>
 
+      <!-- show all shows form for user selection -->
+      <form action="#" id="showFilter" class="displayNone">
+         <label for="showCounter">Amount of Shows Per Page:</label>
+         <select name="showCounter" id="showCounter" autocomplete="off" value="9">
+            <option value="9" selected>10</option>
+            <option value="24">25</option>
+            <option value="49">50</option>
+            <option value="99">100</option>
+            <option value="149">150</option>
+            <option value="245">All</option>
+         </select>
+      </form>
+
+      
       <ul class="gallery">
          <!-- api data goes here -->
       </ul>
