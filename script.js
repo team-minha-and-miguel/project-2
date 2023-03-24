@@ -83,7 +83,9 @@ app.addListeners = (jsonResult, form, array) => {
 
 // ~ check rating changes the search depending on users choice of highest or lowest rated shows ~ //
 app.checkRating = (jsonResult, userInput, form) => {
-
+   if (jsonResult.length > 200) {
+      console.log(`yay`)
+   }
    // if statement that checks to see what user selected //
    if (userInput === 'highest') {
       // sort method that arranges array according to highest-lowest
@@ -95,7 +97,7 @@ app.checkRating = (jsonResult, userInput, form) => {
       jsonResult.sort((a, b) => {
          return a.show.rating.average - b.show.rating.average;
       });
-   } else if (that === 'all') {
+   } else if (userInput === 'all') {
       return jsonResult;
    }
 
@@ -212,7 +214,7 @@ app.fetch = (url, form) => {
 
 
 // ~ function that checks to see which the language is selected by the user and creates an array, to push to the next function ~ //
-app.checkLanguage = (jsonResult, that, form) => {
+app.checkLanguage = (jsonResult, userInput, form) => {
    // counter = 0;
 
    // setting an empty array for use below //
@@ -236,20 +238,20 @@ app.checkLanguage = (jsonResult, that, form) => {
       //  else {
          //    console.log(tvShowArray);
          // };
-      });
+   });
       
-      // if statement that checks to see what language user has selected //
-      if (that === 'noEnglish') {
-         // calls function with array of non english shows passed as an arguement //
-         app.displayLanguageShows(noEnglishArray, form, jsonResult, that);
-         // app.addListeners(jsonResult, form, noEnglishArray)
-      } else if (that === 'english') {
-         // calls function with array of english shows passed as an arguement //
-         app.displayLanguageShows(englishArray, form, jsonResult, that);
-         // app.addListeners(jsonResult, form, englishArray);
+   // if statement that checks to see what language user has selected //
+   if (userInput === 'noEnglish') {
+      // calls function with array of non english shows passed as an arguement //
+      app.displayLanguageShows(noEnglishArray, form, jsonResult, userInput);
+      // app.addListeners(jsonResult, form, noEnglishArray)
+   } else if (userInput === 'english') {
+      // calls function with array of english shows passed as an arguement //
+      app.displayLanguageShows(englishArray, form, jsonResult, userInput);
+      // app.addListeners(jsonResult, form, englishArray);
    } else {
-      // if user does not select english or noEnglish, then call the original displayTvShows function //
-      app.displayTvShows(jsonResult, form);
+   // if user does not select english or noEnglish, then call the original displayTvShows function //
+   app.displayTvShows(jsonResult, form);
    };
    
 };
@@ -261,7 +263,7 @@ app.checkLanguage = (jsonResult, that, form) => {
 
 
 // ~ displays the tv shows according to the language chosen by the user ~ //
-app.displayLanguageShows = (tvShows, form, jsonResult, that) => {
+app.displayLanguageShows = (tvShows, form, jsonResult, userInput) => {
 
    // tv show counter variable //
    const tvResults = tvShows.length;
@@ -360,7 +362,7 @@ app.showUserResults = (tvShows, form) => {
 
    // appending html into variable with p tag //
    totalResults.innerHTML = `
-   Total Results for "<span class="bold">${userSearch}</span>" Found: ${tvResults}
+      Total Results for "<span class="bold">${userSearch}</span>" Found: ${tvResults}
    `;
 
    // appending totalResults p tag element as a child to gallery //
@@ -418,6 +420,7 @@ showPagesButton.addEventListener('click', function(){
    app.searchBar.classList.add('displayNone');
    app.languageForm.classList.add('displayNone');
    app.ratingForm.classList.add('displayNone');
+
    showPagesButton.classList.add('displayNone');
    showSearchTitle.classList.add('displayNone');
 
@@ -443,10 +446,12 @@ searchByName.addEventListener('click', function(){
    pageNumberTwo.classList.add('displayNone');
    pageNumberThree.classList.add('displayNone');
    app.showCounter.classList.add('displayNone');
+   showPageTitle.classList.add('displayNone');
 
    // removing a class to html elements //
    app.searchBar.classList.remove('displayNone');
    showPagesButton.classList.remove('displayNone');
+   showSearchTitle.classList.remove('displayNone');
 });
 
 
@@ -534,6 +539,7 @@ app.displayAllShowPages = (allShows, userInput) => {
    // forEach method that appends the data to the DOM //
    allShows.forEach((show) => {
       // userInput is initially at a value of one, since we call the fetch before the page button click (which has the correct value), so if userInput is 1, then change it to 10 (the first selection value in the form) //
+      console.log(userInput)
       if (userInput == '1') {
          // if tvShowCounter is larger than 10, stop loop, else keep calling function //
          userInput = '10';
@@ -544,7 +550,25 @@ app.displayAllShowPages = (allShows, userInput) => {
          } else {
             app.appendAllShowsToDom(show);
          };
+      } else if (userInput == '2') {
+         userInput = '10';
+         // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
+         if (tvShowsCounter > userInput) {
+            // stop the loop //
+            return;
+         } else {
+            app.appendAllShowsToDom(show);
+         };
          // otherwise, if userInput is not = 1, then still check as usual.
+      } else if (userInput == '3'){
+         userInput = '10';
+         // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
+         if (tvShowsCounter > userInput) {
+            // stop the loop //
+            return;
+         } else {
+            app.appendAllShowsToDom(show);
+         };
       } else {
          if (tvShowsCounter > userInput) {
             // stop the loop //
@@ -633,10 +657,16 @@ app.init();
 
 // 2. OBSERVATIONS - for some reason when i console.log the tvShow.length, it shows more than the length, and i think it doubles every time its used. We need to stop that from happening. Theres a loop between app.addListeners & app.checkLanguage calling each other. But it shouldnt loop because the checkLanguage is only called in the eventListener. 
 
-// 3. COMPLETED - when you search multiple times after using the language rating, it puts empty string alert on check form, when theres a search on the submit. FIXED - took away the addListeners() in the checkLanguage(), 
+// 3. I just noticed that when you click a page number on the 2nd feature branch, it only appends 3 on the second and third page until you change the show form. the if statement to check if user click is 1 works, but if you use || then it breaks. 
+
+// 3. styling - making the correct page thats click to have a blue color on the font when its clicks, and adjusts when its clicked. 
+
+// 4. 2nd feature branch, should show/append the page # the user is currently on. (ex: when page 1 is clicked, the DOM should show that "You are currently on Page: 1")
+
+// 5. COMPLETED - when you search multiple times after using the language rating, it puts empty string alert on check form, when theres a search on the submit. FIXED - took away the addListeners() in the checkLanguage(), 
 
 
-// 4. COMPLETED - show all tv shows in pages branch, when you click the button, it initially only appends 3 shows first, then adjusts when you click the change how many shows correctly. 
+// 6. COMPLETED - show all tv shows in pages branch, when you click the button, it initially only appends 3 shows first, then adjusts when you click the change how many shows correctly. 
 // Reason : when you click show all pages button, there is no userInput value to use, and technically the input value is set to 1. so it will only append 2 shows.
 // SOLUTION: either decide to figure out a way to make the userInput value to 10, or create an additional html option set to 2 shows
 
