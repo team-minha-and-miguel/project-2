@@ -5,76 +5,101 @@
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="styles.css">
+   <link rel="stylesheet" href="./styles/styles.css">
+   <link>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:ital,wght@0,200;0,400;0,700;1,200;1,400;1,700&family=Press+Start+2P&display=swap"
+      rel="stylesheet">
+
    <title>TV Show APP</title>
 </head>
 
 <body>
    <header>
-      <h1>THE ULTIMATE WATCH LIST APP </h1>
-      <p>What will you watch next?</p>
-
-      <h2 class="searchShowByName">Search A Show:</h2>
-      <h2 class="searchShowByPages displayNone">Shows by Pages:</h2>
-      <button class="showAllPages" id="showAllPages">Show all shows by page</button>
-      <button class="searchByName displayNone" id="searchByName">Search By Show Name</button>
-
-      <button class="pageNumberOne displayNone" id="pageNumberOne" value="1">1</button>
-      <button class="pageNumberTwo displayNone" id="pageNumberTwo" value="2">2</button>
-      <button class="pageNumberThree displayNone" id="pageNumberThree" value="3">3</button>
-
-      <!-- search bar for user input  -->
-      <form action="#" id="searchBar">
-         <label for="showSearch">Search A Show: </label>
-         <input type="text" id="showSearch" class="userInput" placeholder="search anything">
-         <button type="submit" for="showSearch" id="showSearch">Submit</button>
-      </form>
-
-      <!-- rating form for user selection -->
-      <form action="#" id="ratingFilter" class="displayNone">
-         <label for="rating">Filter by Rating:</label>
-         <select name="rating" id="rating" autocomplete="off">
-            <option value="all" selected>All Results</option>
-            <option value="highest">High to Low</option>
-            <option value="lowest">Low To High</option>
-         </select>
-      </form>
-
-      <!-- language form for user selection -->
-      <form action="#" id="languageFilter" class="displayNone">
-         <label for="language">Choose your Language:</label>
-         <select name="language" id="language" autocomplete="off">
-            <option value="all" selected>All Results</option>
-            <option value="english">English only</option>
-            <option value="noEnglish">No English</option>
-         </select>
-      </form>
-
-      <!-- show all shows form for user selection -->
-      <form action="#" id="showFilter" class="displayNone">
-         <label for="showCounter">Amount of Shows Per Page:</label>
-         <select name="showCounter" id="showCounter" autocomplete="off" value="9">
-            <option value="9" selected>10</option>
-            <option value="24">25</option>
-            <option value="49">50</option>
-            <option value="99">100</option>
-            <option value="149">150</option>
-            <option value="245">All</option>
-         </select>
-      </form>
-
-      
-      <ul class="gallery">
-         <!-- api data goes here -->
-      </ul>
-
+      <div class="wrapper">
+         <h1 class="appTitle">THE ULTIMATE WATCH LIST </h1>
+      </div>
    </header>
+   
+   <nav>
+      <div class="wrapper">
+         <p class="motto">What will you watch next?</p>
+         <h2 class="searchShowByName">Search A Show:</h2>
+         <h2 class="searchShowByPages displayNone">Shows by Pages:</h2>
+         <button class="showAllPages" id="showAllPages">Show all shows by page</button>
+         <button class="searchByName displayNone" id="searchByName">Search By Show Name</button>
+      </div>
+   </nav>
+   
    <main>
-
+      <div class="wrapper">
+         <button class="pageNumberOne displayNone" id="pageNumberOne" value="1">1</button>
+         <button class="pageNumberTwo displayNone" id="pageNumberTwo" value="2">2</button>
+         <button class="pageNumberThree displayNone" id="pageNumberThree" value="3">3</button>
+         <button class="pageNumberFour displayNone" id="pageNumberFour" value="4">4</button>
+         <button class="pageNumberFive displayNone" id="pageNumberFive" value="5">5</button>
+         <button class="pageNumberSix displayNone" id="pageNumberSix" value="6">6</button>
+         <button class="pageNumberSeven displayNone" id="pageNumberSeven" value="7">7</button>
+         <button class="pageNumberEight displayNone" id="pageNumberEight" value="8">8</button>
+         <button class="pageNumberNine displayNone" id="pageNumberNine" value="9">9</button>
+         <button class="pageNumberTen displayNone" id="pageNumberTen" value="10">10</button>
+         
+         <!-- search bar for user input  -->
+         <form action="#" id="searchBar">
+            
+            <label for="showSearch">Search A Show: </label>
+            <input type="text" id="showSearch" class="userInput" placeholder="search anything">
+            <button type="submit" for="showSearch" id="showSearch">Submit</button>
+         </form>
+   
+   
+         
+         <!-- rating form for user selection -->
+         <form action="#" id="ratingFilter" class="displayNone">
+            <label for="rating">Filter by Rating:</label>
+            <select name="rating" id="rating" autocomplete="off">
+               <option value="all" selected>All Results</option>
+               <option value="highest">High to Low</option>
+               <option value="lowest">Low To High</option>
+            </select>
+         </form>
+         
+         <!-- language form for user selection -->
+         <form action="#" id="languageFilter" class="displayNone">
+            <label for="language">Choose your Language:</label>
+            <select name="language" id="language" autocomplete="off">
+               <option value="all" selected>All Results</option>
+               <option value="english">English only</option>
+               <option value="noEnglish">No English</option>
+            </select>
+         </form>
+         
+         <!-- show all shows form for user selection -->
+         <form action="#" id="showFilter" class="displayNone">
+            <label for="showCounter">Amount of Shows Per Page:</label>
+            <select name="showCounter" id="showCounter" autocomplete="off" value="9">
+               <option value="9" selected>10</option>
+               <option value="24">25</option>
+               <option value="49">50</option>
+               <option value="99">100</option>
+               <option value="149">150</option>
+               <option value="245">All</option>
+            </select>
+         </form>
+         
+         <div class="results"></div>
+         <div class="gallery flex">
+            <!-- api data goes here -->
+         </div>
+      </div>
    </main>
 
    <footer>
-
+      <p class="copyright">
+         <a href="https://junocollege.com/">Juno College @ 2023</a>
+      </p>
    </footer>
    <script src="script.js"></script>
 </body>
