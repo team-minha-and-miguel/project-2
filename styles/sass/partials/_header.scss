@@ -14,6 +14,11 @@ header {
 .showAllPages,
 .searchByName {
    margin-bottom: 1.5rem;
+   &:hover {
+      background-color: $quaternaryColor;
+      color: $quinaryColor;
+      transition: 1s all;
+   }
 }
 
 nav {

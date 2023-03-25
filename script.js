@@ -5,6 +5,9 @@ const app = {};
 const gallery = document.querySelector('.gallery');
 const results = document.querySelector('.results');
 
+gallery.innerHTML = `
+<p class="searchMessage">Waiting for a search ..</p>`;
+
 
 // url endpoints stored in a variable //
 app.apiUrl = 'https://api.tvmaze.com/search/shows';
@@ -15,9 +18,9 @@ app.apiUrlTwo = 'https://proxy.junocollege.com/https://api.tvmaze.com/shows';
 const url = new URL(app.apiUrl);
 const urlTwo = new URL(app.apiUrlTwo);
 
+// empty variables to use for data within local scoped functions
 app.englishArray = [];
 app.noEnglishArray = [];
-
 app.ratingValue = '';
 
 
@@ -231,10 +234,8 @@ app.checkLanguage = (jsonResult, userInput, form) => {
 
    // forEach method that loops through jsonResult data and pushes the correct object to the designated array //
    jsonResult.forEach((tvShowArray) => {
-      // counter = counter +1;
       // destructured variable for use //
       const { show } = tvShowArray;
-
       // if statement that separates objects by english and non-english shows //
       if (show.language !== 'English') {
          // pushing non-english shows to an initially empty array //
@@ -243,9 +244,6 @@ app.checkLanguage = (jsonResult, userInput, form) => {
          // pushing english shows to an initally empty array //
          app.englishArray.push(tvShowArray);
       };
-      //  else {
-         //    console.log(tvShowArray);
-         // };
    });
       
    // if statement that checks to see what language user has selected //
@@ -275,7 +273,6 @@ app.displayLanguageShows = (tvShows, form, jsonResult, userInput) => {
 
    // tv show counter variable //
    const tvResults = tvShows.length;
-   
    // clear the gallery //
    gallery.innerHTML = ``;
 
@@ -387,20 +384,20 @@ app.showUserResults = (tvShows, form) => {
 app.shuffle = (array) => {
    let currentIndex = array.length, randomIndex;
 
-   // While there remain elements to shuffle.
+   // While there remain elements to shuffle. //
    while (currentIndex != 0) {
 
-      // Pick a remaining element.
+      // Pick a remaining element //
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
 
-      // And swap it with the current element.
+      // And swap it with the current element. //
       [array[currentIndex], array[randomIndex]] = [
          array[randomIndex], array[currentIndex]];
-   }
+   };
 
    return array;
-}
+};
 
 
 
@@ -442,7 +439,7 @@ showPagesButton.addEventListener('click', function(){
    urlTwo.search = new URLSearchParams({
       page: input.value
    });
-   console.log(showPagesButton)
+   console.log(showPagesButton);
 
    // fetching all shows function, with passed arguments //
    app.fetchAllShows(urlTwo, input.value, urlTwo.search);
@@ -486,7 +483,9 @@ showPagesButton.addEventListener('click', function(){
 // ~ search by name button that appears when show all page button is clicked, when searchByName is clicked by user, clear gallery, and return app to original state ~ //
 searchByName.addEventListener('click', function(){
    // clear the gallery in the DOM //
-   gallery.innerHTML = ``;
+   gallery.innerHTML = `
+      <p class="searchMessage">Waiting for a search ..</p>
+   `;
 
    // adding a class to html elements //
    searchByName.classList.add('displayNone');
@@ -926,7 +925,6 @@ app.init = () => {
 
 
 
-
 // initial function call to start the app //
 app.init();
 
@@ -934,30 +932,16 @@ app.init();
 
 // ------- ** ISSUES: ** ------- // 
 
-// the tvshow form to append the amount of shows per pages, if statement needs to be fixed. when you select "25" shows, and then click a new page, it only appends 10 shows (as the if statement states userInput = '10'), you need to change that with the app.ratingValue and using that in the if statement to fix it.
+// 2nd feature branch, should show/append the page # the user is currently on. (ex: when page 1 is clicked, the DOM should show that "You are currently on Page: 1") ORRRR onClick eventListener that changes the css color on the page button clicked. 
 
-// 1. PARTIAL COMPLETED - Filter by rating, does not allow you to filter by language first, it doesnt take the language filtered array and filter through that too 
-// ^ what it does is, it takes the original appended 10 shows, and changes by rating
+// 1. PARTIAL COMPLETED - Filter by rating, does not allow you to filter by language first, it doesnt take the language filtered array and filter through that too : what it does is, it takes the original appended 10 shows, and changes by rating
 // Connect the two forms! what works: if user decides to click rating first, then language, it should filter both, by rating and by language
-
 
 // 2. when you freestyle and alternate/click all the buttons, eventually the app gets bogged down w/ so much data, that it slows the browser. it even requests you kill the app. Also happens on the fetch for the 2nd feature branch
 // example - it usually happens between the rating filter followed by the language filter. 
 
-// 2. OBSERVATIONS - for some reason when i console.log the tvShow.length, it shows more than the length, and i think it doubles every time its used. We need to stop that from happening. Theres a loop between app.addListeners & app.checkLanguage calling each other. But it shouldnt loop because the checkLanguage is only called in the eventListener. 
+// 3. PARTIAL COMPLETION -  styling - making the correct page thats click to have a blue color on the font when its clicks, and adjusts when its clicked. 
 
-// 3. I just noticed that when you click a page number on the 2nd feature branch, it only appends 3 on the second and third page until you change the show form. the if statement to check if user click is 1 works, but if you use || then it breaks. 
-
-// 3. styling - making the correct page thats click to have a blue color on the font when its clicks, and adjusts when its clicked. 
-
-// 4. 2nd feature branch, should show/append the page # the user is currently on. (ex: when page 1 is clicked, the DOM should show that "You are currently on Page: 1")
-
-// 5. COMPLETED - when you search multiple times after using the language rating, it puts empty string alert on check form, when theres a search on the submit. FIXED - took away the addListeners() in the checkLanguage(), 
-
-
-// 6. COMPLETED - show all tv shows in pages branch, when you click the button, it initially only appends 3 shows first, then adjusts when you click the change how many shows correctly. 
-// Reason : when you click show all pages button, there is no userInput value to use, and technically the input value is set to 1. so it will only append 2 shows.
-// SOLUTION: either decide to figure out a way to make the userInput value to 10, or create an additional html option set to 2 shows
 
 
 // -----------------------------------------------------
@@ -997,23 +981,19 @@ app.init();
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ---------------------- ** OLD GOALS ** ----------------------------//
 
+// ** PHASE FOUR STEPS ** //
+
+// COMPLETED - the tvshow form to append the amount of shows per pages, if statement needs to be fixed. when you select "25" shows, and then click a new page, it only appends 10 shows (as the if statement states userInput = '10'), you need to change that with the app.ratingValue and using that in the if statement to fix it.
+
+// 3. COMPLETED - I just noticed that when you click a page number on the 2nd feature branch, it only appends 3 on the second and third page until you change the show form. the if statement to check if user click is 1 works, but if you use || then it breaks. 
+
+// 5. COMPLETED - when you search multiple times after using the language rating, it puts empty string alert on check form, when theres a search on the submit. FIXED - took away the addListeners() in the checkLanguage(), 
+
+// 6. COMPLETED - show all tv shows in pages branch, when you click the button, it initially only appends 3 shows first, then adjusts when you click the change how many shows correctly. 
+
+// --------------------------------------------- //
 
 // *** PHASE THREE - NEXT STEPS ***
 

@@ -236,8 +236,8 @@ html {
 }
 
 .wrapper {
-  max-width: 1260px;
-  width: 90%;
+  max-width: 1400px;
+  width: 95%;
   margin: 0 auto;
 }
 
@@ -343,6 +343,13 @@ header .appTitle {
 .searchByName {
   margin-bottom: 1.5rem;
 }
+.showAllPages:hover,
+.searchByName:hover {
+  background-color: white;
+  color: black;
+  -webkit-transition: 1s all;
+  transition: 1s all;
+}
 
 nav {
   background-color: black;
@@ -358,7 +365,6 @@ nav .motto {
 
 main {
   background-color: black;
-  padding-top: 2rem;
   color: white;
 }
 main .pageNumberOne,
@@ -374,21 +380,49 @@ main .pageNumberTen {
   margin-bottom: 1rem;
   border-radius: 50%;
 }
+main .page:hover {
+  background-color: white;
+  color: black;
+  -webkit-transition: 0.7s all;
+  transition: 0.7s all;
+}
+main .userInput {
+  padding: 0.4rem 3rem 0.4rem 1rem;
+}
+main .showSearch:hover {
+  background-color: white;
+  color: black;
+  -webkit-transition: 1s all;
+  transition: 1s all;
+}
+main .ratingForm,
+main .languageForm {
+  padding-top: 0.5rem;
+}
 
 .results {
   font-weight: 400;
+  padding-top: 2rem;
+  text-transform: uppercase;
 }
 
 .gallery {
   margin-top: 2rem;
+  padding-bottom: 17rem;
+}
+.gallery .searchMessage {
+  text-align: center;
+  width: 100%;
+  font-size: 1.5rem;
+  text-transform: uppercase;
 }
 .gallery .showContainer {
   border-radius: 0.4rem;
   padding: 1rem 0.5rem;
-  border: 1px solid black;
+  border: 2px solid #C70404;
   text-align: center;
   margin: 0 auto 1rem auto;
-  width: 20%;
+  width: 19%;
   background-color: grey;
 }
 .gallery .showContainer:hover {
@@ -417,7 +451,9 @@ main .pageNumberTen {
   border: 1px solid black;
 }
 .gallery .showContainer .infoContainer {
-  width: 90%;
+  width: 95%;
+  margin: 0 auto;
+  text-align: left;
 }
 .gallery .showContainer .infoContainer .showInfo {
   font-weight: 700;
