@@ -138,7 +138,7 @@ app.checkRating = (jsonResult, userInput, form) => {
 
          // show user results found //
          app.showUserResults(jsonResult, form);
-         
+
          // forEach loop that goes through every object in array //
          jsonResult.forEach((tvShow) => {
             // function call to append data to DOM // 
@@ -230,7 +230,31 @@ app.checkRating = (jsonResult, userInput, form) => {
             app.appendToDom(tvShow);
          });
          console.log('no english lowest');
-      };
+      } else if (app.languageValue === 'english' && userInput === 'all'){
+         // shuffle the array //
+         app.shuffle(app.englishArray);
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(app.englishArray, form);
+         // forEach loop that goes through every object in array //
+         app.englishArray.forEach((tvShow) => {
+            // function call that appends data to DOM // 
+            app.appendToDom(tvShow);
+         });
+      } else if (app.languageValue === 'noEnglish' && userInput === 'all') {
+         // shuffle the array //
+         app.shuffle(app.noEnglishArray);
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(app.noEnglishArray, form);
+         // forEach loop that goes through every object in array //
+         app.noEnglishArray.forEach((tvShow) => {
+            // function call that appends data to DOM // 
+            app.appendToDom(tvShow);
+         });
+      }
    };
 };
 
