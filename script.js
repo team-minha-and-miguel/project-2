@@ -5,6 +5,7 @@ const app = {};
 const gallery = document.querySelector('.gallery');
 const results = document.querySelector('.results');
 
+// inserting a intro message to user prior to app use. 
 gallery.innerHTML = `
 <p class="searchMessage">Waiting for a search ..</p>`;
 
@@ -22,6 +23,7 @@ const urlTwo = new URL(app.apiUrlTwo);
 app.englishArray = [];
 app.noEnglishArray = [];
 app.ratingValue = '';
+app.languageValue = '';
 
 
 // ~ add listeners function that is called and waits for user change ~ //
@@ -42,9 +44,16 @@ app.addListeners = (jsonResult, form, array) => {
 
    // event listener that waits for user submission //
    document.querySelector('form').addEventListener('submit', function (e) {
+
+      // clearing out variables every time submit is clicked //
+      app.englishArray = [];
+      app.noEnglishArray = [];
+      app.ratingValue = '';
+      app.languageValue = '';
+
       // add 1 to the counter for loop break use.
       counter = counter + 1;
-      console.log(counter)
+
       // if counter reaches 1, stop the loop and possible alert in checkForm();
       if (counter > 1) {
          return;
@@ -62,7 +71,7 @@ app.addListeners = (jsonResult, form, array) => {
 
    // event listener that calls checkLanguage() on any user changes if theres data in the parameter //
    app.selectLanguage.addEventListener(`change`, function () {
-
+      // if there's an arguement in the parameters, call function //
       if(jsonResult){
          app.checkLanguage(jsonResult, this.value, form);
       };
@@ -71,10 +80,11 @@ app.addListeners = (jsonResult, form, array) => {
    // show how many shows in a page event listener // `
    app.selectCounter.addEventListener(`change`, function(){
 
-      // function call that fetches for data with new arguements
+      // function call that fetches for data with new arguements //
       app.fetchAllShows(urlTwo, this.value);
+
+      // storing userInput into empty variable //
       app.ratingValue = this.value;
-      console.log(app.ratingValue)
    });
    
    // event listener that calls checkRating() on any user change if theres data in the parameter //
@@ -84,58 +94,144 @@ app.addListeners = (jsonResult, form, array) => {
       if (jsonResult) {
          app.checkRating(jsonResult, this.value, form);
       };
+      // remove a class from html element //
       app.languageForm.classList.remove('displayNone');
    });
    
 };
 
 
+
+
 // ~ check rating changes the search depending on users choice of highest or lowest rated shows ~ //
 app.checkRating = (jsonResult, userInput, form) => {
-   // if statement that checks to see what user selected //
-   if (userInput === 'highest') {
-      // sort method that arranges array according to highest-lowest
-      jsonResult.sort((a, b) => {
-         return b.show.rating.average - a.show.rating.average;
-      });
-   } else if (userInput === 'lowest') {
-      // sort method that arranges array according to lowest-highest
-      jsonResult.sort((a, b) => {
-         return a.show.rating.average - b.show.rating.average;
-      });
-      // console.log(jsonResult)
-   } else if (userInput === 'all') {
-         // console.log('it worked', jsonResult)
-      app.shuffle(jsonResult);
+   // if statement that checks to see if language arrays are empty, if it is, then proceed to check rating with original API array
+   if (app.englishArray.length === 0 && app.noEnglishArray.length === 0 ) {
 
-      // return jsonResult;
-   }
-   console.log(jsonResult, userInput)
+      // if statement that checks to see what user selected //
+      if (userInput === 'highest') {
+         // sort array according to highest-lowest
+         jsonResult.sort((a, b) => {
+            return b.show.rating.average - a.show.rating.average;
+         });
 
-   // clearing gallery in the DOM //
-   gallery.innerHTML = ``;
+         // clear the gallery //
+         gallery.innerHTML = ``;
 
-   // ** CANNOT FIGURE OUT THE IF STATEMENT TO WORK. ** // 
+         // show user results found // 
+         app.showUserResults(jsonResult, form);
 
-   // if statement to see if we have an array, then use that info to the appendToDom() //
-   // if (array[0].show.language === 'English') {
-   //    console.log('yay')
-   //    app.showUserResults(array, form)
-   //    array.forEach((tvShow) => {
-   //       // console.log(`${tvShow.show.rating.average}`, array);
-   //       app.appendToDom(tvShow)
-   //    });
-   // } else {
+         // forEach loop that goes through every object in array 
+         jsonResult.forEach((tvShow) => {
+            // append function on every show object
+            app.appendToDom(tvShow);
+         });
 
-   // show user result with next function, using data as arguements.
-   app.showUserResults(jsonResult, form);
+      } else if (userInput === 'lowest') {
+         // sort method that arranges array according to lowest-highest
+         jsonResult.sort((a, b) => {
+            return a.show.rating.average - b.show.rating.average;
+         });
 
-   // forEach method which will loop through array and append each to next function
-   jsonResult.forEach((tvShow) => {
+         // clear the gallery //
+         gallery.innerHTML = ``;
 
-      app.appendToDom(tvShow);
-   });
-   // };
+         // show user results found //
+         app.showUserResults(jsonResult, form);
+         
+         // forEach loop that goes through every object in array //
+         jsonResult.forEach((tvShow) => {
+            // function call to append data to DOM // 
+            app.appendToDom(tvShow);
+         });
+
+      } else if (userInput === 'all') {
+         // shuffle the array //
+         app.shuffle(jsonResult);
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(jsonResult, form);
+         // forEach loop that goes through every object in array //
+         jsonResult.forEach((tvShow) => {
+            // function call that appends data to DOM // 
+            app.appendToDom(tvShow);
+         });
+      };
+   // other wise, if theres objects in the array, then use the data in these arrays instead of original array
+   } else if (app.englishArray.length !== 0 || app.noEnglishArray.length !== 0) {
+      // if user clicked english and highest rated shows 
+      if (app.languageValue === 'english' && userInput === 'highest') {
+         console.log('english highest');
+         // sort the array //
+         app.englishArray.sort((a, b) => {
+            return b.show.rating.average - a.show.rating.average;
+         });
+
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(app.englishArray, form);
+         // forEach loop that goes through every object //
+         app.englishArray.forEach((tvShow) => {
+            // function call to append data to DOM // 
+            app.appendToDom(tvShow);
+         });
+         console.log(app.englishArray);
+      // if user clicked non english and highest rated shows 
+      } else if(app.languageValue === 'noEnglish' && userInput === 'highest') {
+         // sort the array //
+         app.noEnglishArray.sort((a, b) => {
+            return b.show.rating.average - a.show.rating.average;
+         });
+
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(app.noEnglishArray, form);
+         // forEach loop that goes through every object //
+         app.noEnglishArray.forEach((tvShow) => {
+            // function call to append data to DOM // 
+            app.appendToDom(tvShow);
+         });
+         console.log('no english highest');
+      // if user clicked english and lowest rated shows //
+      } else if(app.languageValue === 'english' && userInput === 'lowest') {
+         // sort the array //
+         app.englishArray.sort((a, b) => {
+            return a.show.rating.average - b.show.rating.average;
+         });
+
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(app.englishArray, form);
+         // forEach loop that goes through every object //
+         app.englishArray.forEach((tvShow) => {
+            // function call to append data to DOM
+            app.appendToDom(tvShow);
+         });
+         console.log('english lowest');
+      // if user clicked non english shows and lowest rated shows //
+      } else if (app.languageValue === 'noEnglish' && userInput === 'lowest') {
+         // sort the array //
+         app.noEnglishArray.sort((a, b) => {
+            return a.show.rating.average - b.show.rating.average;
+         });
+
+         // clear the gallery //
+         gallery.innerHTML = ``;
+
+         // show user results found //
+         app.showUserResults(app.noEnglishArray, form);
+         // forEach loop that goes through every object //
+         app.noEnglishArray.forEach((tvShow) => {
+            // function call to append data to DOM //
+            app.appendToDom(tvShow);
+         });
+         console.log('no english lowest');
+      };
+   };
 };
 
 
@@ -227,10 +323,13 @@ app.fetch = (url, form) => {
 // ~ function that checks to see which the language is selected by the user and creates an array, to push to the next function ~ //
 app.checkLanguage = (jsonResult, userInput, form) => {
    // counter = 0;
+   app.languageValue = '';
 
    // setting an empty array for use below //
    app.englishArray = [];
    app.noEnglishArray = [];
+
+
 
    // forEach method that loops through jsonResult data and pushes the correct object to the designated array //
    jsonResult.forEach((tvShowArray) => {
@@ -244,8 +343,11 @@ app.checkLanguage = (jsonResult, userInput, form) => {
          // pushing english shows to an initally empty array //
          app.englishArray.push(tvShowArray);
       };
+      console.log()
    });
-      
+   
+   app.languageValue = userInput;
+   console.log(userInput)
    // if statement that checks to see what language user has selected //
    if (userInput === 'noEnglish') {
       // calls function with array of non english shows passed as an arguement //
@@ -930,12 +1032,11 @@ app.init();
 
 
 
-// ------- ** ISSUES: ** ------- // 
+// ------- ** ISSUES / FIXES ** ------- // 
 
-// 2nd feature branch, should show/append the page # the user is currently on. (ex: when page 1 is clicked, the DOM should show that "You are currently on Page: 1") ORRRR onClick eventListener that changes the css color on the page button clicked. 
+// 1. 2nd feature branch, should show/append the page # the user is currently on. (ex: when page 1 is clicked, the DOM should show that "You are currently on Page: 1") ORRRR onClick eventListener that changes the css color on the page button clicked. 
 
-// 1. PARTIAL COMPLETED - Filter by rating, does not allow you to filter by language first, it doesnt take the language filtered array and filter through that too : what it does is, it takes the original appended 10 shows, and changes by rating
-// Connect the two forms! what works: if user decides to click rating first, then language, it should filter both, by rating and by language
+// maybe create an empty page array that has all the page # values and append it to the dom using for each loop, and somehow use a user click to check which button was clicked, and append data according to which page number is clicked. SOME HOW
 
 // 2. when you freestyle and alternate/click all the buttons, eventually the app gets bogged down w/ so much data, that it slows the browser. it even requests you kill the app. Also happens on the fetch for the 2nd feature branch
 // example - it usually happens between the rating filter followed by the language filter. 
@@ -984,6 +1085,9 @@ app.init();
 // ---------------------- ** OLD GOALS ** ----------------------------//
 
 // ** PHASE FOUR STEPS ** //
+
+// 1. COMPLETED - Filter by rating, does not allow you to filter by language first, it doesnt take the language filtered array and filter through that too : what it does is, it takes the original appended 10 shows, and changes by rating
+// Connect the two forms! what works: if user decides to click rating first, then language, it should filter both, by rating and by language
 
 // COMPLETED - the tvshow form to append the amount of shows per pages, if statement needs to be fixed. when you select "25" shows, and then click a new page, it only appends 10 shows (as the if statement states userInput = '10'), you need to change that with the app.ratingValue and using that in the if statement to fix it.
 
