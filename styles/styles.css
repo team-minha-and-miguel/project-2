@@ -380,6 +380,9 @@ main .pageNumberTen {
   margin-bottom: 1rem;
   border-radius: 50%;
 }
+main .page {
+  margin: 0 0.2rem 1rem 0.2rem;
+}
 main .page:hover {
   background-color: white;
   color: black;
