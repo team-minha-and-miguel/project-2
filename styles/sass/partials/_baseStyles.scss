@@ -1,0 +1,99 @@
+// ~ wrapper to contain items ~ //
+.wrapper {
+   max-width: 1400px;
+   width: 95%;
+   margin: 0 auto;
+}
+
+// ~ flex items ~ //
+.flex {
+   display: flex;
+   // justify-content: space-between;
+   flex-wrap: wrap;
+}
+
+.displayNone {
+   display: none;
+}
+
+* {
+   padding: 0;
+   margin: 0;
+}
+
+// ~ header styles & sizes ~ //
+h1,
+h2 {
+   text-transform: uppercase;
+}
+
+h1 {
+   font-size: 2.5rem;
+   line-height: 4.3rem;
+   font-weight: 700;
+}
+
+h2 {
+   font-size: 2.1rem;
+   line-height: 2.4rem;
+}
+
+
+html {
+   font-family: $bodyFont;
+   // font-size:125%;
+   background-color: $primaryColor;
+};
+
+// main {
+//    background: $primaryColor;
+// }
+
+.appTitle {
+   font-family: $headingFont;
+}
+
+button {
+   font-size: 1rem;
+   line-height: 1.2rem;
+   transition: 0.3s;
+   text-transform: uppercase;
+   padding: .5rem 1rem;
+   border-radius: .2rem;
+   border: none;
+   background-color: $primaryColor;
+   color: $quaternaryColor;
+}
+
+form {
+   button,
+   select {
+      font-size: 1rem;
+      line-height: 1.2rem;
+      transition: 0.3s;
+      text-transform: uppercase;
+      padding: .5rem 1rem;
+      border-radius: .2rem;
+      border: none;
+      background-color: $primaryColor;
+      color: $quaternaryColor;
+   }
+}
+
+a {
+   text-decoration: none;
+   color: inherit;
+   cursor: pointer;
+}
+
+p {
+   font-size: 1rem;
+   line-height: 1.6rem;
+   font-weight: 400;
+}
+
+ul,
+li {
+   text-decoration: none;
+   list-style: none;
+}

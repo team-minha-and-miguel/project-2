@@ -3,6 +3,11 @@ const app = {};
 
 // globally scoped variable that stores and connects to a html element //
 const gallery = document.querySelector('.gallery');
+const results = document.querySelector('.results');
+
+// inserting a intro message to user prior to app use. 
+gallery.innerHTML = `
+<p class="searchMessage">Waiting for a search ..</p>`;
 
 
 // url endpoints stored in a variable //
@@ -14,8 +19,11 @@ app.apiUrlTwo = 'https://proxy.junocollege.com/https://api.tvmaze.com/shows';
 const url = new URL(app.apiUrl);
 const urlTwo = new URL(app.apiUrlTwo);
 
-
-
+// empty variables to use for data within local scoped functions
+app.englishArray = [];
+app.noEnglishArray = [];
+app.ratingValue = '';
+app.languageValue = '';
 
 
 // ~ add listeners function that is called and waits for user change ~ //
@@ -36,9 +44,16 @@ app.addListeners = (jsonResult, form, array) => {
 
    // event listener that waits for user submission //
    document.querySelector('form').addEventListener('submit', function (e) {
+
+      // clearing out variables every time submit is clicked //
+      app.englishArray = [];
+      app.noEnglishArray = [];
+      app.ratingValue = '';
+      app.languageValue = '';
+
       // add 1 to the counter for loop break use.
       counter = counter + 1;
-      console.log(counter)
+
       // if counter reaches 1, stop the loop and possible alert in checkForm();
       if (counter > 1) {
          return;
@@ -56,7 +71,7 @@ app.addListeners = (jsonResult, form, array) => {
 
    // event listener that calls checkLanguage() on any user changes if theres data in the parameter //
    app.selectLanguage.addEventListener(`change`, function () {
-
+      // if there's an arguement in the parameters, call function //
       if(jsonResult){
          app.checkLanguage(jsonResult, this.value, form);
       };
@@ -65,8 +80,11 @@ app.addListeners = (jsonResult, form, array) => {
    // show how many shows in a page event listener // `
    app.selectCounter.addEventListener(`change`, function(){
 
-      // function call that fetches for data with new arguements
-      app.fetchAllShows(urlTwo, this.value, urlTwo.search);
+      // function call that fetches for data with new arguements //
+      app.fetchAllShows(urlTwo, this.value);
+
+      // storing userInput into empty variable //
+      app.ratingValue = this.value;
    });
    
    // event listener that calls checkRating() on any user change if theres data in the parameter //
@@ -76,55 +94,168 @@ app.addListeners = (jsonResult, form, array) => {
       if (jsonResult) {
          app.checkRating(jsonResult, this.value, form);
       };
+      // remove a class from html element //
+      app.languageForm.classList.remove('displayNone');
    });
    
 };
 
 
+
+
 // ~ check rating changes the search depending on users choice of highest or lowest rated shows ~ //
 app.checkRating = (jsonResult, userInput, form) => {
-   if (jsonResult.length > 200) {
-      console.log(`yay`)
-   }
-   // if statement that checks to see what user selected //
-   if (userInput === 'highest') {
-      // sort method that arranges array according to highest-lowest
-      jsonResult.sort((a, b) => {
-         return b.show.rating.average - a.show.rating.average;
-      });
-   } else if (userInput === 'lowest') {
-      // sort method that arranges array according to lowest-highest
-      jsonResult.sort((a, b) => {
-         return a.show.rating.average - b.show.rating.average;
-      });
-   } else if (userInput === 'all') {
-      return jsonResult;
-   }
+   // if statement that checks to see if language arrays are empty, if it is, then proceed to check rating with original API array
+   if (app.englishArray.length === 0 && app.noEnglishArray.length === 0 ) {
 
-   // clearing gallery in the DOM //
-   gallery.innerHTML = ``;
+      // if statement that checks to see what user selected //
+      if (userInput === 'highest') {
+         // sort array according to highest-lowest
+         jsonResult.sort((a, b) => {
+            return b.show.rating.average - a.show.rating.average;
+         });
 
-   // ** CANNOT FIGURE OUT THE IF STATEMENT TO WORK. ** // 
+         // clear the gallery //
+         gallery.innerHTML = ``;
 
-   // if statement to see if we have an array, then use that info to the appendToDom() //
-   // if (array[0].show.language === 'English') {
-   //    console.log('yay')
-   //    app.showUserResults(array, form)
-   //    array.forEach((tvShow) => {
-   //       // console.log(`${tvShow.show.rating.average}`, array);
-   //       app.appendToDom(tvShow)
-   //    });
-   // } else {
+         // show user results found // 
+         app.showUserResults(jsonResult, form);
 
-   // show user result with next function, using data as arguements.
-   app.showUserResults(jsonResult, form);
+         // forEach loop that goes through every object in array 
+         jsonResult.forEach((tvShow) => {
+            // append function on every show object
+            app.appendToDom(tvShow);
+         });
 
-   // forEach method which will loop through array and append each to next function
-   jsonResult.forEach((tvShow) => {
+      } else if (userInput === 'lowest') {
+         // sort method that arranges array according to lowest-highest
+         jsonResult.sort((a, b) => {
+            return a.show.rating.average - b.show.rating.average;
+         });
 
-      app.appendToDom(tvShow);
-   });
-   // };
+         // clear the gallery //
+         gallery.innerHTML = ``;
+
+         // show user results found //
+         app.showUserResults(jsonResult, form);
+
+         // forEach loop that goes through every object in array //
+         jsonResult.forEach((tvShow) => {
+            // function call to append data to DOM // 
+            app.appendToDom(tvShow);
+         });
+
+      } else if (userInput === 'all') {
+         // shuffle the array //
+         app.shuffle(jsonResult);
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(jsonResult, form);
+         // forEach loop that goes through every object in array //
+         jsonResult.forEach((tvShow) => {
+            // function call that appends data to DOM // 
+            app.appendToDom(tvShow);
+         });
+      };
+   // other wise, if theres objects in the array, then use the data in these arrays instead of original array
+   } else if (app.englishArray.length !== 0 || app.noEnglishArray.length !== 0) {
+      // if user clicked english and highest rated shows 
+      if (app.languageValue === 'english' && userInput === 'highest') {
+         console.log('english highest');
+         // sort the array //
+         app.englishArray.sort((a, b) => {
+            return b.show.rating.average - a.show.rating.average;
+         });
+
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(app.englishArray, form);
+         // forEach loop that goes through every object //
+         app.englishArray.forEach((tvShow) => {
+            // function call to append data to DOM // 
+            app.appendToDom(tvShow);
+         });
+         console.log(app.englishArray);
+      // if user clicked non english and highest rated shows 
+      } else if(app.languageValue === 'noEnglish' && userInput === 'highest') {
+         // sort the array //
+         app.noEnglishArray.sort((a, b) => {
+            return b.show.rating.average - a.show.rating.average;
+         });
+
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(app.noEnglishArray, form);
+         // forEach loop that goes through every object //
+         app.noEnglishArray.forEach((tvShow) => {
+            // function call to append data to DOM // 
+            app.appendToDom(tvShow);
+         });
+         console.log('no english highest');
+      // if user clicked english and lowest rated shows //
+      } else if(app.languageValue === 'english' && userInput === 'lowest') {
+         // sort the array //
+         app.englishArray.sort((a, b) => {
+            return a.show.rating.average - b.show.rating.average;
+         });
+
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(app.englishArray, form);
+         // forEach loop that goes through every object //
+         app.englishArray.forEach((tvShow) => {
+            // function call to append data to DOM
+            app.appendToDom(tvShow);
+         });
+         console.log('english lowest');
+      // if user clicked non english shows and lowest rated shows //
+      } else if (app.languageValue === 'noEnglish' && userInput === 'lowest') {
+         // sort the array //
+         app.noEnglishArray.sort((a, b) => {
+            return a.show.rating.average - b.show.rating.average;
+         });
+
+         // clear the gallery //
+         gallery.innerHTML = ``;
+
+         // show user results found //
+         app.showUserResults(app.noEnglishArray, form);
+         // forEach loop that goes through every object //
+         app.noEnglishArray.forEach((tvShow) => {
+            // function call to append data to DOM //
+            app.appendToDom(tvShow);
+         });
+         console.log('no english lowest');
+      } else if (app.languageValue === 'english' && userInput === 'all'){
+         // shuffle the array //
+         app.shuffle(app.englishArray);
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(app.englishArray, form);
+         // forEach loop that goes through every object in array //
+         app.englishArray.forEach((tvShow) => {
+            // function call that appends data to DOM // 
+            app.appendToDom(tvShow);
+         });
+      } else if (app.languageValue === 'noEnglish' && userInput === 'all') {
+         // shuffle the array //
+         app.shuffle(app.noEnglishArray);
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(app.noEnglishArray, form);
+         // forEach loop that goes through every object in array //
+         app.noEnglishArray.forEach((tvShow) => {
+            // function call that appends data to DOM // 
+            app.appendToDom(tvShow);
+         });
+      }
+   };
 };
 
 
@@ -170,7 +301,7 @@ app.checkUserForm = (form, url) => {
       app.fetch(url, form);
 
       // creating a class list that removes displayNone from form elements to make it appear to DOM //
-      app.languageForm.classList.remove('displayNone');
+      // app.languageForm.classList.remove('displayNone');
       app.ratingForm.classList.remove('displayNone');
    };
 };
@@ -216,38 +347,39 @@ app.fetch = (url, form) => {
 // ~ function that checks to see which the language is selected by the user and creates an array, to push to the next function ~ //
 app.checkLanguage = (jsonResult, userInput, form) => {
    // counter = 0;
+   app.languageValue = '';
 
    // setting an empty array for use below //
-   const englishArray = [];
-   const noEnglishArray = [];
+   app.englishArray = [];
+   app.noEnglishArray = [];
+
+
 
    // forEach method that loops through jsonResult data and pushes the correct object to the designated array //
    jsonResult.forEach((tvShowArray) => {
-      // counter = counter +1;
       // destructured variable for use //
       const { show } = tvShowArray;
-
       // if statement that separates objects by english and non-english shows //
       if (show.language !== 'English') {
          // pushing non-english shows to an initially empty array //
-         noEnglishArray.push(tvShowArray);
+         app.noEnglishArray.push(tvShowArray);
       } else if (show.language === 'English') {
          // pushing english shows to an initally empty array //
-         englishArray.push(tvShowArray);
+         app.englishArray.push(tvShowArray);
       };
-      //  else {
-         //    console.log(tvShowArray);
-         // };
+      console.log()
    });
-      
+   
+   app.languageValue = userInput;
+   console.log(userInput)
    // if statement that checks to see what language user has selected //
    if (userInput === 'noEnglish') {
       // calls function with array of non english shows passed as an arguement //
-      app.displayLanguageShows(noEnglishArray, form, jsonResult, userInput);
+      app.displayLanguageShows(app.noEnglishArray, form, jsonResult, userInput);
       // app.addListeners(jsonResult, form, noEnglishArray)
    } else if (userInput === 'english') {
       // calls function with array of english shows passed as an arguement //
-      app.displayLanguageShows(englishArray, form, jsonResult, userInput);
+      app.displayLanguageShows(app.englishArray, form, jsonResult, userInput);
       // app.addListeners(jsonResult, form, englishArray);
    } else {
    // if user does not select english or noEnglish, then call the original displayTvShows function //
@@ -267,7 +399,6 @@ app.displayLanguageShows = (tvShows, form, jsonResult, userInput) => {
 
    // tv show counter variable //
    const tvResults = tvShows.length;
-   
    // clear the gallery //
    gallery.innerHTML = ``;
 
@@ -315,6 +446,7 @@ app.appendToDom = (tvShow) => {
 
    // create li element stored in a variable //
    const newListItem = document.createElement('li');
+   newListItem.classList.add('showContainer');
 
    // image path variable for use in new element creation, includes conditions for null image //
    const imagePath = image ? image.original : 'https://placekitten.com/200/300';
@@ -330,14 +462,18 @@ app.appendToDom = (tvShow) => {
 
    // adding content into the li variable //
    newListItem.innerHTML = `
-      <h2>${name}</h2>
+      <h2 class="tvTitle">${name}</h2>
       <div class="imgContainer"><img src="${imagePath}" alt="${altPath}" /></div>
-      <p>Summary:${summary}</p>
-      <p>Rating: ${rating.average}</p>
-      <p>Language: ${language}</p>
-      <p>Genres: ${genres}</p>
-      <p>Episode Length: ${averageRuntime} mins</p>
-      <p>Show Current Status: ${status} </p>
+      <div class="infoContainer">
+         <div class="summaryContainer displayNone">
+         <p><span class="showInfo">Summary:</span> ${summary}</p>
+         </div>
+         <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
+         <p><span class="showInfo">Language:</span>  ${language}</p>
+         <p><span class="showInfo">Genres:</span>  ${genres}</p>
+         <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
+         <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
+      </div>
       `;
 
    // append each entry to the gallery //
@@ -350,7 +486,7 @@ app.appendToDom = (tvShow) => {
 
 // ~ function that shows user search total results ~ //
 app.showUserResults = (tvShows, form) => {
-
+   results.innerHTML = ``;
    // storing the users input into a variable while capitalizing the first letter //
    const userSearch = form[0].toUpperCase() + form.substring(1);
 
@@ -359,6 +495,7 @@ app.showUserResults = (tvShows, form) => {
 
    // creating a variable and storing a new p element tag in it //
    const totalResults = document.createElement('p');
+   totalResults.classList.add('totalResults')
 
    // appending html into variable with p tag //
    totalResults.innerHTML = `
@@ -366,11 +503,27 @@ app.showUserResults = (tvShows, form) => {
    `;
 
    // appending totalResults p tag element as a child to gallery //
-   gallery.appendChild(totalResults);
+   results.appendChild(totalResults);
 };
 
 
+app.shuffle = (array) => {
+   let currentIndex = array.length, randomIndex;
 
+   // While there remain elements to shuffle. //
+   while (currentIndex != 0) {
+
+      // Pick a remaining element //
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element. //
+      [array[currentIndex], array[randomIndex]] = [
+         array[randomIndex], array[currentIndex]];
+   };
+
+   return array;
+};
 
 
 
@@ -392,6 +545,13 @@ const showPagesButton = document.querySelector('.showAllPages');
 const pageNumberOne = document.querySelector('.pageNumberOne');
 const pageNumberTwo = document.querySelector('.pageNumberTwo');
 const pageNumberThree = document.querySelector('.pageNumberThree');
+const pageNumberFour = document.querySelector('.pageNumberFour');
+const pageNumberFive = document.querySelector('.pageNumberFive');
+const pageNumberSix = document.querySelector('.pageNumberSix');
+const pageNumberSeven = document.querySelector('.pageNumberSeven');
+const pageNumberEight = document.querySelector('.pageNumberEight');
+const pageNumberNine = document.querySelector('.pageNumberNine');
+const pageNumberTen = document.querySelector('.pageNumberTen');
 
 
 
@@ -405,7 +565,7 @@ showPagesButton.addEventListener('click', function(){
    urlTwo.search = new URLSearchParams({
       page: input.value
    });
-   console.log(showPagesButton)
+   console.log(showPagesButton);
 
    // fetching all shows function, with passed arguments //
    app.fetchAllShows(urlTwo, input.value, urlTwo.search);
@@ -420,17 +580,28 @@ showPagesButton.addEventListener('click', function(){
    app.searchBar.classList.add('displayNone');
    app.languageForm.classList.add('displayNone');
    app.ratingForm.classList.add('displayNone');
-
+   results.classList.add('displayNone');
    showPagesButton.classList.add('displayNone');
    showSearchTitle.classList.add('displayNone');
-
+   
    // removing a class to html elements //
+   results.classList.remove('displayNone');
    searchByName.classList.remove('displayNone');
    pageNumberOne.classList.remove('displayNone');
    pageNumberTwo.classList.remove('displayNone');
    pageNumberThree.classList.remove('displayNone');
+   pageNumberFour.classList.remove('displayNone');
+   pageNumberFive.classList.remove('displayNone');
+   pageNumberSix.classList.remove('displayNone');
+   pageNumberSeven.classList.remove('displayNone');
+   pageNumberEight.classList.remove('displayNone');
+   pageNumberNine.classList.remove('displayNone');
+   pageNumberTen.classList.remove('displayNone');
    showPageTitle.classList.remove('displayNone');
    app.showCounter.classList.remove('displayNone');
+
+   results.innerHTML = ``;
+   
 });
 
 
@@ -438,13 +609,22 @@ showPagesButton.addEventListener('click', function(){
 // ~ search by name button that appears when show all page button is clicked, when searchByName is clicked by user, clear gallery, and return app to original state ~ //
 searchByName.addEventListener('click', function(){
    // clear the gallery in the DOM //
-   gallery.innerHTML = ``;
+   gallery.innerHTML = `
+      <p class="searchMessage">Waiting for a search ..</p>
+   `;
 
    // adding a class to html elements //
    searchByName.classList.add('displayNone');
    pageNumberOne.classList.add('displayNone');
    pageNumberTwo.classList.add('displayNone');
    pageNumberThree.classList.add('displayNone');
+   pageNumberFour.classList.add('displayNone')
+   pageNumberFive.classList.add('displayNone')
+   pageNumberSix.classList.add('displayNone')
+   pageNumberSeven.classList.add('displayNone')
+   pageNumberEight.classList.add('displayNone')
+   pageNumberNine.classList.add('displayNone')
+   pageNumberTen.classList.add('displayNone')
    app.showCounter.classList.add('displayNone');
    showPageTitle.classList.add('displayNone');
 
@@ -458,7 +638,6 @@ searchByName.addEventListener('click', function(){
 
 // ~ 1st page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ //
 pageNumberOne.addEventListener('click', function(){
-
    // storing html button element in variable 
    const input = document.querySelector('#pageNumberOne');
 
@@ -474,7 +653,6 @@ pageNumberOne.addEventListener('click', function(){
 
 // ~ 2nd page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ //
 pageNumberTwo.addEventListener('click', function(){
-
    // storing html button element in variable //
    const input = document.querySelector('#pageNumberTwo');
 
@@ -490,7 +668,6 @@ pageNumberTwo.addEventListener('click', function(){
 
 // ~ 3rd page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
 pageNumberThree.addEventListener('click', function(){
-
    // storing html button element in variable  //
    const input = document.querySelector('#pageNumberThree');
 
@@ -502,8 +679,109 @@ pageNumberThree.addEventListener('click', function(){
    // function call //
    app.fetchAllShows(urlTwo, input.value);
 });
-// ** CAN CONTINUE ADDING PAGES USING THIS DATA ABOVE ^ ** //
-// ** JUST NEED TO ADD BUTTONS IN HTML ** // 
+
+
+// ~ 4th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberFour.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberFour');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+
+// ~ 5th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberFive.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberFive');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+
+// ~ 6th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberSix.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberSix');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 7th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberSeven.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberSeven');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 8th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberEight.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberEight');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 9th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberNine.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberNine');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 10th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberTen.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberTen');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+
 
 
 
@@ -532,17 +810,16 @@ app.fetchAllShows = (urlTwo, form) => {
 app.displayAllShowPages = (allShows, userInput) => {
    // clear gallery in the DOM //
    gallery.innerHTML = ``;
-
+   console.log(app.ratingValue)
    // creating a changable variable with a value of 0 //
    let tvShowsCounter = 0;
 
    // forEach method that appends the data to the DOM //
    allShows.forEach((show) => {
-      // userInput is initially at a value of one, since we call the fetch before the page button click (which has the correct value), so if userInput is 1, then change it to 10 (the first selection value in the form) //
-      console.log(userInput)
-      if (userInput == '1') {
+      // userInput is initially at a value of one, since we call the fetch before the page button click (which has the correct value), so if userInput is 1 & app.ratingValue is empty, then change it to 10 (the first selection value in the form) //
+      if (userInput == '1' && app.ratingValue == '') {
          // if tvShowCounter is larger than 10, stop loop, else keep calling function //
-         userInput = '10';
+         userInput = '9';
          // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
          if (tvShowsCounter > userInput) {
             // stop the loop //
@@ -550,8 +827,16 @@ app.displayAllShowPages = (allShows, userInput) => {
          } else {
             app.appendAllShowsToDom(show);
          };
-      } else if (userInput == '2') {
-         userInput = '10';
+         // if userInput is 1 but app.ratingValue isnt empty
+      } else if (userInput == '1' && app.ratingValue !== '') {
+         // then compare tvShowsCounter to the app.ratingValue instead of userInput
+         if (tvShowsCounter > app.ratingValue) {
+            return;
+         } else {
+            app.appendAllShowsToDom(show)
+         };
+      } else if (userInput == '2' && app.ratingValue == '') {
+         userInput = '9';
          // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
          if (tvShowsCounter > userInput) {
             // stop the loop //
@@ -560,8 +845,14 @@ app.displayAllShowPages = (allShows, userInput) => {
             app.appendAllShowsToDom(show);
          };
          // otherwise, if userInput is not = 1, then still check as usual.
-      } else if (userInput == '3'){
-         userInput = '10';
+      } else if (userInput == '2' && app.ratingValue !== '') {
+         if (tvShowsCounter > app.ratingValue) {
+            return;
+         } else {
+            app.appendAllShowsToDom(show)
+         }
+      } else if (userInput == '3' && app.ratingValue == ''){
+         userInput = '9';
          // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
          if (tvShowsCounter > userInput) {
             // stop the loop //
@@ -569,6 +860,117 @@ app.displayAllShowPages = (allShows, userInput) => {
          } else {
             app.appendAllShowsToDom(show);
          };
+      } else if (userInput == '3' && app.ratingValue !== '') {
+         if (tvShowsCounter > app.ratingValue) {
+            return;
+         } else {
+            app.appendAllShowsToDom(show)
+         }
+      } else if (userInput == '4' && app.ratingValue == '') {
+         userInput = '9';
+         // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
+         if (tvShowsCounter > userInput) {
+            // stop the loop //
+            return;
+         } else {
+            app.appendAllShowsToDom(show);
+         };
+      } else if (userInput == '4' && app.ratingValue !== '') {
+         if (tvShowsCounter > app.ratingValue) {
+            return;
+         } else {
+            app.appendAllShowsToDom(show)
+         }
+      } else if (userInput == '5' && app.ratingValue == '') {
+         userInput = '9';
+         // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
+         if (tvShowsCounter > userInput) {
+            // stop the loop //
+            return;
+         } else {
+            app.appendAllShowsToDom(show);
+         };
+      } else if (userInput == '5' && app.ratingValue !== '') {
+         if (tvShowsCounter > app.ratingValue) {
+            return;
+         } else {
+            app.appendAllShowsToDom(show)
+         }
+      } else if (userInput == '6' && app.ratingValue == '') {
+         userInput = '9';
+         // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
+         if (tvShowsCounter > userInput) {
+            // stop the loop //
+            return;
+         } else {
+            app.appendAllShowsToDom(show);
+         };
+      } else if (userInput == '6' && app.ratingValue !== '') {
+         if (tvShowsCounter > app.ratingValue) {
+            return;
+         } else {
+            app.appendAllShowsToDom(show)
+         }
+      } else if (userInput == '7' && app.ratingValue == '') {
+         userInput = '9';
+         // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
+         if (tvShowsCounter > userInput) {
+            // stop the loop //
+            return;
+         } else {
+            app.appendAllShowsToDom(show);
+         };
+      } else if (userInput == '7' && app.ratingValue !== '') {
+         if (tvShowsCounter > app.ratingValue) {
+            return;
+         } else {
+            app.appendAllShowsToDom(show)
+         }
+      } else if (userInput == '8' && app.ratingValue == '') {
+         userInput = '9';
+         // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
+         if (tvShowsCounter > userInput) {
+            // stop the loop //
+            return;
+         } else {
+            app.appendAllShowsToDom(show);
+         };
+      } else if (userInput == '8' && app.ratingValue !== '') {
+         if (tvShowsCounter > app.ratingValue) {
+            return;
+         } else {
+            app.appendAllShowsToDom(show)
+         }
+      } else if (userInput == '9' && app.ratingValue == '') {
+         userInput = '9';
+         // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
+         if (tvShowsCounter > userInput) {
+            // stop the loop //
+            return;
+         } else {
+            app.appendAllShowsToDom(show);
+         };
+      } else if (userInput == '9' && app.ratingValue !== '') {
+         if (tvShowsCounter > app.ratingValue) {
+            return;
+         } else {
+            app.appendAllShowsToDom(show)
+         }
+      } else if (userInput == '10' && app.ratingValue == '') {
+         userInput = '9';
+         // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
+         if (tvShowsCounter > userInput) {
+            // stop the loop //
+            return;
+         } else {
+            app.appendAllShowsToDom(show);
+         };
+      } else if (userInput == '10' && app.ratingValue !== '') {
+         if (tvShowsCounter > app.ratingValue) {
+            return;
+         } else {
+            app.appendAllShowsToDom(show)
+         }
       } else {
          if (tvShowsCounter > userInput) {
             // stop the loop //
@@ -576,16 +978,19 @@ app.displayAllShowPages = (allShows, userInput) => {
          } else {
             app.appendAllShowsToDom(show);
          };
-      }
+      };
+
+      // shuffle allShows Array every time function is called to give variety. 
+      app.shuffle(allShows);
       
       // stops the forEach method from continuing to append data after userChoice
       if (tvShowsCounter === userInput) {
          return;
-      }
+      };
       
       // add + 1 to the tvShowCounter // 
       tvShowsCounter = tvShowsCounter + 1;
-      console.log(userInput)
+      // console.log(userInput)
    });
 };
 
@@ -596,6 +1001,7 @@ app.appendAllShowsToDom = (show) => {
 
    // creating an html element, storing it in a variable //
    const newListItem = document.createElement('li');
+   newListItem.classList.add('showContainer');
 
    // destructured objects // 
    const { image, rating, summary, name, language, status, averageRuntime, genres } = show;
@@ -612,16 +1018,22 @@ app.appendAllShowsToDom = (show) => {
       altPath = `placeholder image`;
    };
 
+   // console.log(show)
+
    // adding content to the li element // 
    newListItem.innerHTML = `
-      <h2>${name}</h2>
+      <h2 class="tvTitle">${name}</h2>
       <div class="imgContainer"><img src="${imagePath}" alt="${altPath}" /></div>
-      <p>Summary:${summary}</p>
-      <p>Rating: ${rating.average}</p>
-      <p>Language: ${language}</p>
-      <p>Genres: ${genres}</p>
-      <p>Episode Length: ${averageRuntime} mins</p>
-      <p>Show Current Status: ${status} </p>
+      <div class="infoContainer">
+         <div class="summaryContainer displayNone">
+         <p><span class="showInfo">Summary:</span> ${summary}</p>
+         </div>
+         <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
+         <p><span class="showInfo">Language:</span>  ${language}</p>
+         <p><span class="showInfo">Genres:</span>  ${genres}</p>
+         <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
+         <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
+      </div>
       `;
 
    // append li element to the gallery in the DOM // 
@@ -639,36 +1051,22 @@ app.init = () => {
 
 
 
-
 // initial function call to start the app //
 app.init();
 
 
 
-// ------- ** ISSUES: ** ------- // 
+// ------- ** ISSUES / FIXES ** ------- // 
 
-// 1. Filter by rating, does not allow you to filter by language first, it doesnt take the language filtered array and filter through that too 
-// ^ what it does is, it takes the original appended 10 shows, and changes by rating
-// Connect the two forms! what works: if user decides to click rating first, then language, it should filter both, by rating and by language
+// 1. 2nd feature branch, should show/append the page # the user is currently on. (ex: when page 1 is clicked, the DOM should show that "You are currently on Page: 1") ORRRR onClick eventListener that changes the css color on the page button clicked. 
 
+// maybe create an empty page array that has all the page # values and append it to the dom using for each loop, and somehow use a user click to check which button was clicked, and append data according to which page number is clicked. SOME HOW
 
 // 2. when you freestyle and alternate/click all the buttons, eventually the app gets bogged down w/ so much data, that it slows the browser. it even requests you kill the app. Also happens on the fetch for the 2nd feature branch
 // example - it usually happens between the rating filter followed by the language filter. 
 
-// 2. OBSERVATIONS - for some reason when i console.log the tvShow.length, it shows more than the length, and i think it doubles every time its used. We need to stop that from happening. Theres a loop between app.addListeners & app.checkLanguage calling each other. But it shouldnt loop because the checkLanguage is only called in the eventListener. 
+// 3. PARTIAL COMPLETION -  styling - making the correct page thats click to have a blue color on the font when its clicks, and adjusts when its clicked. 
 
-// 3. I just noticed that when you click a page number on the 2nd feature branch, it only appends 3 on the second and third page until you change the show form. the if statement to check if user click is 1 works, but if you use || then it breaks. 
-
-// 3. styling - making the correct page thats click to have a blue color on the font when its clicks, and adjusts when its clicked. 
-
-// 4. 2nd feature branch, should show/append the page # the user is currently on. (ex: when page 1 is clicked, the DOM should show that "You are currently on Page: 1")
-
-// 5. COMPLETED - when you search multiple times after using the language rating, it puts empty string alert on check form, when theres a search on the submit. FIXED - took away the addListeners() in the checkLanguage(), 
-
-
-// 6. COMPLETED - show all tv shows in pages branch, when you click the button, it initially only appends 3 shows first, then adjusts when you click the change how many shows correctly. 
-// Reason : when you click show all pages button, there is no userInput value to use, and technically the input value is set to 1. so it will only append 2 shows.
-// SOLUTION: either decide to figure out a way to make the userInput value to 10, or create an additional html option set to 2 shows
 
 
 // -----------------------------------------------------
@@ -708,23 +1106,22 @@ app.init();
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ---------------------- ** OLD GOALS ** ----------------------------//
 
+// ** PHASE FOUR STEPS ** //
+
+// 1. COMPLETED - Filter by rating, does not allow you to filter by language first, it doesnt take the language filtered array and filter through that too : what it does is, it takes the original appended 10 shows, and changes by rating
+// Connect the two forms! what works: if user decides to click rating first, then language, it should filter both, by rating and by language
+
+// COMPLETED - the tvshow form to append the amount of shows per pages, if statement needs to be fixed. when you select "25" shows, and then click a new page, it only appends 10 shows (as the if statement states userInput = '10'), you need to change that with the app.ratingValue and using that in the if statement to fix it.
+
+// 3. COMPLETED - I just noticed that when you click a page number on the 2nd feature branch, it only appends 3 on the second and third page until you change the show form. the if statement to check if user click is 1 works, but if you use || then it breaks. 
+
+// 5. COMPLETED - when you search multiple times after using the language rating, it puts empty string alert on check form, when theres a search on the submit. FIXED - took away the addListeners() in the checkLanguage(), 
+
+// 6. COMPLETED - show all tv shows in pages branch, when you click the button, it initially only appends 3 shows first, then adjusts when you click the change how many shows correctly. 
+
+// --------------------------------------------- //
 
 // *** PHASE THREE - NEXT STEPS ***
 
