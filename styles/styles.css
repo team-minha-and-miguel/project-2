@@ -463,6 +463,24 @@ main .languageForm {
   color: black;
 }
 
+.pages {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+.pages .listedButtons {
+  text-decoration: none;
+}
+
+.selected {
+  background-color: white;
+  color: #C70404;
+}
+
 footer {
   background-color: grey;
 }

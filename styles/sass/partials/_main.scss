@@ -95,3 +95,17 @@ main {
       }
    }
 }
+
+.pages {
+
+   display: flex;
+   flex-direction: row;
+   .listedButtons {
+      text-decoration: none;
+   };
+}
+
+.selected {
+   background-color: $quaternaryColor;
+   color: $primaryColor;
+}
