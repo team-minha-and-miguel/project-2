@@ -411,13 +411,14 @@ main .languageForm {
 
 .gallery {
   margin-top: 2rem;
-  padding-bottom: 17rem;
+  padding-bottom: 16.5rem;
 }
 .gallery .searchMessage {
   text-align: center;
   width: 100%;
   font-size: 1.5rem;
   text-transform: uppercase;
+  font-weight: 400;
 }
 .gallery .showContainer {
   border-radius: 0.4rem;
@@ -433,6 +434,27 @@ main .languageForm {
           transform: scale(1.05);
   -webkit-transition: 1s all;
   transition: 1s all;
+}
+.gallery .showContainer:hover .imgContainer p {
+  display: block;
+}
+.gallery .showContainer .exitButtonContainer {
+  display: none;
+  width: 100%;
+  -webkit-box-align: right;
+      -ms-flex-align: right;
+          align-items: right;
+  text-align: right;
+}
+.gallery .showContainer .exitButtonContainer .exitButton {
+  color: white;
+  margin: 0 auto;
+  padding: 0.2rem 0.6rem;
+  z-index: 1;
+  cursor: pointer;
+}
+.gallery .showContainer .exitButtonContainer .exitDisplay {
+  display: block;
 }
 .gallery .showContainer .tvTitle {
   font-size: 1.1rem;
@@ -452,6 +474,12 @@ main .languageForm {
   -o-object-fit: cover;
      object-fit: cover;
   border: 1px solid black;
+}
+.gallery .showContainer .imgContainer p {
+  display: none;
+}
+.gallery .showContainer .imgContainer p b {
+  color: black;
 }
 .gallery .showContainer .infoContainer {
   width: 95%;

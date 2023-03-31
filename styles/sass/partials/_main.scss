@@ -47,12 +47,13 @@ main {
 
 .gallery {
    margin-top: 2rem;
-   padding-bottom: 17rem;
+   padding-bottom: 16.5rem;
    .searchMessage {
       text-align: center;
       width: 100%;
       font-size: 1.5rem;
       text-transform: uppercase;
+      font-weight: 400;
    }
    .showContainer {
       border-radius: .4rem;
@@ -65,6 +66,25 @@ main {
       &:hover {
          transform: scale(1.05);
          transition: 1s all;
+      }
+      &:hover .imgContainer p {
+         display: block;
+      }
+      .exitButtonContainer {
+         display: none;
+         width: 100%;
+         align-items: right;
+         text-align: right;
+         .exitButton {
+            color: $quaternaryColor;
+            margin: 0 auto;
+            padding: .2rem .6rem;
+            z-index: 1;
+            cursor: pointer;
+         }
+         .exitDisplay {
+            display: block;
+         }
       }
       .tvTitle {
          font-size: 1.1rem;
@@ -83,6 +103,12 @@ main {
             object-fit: cover;
             border: 1px solid black;
          }
+         p {
+            display: none;
+            b {
+               color: $quinaryColor;
+            }
+         }
       }
       .infoContainer {
          width: 95%;
@@ -93,11 +119,12 @@ main {
             color: $quinaryColor;
          }
       }
+      // .summaryContainer {
+      // }
    }
 }
 
 .pages {
-
    display: flex;
    flex-direction: row;
    .listedButtons {
