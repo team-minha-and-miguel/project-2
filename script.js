@@ -6,14 +6,11 @@ const gallery = document.querySelector('.gallery');
 const results = document.querySelector('.results');
 
 // inserting a intro message to user prior to app use. 
-gallery.innerHTML = `
-<p class="searchMessage">Waiting for a search ..</p>`;
-
+gallery.innerHTML = ` <p class="searchMessage">Waiting for a search ..</p> `;
 
 // url endpoints stored in a variable //
 app.apiUrl = 'https://api.tvmaze.com/search/shows';
 app.apiUrlTwo = 'https://proxy.junocollege.com/https://api.tvmaze.com/shows';
-
 
 // storing url in a new URL to manipulate data within //
 const url = new URL(app.apiUrl);
@@ -25,10 +22,9 @@ app.noEnglishArray = [];
 app.ratingValue = '';
 app.languageValue = '';
 
-
 // ~ add listeners function that is called and waits for user change ~ //
-app.addListeners = (jsonResult, form, array) => {
-   // counter variable 
+app.addListeners = (jsonResult, form) => {
+   // counter variable //
    let counter = 0;
    // connecting class in html to variable //
    app.languageForm = document.querySelector('#languageFilter');
@@ -44,7 +40,10 @@ app.addListeners = (jsonResult, form, array) => {
 
    // event listener that waits for user submission //
    document.querySelector('form').addEventListener('submit', function (e) {
-
+      
+      // prevents app from refreshing on submit //
+      e.preventDefault();
+      
       // clearing out variables every time submit is clicked //
       app.englishArray = [];
       app.noEnglishArray = [];
@@ -57,9 +56,7 @@ app.addListeners = (jsonResult, form, array) => {
       // if counter reaches 1, stop the loop and possible alert in checkForm();
       if (counter > 1) {
          return;
-      }
-      // prevents app from refreshing on submit //
-      e.preventDefault();
+      };
 
       // on submit that always changes the form selection to its original "all results" selection //
       app.selectLanguage.value = `all`;
@@ -69,6 +66,7 @@ app.addListeners = (jsonResult, form, array) => {
       app.getTvShows();
    });
 
+
    // event listener that calls checkLanguage() on any user changes if theres data in the parameter //
    app.selectLanguage.addEventListener(`change`, function () {
       // if there's an arguement in the parameters, call function //
@@ -76,10 +74,10 @@ app.addListeners = (jsonResult, form, array) => {
          app.checkLanguage(jsonResult, this.value, form);
       };
    });
-   
-   // show how many shows in a page event listener // `
-   app.selectCounter.addEventListener(`change`, function(){
 
+
+   // show how many shows in a page event listener // 
+   app.selectCounter.addEventListener(`change`, function(){
       // function call that fetches for data with new arguements //
       app.fetchAllShows(urlTwo, this.value);
 
@@ -89,7 +87,6 @@ app.addListeners = (jsonResult, form, array) => {
    
    // event listener that calls checkRating() on any user change if theres data in the parameter //
    app.selectRating.addEventListener(`change`, function(){
-
       // if data is available, call checkRating() //
       if (jsonResult) {
          app.checkRating(jsonResult, this.value, form);
@@ -97,7 +94,6 @@ app.addListeners = (jsonResult, form, array) => {
       // remove a class from html element //
       app.languageForm.classList.remove('displayNone');
    });
-   
 };
 
 
@@ -110,44 +106,41 @@ app.checkRating = (jsonResult, userInput, form) => {
 
       // if statement that checks to see what user selected //
       if (userInput === 'highest') {
-         // sort array according to highest-lowest
+         // sort array according to highest-lowest //
          jsonResult.sort((a, b) => {
             return b.show.rating.average - a.show.rating.average;
          });
 
          // clear the gallery //
          gallery.innerHTML = ``;
-
          // show user results found // 
          app.showUserResults(jsonResult, form);
-
-         // forEach loop that goes through every object in array 
+         // forEach loop that goes through every object in array //
          jsonResult.forEach((tvShow) => {
             // append function on every show object
-            app.appendToDom(tvShow);
+            app.appendToDom(tvShow, jsonResult);
          });
 
       } else if (userInput === 'lowest') {
-         // sort method that arranges array according to lowest-highest
+         // sort method that arranges array according to lowest-highest //
          jsonResult.sort((a, b) => {
             return a.show.rating.average - b.show.rating.average;
          });
 
          // clear the gallery //
          gallery.innerHTML = ``;
-
          // show user results found //
          app.showUserResults(jsonResult, form);
-
          // forEach loop that goes through every object in array //
          jsonResult.forEach((tvShow) => {
             // function call to append data to DOM // 
-            app.appendToDom(tvShow);
+            app.appendToDom(tvShow, jsonResult);
          });
 
       } else if (userInput === 'all') {
          // shuffle the array //
          app.shuffle(jsonResult);
+
          // clear the gallery //
          gallery.innerHTML = ``;
          // show user results found // 
@@ -155,9 +148,10 @@ app.checkRating = (jsonResult, userInput, form) => {
          // forEach loop that goes through every object in array //
          jsonResult.forEach((tvShow) => {
             // function call that appends data to DOM // 
-            app.appendToDom(tvShow);
+            app.appendToDom(tvShow, jsonResult);
          });
       };
+
    // other wise, if theres objects in the array, then use the data in these arrays instead of original array
    } else if (app.englishArray.length !== 0 || app.noEnglishArray.length !== 0) {
       // if user clicked english and highest rated shows 
@@ -175,10 +169,9 @@ app.checkRating = (jsonResult, userInput, form) => {
          // forEach loop that goes through every object //
          app.englishArray.forEach((tvShow) => {
             // function call to append data to DOM // 
-            app.appendToDom(tvShow);
+            app.appendToDom(tvShow, jsonResult);
          });
-         console.log(app.englishArray);
-      // if user clicked non english and highest rated shows 
+      // if user clicked non english and highest rated shows //
       } else if(app.languageValue === 'noEnglish' && userInput === 'highest') {
          // sort the array //
          app.noEnglishArray.sort((a, b) => {
@@ -192,7 +185,7 @@ app.checkRating = (jsonResult, userInput, form) => {
          // forEach loop that goes through every object //
          app.noEnglishArray.forEach((tvShow) => {
             // function call to append data to DOM // 
-            app.appendToDom(tvShow);
+            app.appendToDom(tvShow, jsonResult);
          });
          console.log('no english highest');
       // if user clicked english and lowest rated shows //
@@ -209,7 +202,7 @@ app.checkRating = (jsonResult, userInput, form) => {
          // forEach loop that goes through every object //
          app.englishArray.forEach((tvShow) => {
             // function call to append data to DOM
-            app.appendToDom(tvShow);
+            app.appendToDom(tvShow, jsonResult);
          });
          console.log('english lowest');
       // if user clicked non english shows and lowest rated shows //
@@ -221,18 +214,19 @@ app.checkRating = (jsonResult, userInput, form) => {
 
          // clear the gallery //
          gallery.innerHTML = ``;
-
          // show user results found //
          app.showUserResults(app.noEnglishArray, form);
          // forEach loop that goes through every object //
+
          app.noEnglishArray.forEach((tvShow) => {
             // function call to append data to DOM //
-            app.appendToDom(tvShow);
+            app.appendToDom(tvShow, jsonResult);
          });
          console.log('no english lowest');
       } else if (app.languageValue === 'english' && userInput === 'all'){
          // shuffle the array //
          app.shuffle(app.englishArray);
+
          // clear the gallery //
          gallery.innerHTML = ``;
          // show user results found // 
@@ -240,21 +234,67 @@ app.checkRating = (jsonResult, userInput, form) => {
          // forEach loop that goes through every object in array //
          app.englishArray.forEach((tvShow) => {
             // function call that appends data to DOM // 
-            app.appendToDom(tvShow);
+            app.appendToDom(tvShow, jsonResult);
          });
+         console.log('english all')
       } else if (app.languageValue === 'noEnglish' && userInput === 'all') {
          // shuffle the array //
          app.shuffle(app.noEnglishArray);
          // clear the gallery //
+
          gallery.innerHTML = ``;
          // show user results found // 
          app.showUserResults(app.noEnglishArray, form);
          // forEach loop that goes through every object in array //
          app.noEnglishArray.forEach((tvShow) => {
             // function call that appends data to DOM // 
-            app.appendToDom(tvShow);
+            app.appendToDom(tvShow, jsonResult);
          });
-      }
+         console.log('no english all')
+      } else if (app.languageValue === 'all' && userInput === 'all') {
+         // shuffle the array //
+         app.shuffle(jsonResult);
+
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(jsonResult, form);
+         // forEach loop that goes through every object in array //
+         jsonResult.forEach((tvShow) => {
+            // function call that appends data to DOM // 
+            app.appendToDom(tvShow, jsonResult);
+         });
+      } else if (app.languageValue === 'all' && userInput === 'highest') {
+         // sort array according to highest-lowest //
+         jsonResult.sort((a, b) => {
+            return b.show.rating.average - a.show.rating.average;
+         });
+
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found // 
+         app.showUserResults(jsonResult, form);
+         // forEach loop that goes through every object in array //
+         jsonResult.forEach((tvShow) => {
+            // append function on every show object
+            app.appendToDom(tvShow, jsonResult);
+         });
+      } else if (app.languageValue === 'all' && userInput === 'lowest') {
+         // sort method that arranges array according to lowest-highest //
+         jsonResult.sort((a, b) => {
+            return a.show.rating.average - b.show.rating.average;
+         });
+
+         // clear the gallery //
+         gallery.innerHTML = ``;
+         // show user results found //
+         app.showUserResults(jsonResult, form);
+         // forEach loop that goes through every object in array //
+         jsonResult.forEach((tvShow) => {
+            // function call to append data to DOM // 
+            app.appendToDom(tvShow, jsonResult);
+         });
+      };
    };
 };
 
@@ -270,7 +310,6 @@ app.getTvShows = () => {
    url.search = new URLSearchParams({
       q: input.value
    });
-   console.log(input.value)
 
    // call check form to determine if user search matches what is needed for correct search //
    app.checkUserForm(input.value, url);
@@ -284,8 +323,6 @@ app.getTvShows = () => {
 
 // ~ check form function that checks for any special characters or no entry in the form ~ //
 app.checkUserForm = (form, url) => {
-   // counter = counter + 1;
-   // console.log(form, counter)
    // variable that contains regex for all special characters // 
    const spec = /^[\w ]+$/;
 
@@ -301,7 +338,7 @@ app.checkUserForm = (form, url) => {
       app.fetch(url, form);
 
       // creating a class list that removes displayNone from form elements to make it appear to DOM //
-      // app.languageForm.classList.remove('displayNone');
+      app.languageForm.classList.remove('displayNone');
       app.ratingForm.classList.remove('displayNone');
    };
 };
@@ -312,7 +349,6 @@ app.checkUserForm = (form, url) => {
 
 // ~ fetching information from the API ~ //
 app.fetch = (url, form) => {
-
    fetch(url)
       .then(response => {
          // if statement that checks to see if theres an error, or returns json version //
@@ -328,6 +364,7 @@ app.fetch = (url, form) => {
          app.addListeners(jsonResult, form);
          // calls displayTvShows using the jsonResult data //
          app.displayTvShows(jsonResult, form);
+         console.log(jsonResult[0].show.id);
       })
       // catch function that alerts user depending on the type of error //
       .catch((error) => {
@@ -346,14 +383,11 @@ app.fetch = (url, form) => {
 
 // ~ function that checks to see which the language is selected by the user and creates an array, to push to the next function ~ //
 app.checkLanguage = (jsonResult, userInput, form) => {
-   // counter = 0;
    app.languageValue = '';
 
    // setting an empty array for use below //
    app.englishArray = [];
    app.noEnglishArray = [];
-
-
 
    // forEach method that loops through jsonResult data and pushes the correct object to the designated array //
    jsonResult.forEach((tvShowArray) => {
@@ -367,106 +401,169 @@ app.checkLanguage = (jsonResult, userInput, form) => {
          // pushing english shows to an initally empty array //
          app.englishArray.push(tvShowArray);
       };
-      console.log()
    });
    
+   // storing userInput into the languageValue variable // 
    app.languageValue = userInput;
-   console.log(userInput)
    // if statement that checks to see what language user has selected //
    if (userInput === 'noEnglish') {
       // calls function with array of non english shows passed as an arguement //
-      app.displayLanguageShows(app.noEnglishArray, form, jsonResult, userInput);
+      app.displayTvShows(app.noEnglishArray, form, userInput);
       // app.addListeners(jsonResult, form, noEnglishArray)
    } else if (userInput === 'english') {
       // calls function with array of english shows passed as an arguement //
-      app.displayLanguageShows(app.englishArray, form, jsonResult, userInput);
+      app.displayTvShows(app.englishArray, form, userInput);
       // app.addListeners(jsonResult, form, englishArray);
-   } else {
+   } else if (userInput === 'all') {
    // if user does not select english or noEnglish, then call the original displayTvShows function //
-   app.displayTvShows(jsonResult, form);
-   };
-   
-};
-
-
-
-
-
-
-
-// ~ displays the tv shows according to the language chosen by the user ~ //
-app.displayLanguageShows = (tvShows, form, jsonResult, userInput) => {
-
-   // tv show counter variable //
-   const tvResults = tvShows.length;
-   // clear the gallery //
-   gallery.innerHTML = ``;
-
-   // showing total results appended to the DOM for user view //
-   app.showUserResults(tvShows, form);
-
-   // for loop to append each show to the DOM //
-   for (let i = 0; i < tvResults; i++) {
-      app.appendToDom(tvShows[i]);
-      console.log(tvShows[i], tvShows.length);
+   console.log('heyyyyyyyyy')
+   app.displayTvShows(jsonResult, form, userInput);
    };
 };
+
 
 
 
 
 
 // ~ function that displays shows to the DOM ~ //
-app.displayTvShows = (tvShowArray, form) => {
-
+app.displayTvShows = (tvShows, form, userInput) => {
    // clear gallery before displaying new search results //
    gallery.innerHTML = ``;
 
-   // showing total tv show results, appended to the DOM //
-   app.showUserResults(tvShowArray, form);
-   
-   // forEach method that loops through every object in tvShowArray //
-   tvShowArray.forEach(tvShow => {
-      // function that called and passes every tvShow object as an arguement //
-      app.appendToDom(tvShow);
-   });
+   if(userInput ===  `english` || `noEnglish`) {
+      // storing the length of array in variable // 
+      const tvResults = tvShows.length;
+      // showing total results appended to the DOM for user view //
+      app.showUserResults(tvShows, form);
+
+      // for loop to append each show to the DOM //
+      for (let i = 0; i < tvResults; i++) {
+         app.appendToDom(tvShows[i], tvShows);
+      };
+   } else {
+      // showing total tv show results, appended to the DOM //
+      app.showUserResults(tvShows, form);
+      
+      // forEach method that loops through every object in tvShowArray //
+      tvShows.forEach(tvShow => {
+         // function that called and passes every tvShow object as an arguement //
+         app.appendToDom(tvShow, tvShows);
+      });
+   };
 };
 
 
 
-
+// empty variables to use below // 
+app.domCounter = 0;
+app.innerHTML = [];
 
 
 // ~ appends the data to the dom every time the loop runs in the previous function ~ //
-app.appendToDom = (tvShow) => {
-
-   // destructured objects from tvShow array //
-   const { show } = tvShow;
-   const { image, name, summary, rating, genres, averageRuntime, status, language } = show;
+app.appendToDom = (tvShow, jsonResult) => {
 
    // create li element stored in a variable //
    const newListItem = document.createElement('li');
+   // adding class to html element //
    newListItem.classList.add('showContainer');
+   // adding a counter to the value of each showContainer to give specificity to each show //
+   newListItem.value = app.domCounter;
+   // adding class to each show to determine which one was clicked //
+   newListItem.className = `showContainer tvShow${app.domCounter}`;
+   
+   
+    console.log(app.domCounter, newListItem.className);
 
-   // image path variable for use in new element creation, includes conditions for null image //
-   const imagePath = image ? image.original : 'https://placekitten.com/200/300';
+   // if there is no data in the tvShow.show // 
+   if (tvShow.show === undefined) {
+      // destructured objects // 
+      const { image, name, summary, rating, genres, averageRuntime, status, language } = tvShow;
+      // image path variable for use in new element creation, includes conditions for null image //
+      const imagePath = image ? image.original : 'https://placekitten.com/200/300';
 
-   // alt text path variable for use in new element creation, includes conditions for placeholder image //
-   let altPath;
-   // if statement that checks to see and adds placeholder if the object image is null //
-   if (image != null) {
-      altPath = `Poster for ${name}`;
+      // alt text path variable for use in new element creation, includes conditions for placeholder image //
+      let altPath;
+      // if statement that checks to see and adds placeholder if the object image is null //
+      if (image != null) {
+         altPath = `Poster for ${name}`;
+      } else {
+         altPath = 'placeholder image';
+      };
+
+      // adding content into the li variable //
+      newListItem.innerHTML = `
+         <h2 class="tvTitle">${name}</h2>
+         <div class="imgContainer">
+         <img src="${imagePath}" alt="${altPath}" id="img"/>
+         ${summary}
+         </div>
+         <div class="infoContainer">
+            <div class="summaryContainer displayNone">
+               <p><span class="showInfo">Summary:</span> ${summary}</p>
+            </div>
+            <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
+            <p><span class="showInfo">Language:</span>  ${language}</p>
+            <p><span class="showInfo">Genres:</span>  ${genres}</p>
+            <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
+            <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
+         </div> `;
+
+      // show container event listener that appends new data on click // 
+      newListItem.addEventListener('click', function(){
+         // variable to use in attempt to have an onclick to append summary
+         const clickedShow = document.querySelector(`.tvShow${newListItem.value}`)
+         // adding content into the li variable //
+         clickedShow.innerHTML = `
+         <div class="exitButtonContainer" id="exit">
+            <button class="exitButton">X</button>
+         </div>
+         <h2 class="tvTitle">${name}</h2>
+         <div class="imgContainer">
+            <p class=""summaryContainer>${summary}</p>
+         </div>
+         <div class="infoContainer">
+            <div class="summaryContainer displayNone">
+            <p><span class="showInfo">Summary:</span> ${summary}</p>
+            </div>
+            <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
+            <p><span class="showInfo">Language:</span>  ${language}</p>
+            <p><span class="showInfo">Genres:</span>  ${genres}</p>
+            <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
+            <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
+         </div>
+         `
+
+      });
    } else {
-      altPath = 'placeholder image';
-   };
-
-   // adding content into the li variable //
-   newListItem.innerHTML = `
+      // destructured objects from tvShow array //
+      const { show } = tvShow;
+      const { image, name, summary, rating, genres, averageRuntime, status, language } = show; 
+      // image path variable for use in new element creation, includes conditions for null image //
+      const imagePath = image ? image.original : 'https://placekitten.com/200/300';
+   
+      // alt text path variable for use in new element creation, includes conditions for placeholder image //
+      let altPath;
+      // if statement that checks to see and adds placeholder if the object image is null //
+      if (image != null) {
+         altPath = `Poster for ${name}`;
+      } else {
+         altPath = 'placeholder image';
+      };
+      
+      // adding content into the li variable //
+      newListItem.innerHTML = `
+      <div class="exitButtonContainer" id="exit">
+         <button class="exitButton">X</button>
+      </div>
       <h2 class="tvTitle">${name}</h2>
-      <div class="imgContainer"><img src="${imagePath}" alt="${altPath}" /></div>
+      <div class="imgContainer">
+      <img src="${imagePath}" alt="${altPath}" id="img"/>
+      ${summary}
+      </div>
       <div class="infoContainer">
          <div class="summaryContainer displayNone">
-         <p><span class="showInfo">Summary:</span> ${summary}</p>
+            <p><span class="showInfo">Summary:</span> ${summary}</p>
          </div>
          <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
          <p><span class="showInfo">Language:</span>  ${language}</p>
@@ -474,10 +571,57 @@ app.appendToDom = (tvShow) => {
          <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
          <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
       </div>
-      `;
+         `;
+
+      // show container event listener that appends data on click // 
+      newListItem.addEventListener('click', function () {
+         // variable to use in attempt to have an onclick to append summary
+         const clickedShow = document.querySelector(`.tvShow${newListItem.value}`)
+         exitButtonContainer.style.display = 'block';
+         // adding content into the li variable //
+         // clickedShow.innerHTML = `
+         // <div class="exitButtonContainer" id="exit">
+         //    <button class="exitButton">X</button>
+         // </div>
+         // <h2 class="tvTitle">${name}</h2>
+         // <div class="imgContainer">
+         //    <p class=""summaryContainer>${summary}</p>
+         // </div>
+         // <div class="infoContainer">
+         //    <div class="summaryContainer displayNone">
+         //    <p><span class="showInfo">Summary:</span> ${summary}</p>
+         //    </div>
+         //    <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
+         //    <p><span class="showInfo">Language:</span>  ${language}</p>
+         //    <p><span class="showInfo">Genres:</span>  ${genres}</p>
+         //    <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
+         //    <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
+         // </div>
+         // `
+         // exit button variable that stored html element
+         const exitButton = document.querySelector('.exitButtonContainer');
+         const exit = document.getElementById('exit');
+         // exit button event listener that should return show container to original state on click // 
+         exitButton.addEventListener('click', function (event) {
+            // this.parentNode.removeChild(this);
+            exitButton.style.display = `none`;
+            console.log(exit.style.display)
+          // this doesnt work!!!!! //
+            // gallery.innerHTML = `WHY IS IT NOT WORKING`;
+            // to show that the button works on click // 
+            console.log(newListItem, 'clicked X', exit);
+         });
+      });
+   };
 
    // append each entry to the gallery //
    gallery.appendChild(newListItem);
+
+   app.array = document.querySelectorAll('li');
+   console.log(app.array)
+   
+   // adding +1 to the counter variable every time it loops //
+   app.domCounter++;
 };
 
 
@@ -486,6 +630,7 @@ app.appendToDom = (tvShow) => {
 
 // ~ function that shows user search total results ~ //
 app.showUserResults = (tvShows, form) => {
+   // clearing innerHTML in results element //
    results.innerHTML = ``;
    // storing the users input into a variable while capitalizing the first letter //
    const userSearch = form[0].toUpperCase() + form.substring(1);
@@ -495,18 +640,25 @@ app.showUserResults = (tvShows, form) => {
 
    // creating a variable and storing a new p element tag in it //
    const totalResults = document.createElement('p');
-   totalResults.classList.add('totalResults')
+   totalResults.classList.add('totalResults');
 
    // appending html into variable with p tag //
    totalResults.innerHTML = `
       Total Results for "<span class="bold">${userSearch}</span>" Found: ${tvResults}
    `;
 
+   if(tvResults == 0) {
+      console.log('nothing');
+      app.noSearchFound();
+   };
+
    // appending totalResults p tag element as a child to gallery //
    results.appendChild(totalResults);
 };
 
 
+
+// function that shuffles array and returns new value when called //
 app.shuffle = (array) => {
    let currentIndex = array.length, randomIndex;
 
@@ -526,6 +678,12 @@ app.shuffle = (array) => {
 };
 
 
+// function that is called when 0 results are found //
+app.noSearchFound = () => {
+   gallery.innerHTML = ` <h3 class="searchMessage"> OOPS.. SORRY, NOTHING FOUND. TRY AGAIN :( </h3> `;
+}
+
+
 
 
 // ------ SHOW ALL TV SHOWS BY PAGES FEATURE BRANCH ------ // 
@@ -536,43 +694,30 @@ app.shuffle = (array) => {
 // ~ globally scoped variables that connect to html elements ~ // 
 
 // search by name feature branch variables //
+const pages = document.querySelector('.pages');
 const showSearchTitle = document.querySelector('.searchShowByName');
 const searchByName = document.querySelector('.searchByName');
 
 // show all shows in pages feature branch variables
 const showPageTitle = document.querySelector('.searchShowByPages');
 const showPagesButton = document.querySelector('.showAllPages');
-const pageNumberOne = document.querySelector('.pageNumberOne');
-const pageNumberTwo = document.querySelector('.pageNumberTwo');
-const pageNumberThree = document.querySelector('.pageNumberThree');
-const pageNumberFour = document.querySelector('.pageNumberFour');
-const pageNumberFive = document.querySelector('.pageNumberFive');
-const pageNumberSix = document.querySelector('.pageNumberSix');
-const pageNumberSeven = document.querySelector('.pageNumberSeven');
-const pageNumberEight = document.querySelector('.pageNumberEight');
-const pageNumberNine = document.querySelector('.pageNumberNine');
-const pageNumberTen = document.querySelector('.pageNumberTen');
 
 
 
 // ~ show pages button that listens for user click, display:none elements and fetch's 2nd endpoint data ~ // 
 showPagesButton.addEventListener('click', function(){
-
    // data needed for specific end point fetch //
    const input = document.querySelector('#pageNumberOne');
-
    // new search params with values based on user choice //
    urlTwo.search = new URLSearchParams({
       page: input.value
    });
-   console.log(showPagesButton);
 
    // fetching all shows function, with passed arguments //
    app.fetchAllShows(urlTwo, input.value, urlTwo.search);
 
    // storing search bar to a variable //
    app.searchBar = document.querySelector(`#searchBar`);
-
    // clearing the gallery in the DOM // 
    gallery.innerHTML = ``;
 
@@ -587,21 +732,10 @@ showPagesButton.addEventListener('click', function(){
    // removing a class to html elements //
    results.classList.remove('displayNone');
    searchByName.classList.remove('displayNone');
-   pageNumberOne.classList.remove('displayNone');
-   pageNumberTwo.classList.remove('displayNone');
-   pageNumberThree.classList.remove('displayNone');
-   pageNumberFour.classList.remove('displayNone');
-   pageNumberFive.classList.remove('displayNone');
-   pageNumberSix.classList.remove('displayNone');
-   pageNumberSeven.classList.remove('displayNone');
-   pageNumberEight.classList.remove('displayNone');
-   pageNumberNine.classList.remove('displayNone');
-   pageNumberTen.classList.remove('displayNone');
    showPageTitle.classList.remove('displayNone');
    app.showCounter.classList.remove('displayNone');
 
    results.innerHTML = ``;
-   
 });
 
 
@@ -609,22 +743,10 @@ showPagesButton.addEventListener('click', function(){
 // ~ search by name button that appears when show all page button is clicked, when searchByName is clicked by user, clear gallery, and return app to original state ~ //
 searchByName.addEventListener('click', function(){
    // clear the gallery in the DOM //
-   gallery.innerHTML = `
-      <p class="searchMessage">Waiting for a search ..</p>
-   `;
+   gallery.innerHTML = ` <p class="searchMessage"> Waiting for a search ..</p> `;
 
    // adding a class to html elements //
    searchByName.classList.add('displayNone');
-   pageNumberOne.classList.add('displayNone');
-   pageNumberTwo.classList.add('displayNone');
-   pageNumberThree.classList.add('displayNone');
-   pageNumberFour.classList.add('displayNone')
-   pageNumberFive.classList.add('displayNone')
-   pageNumberSix.classList.add('displayNone')
-   pageNumberSeven.classList.add('displayNone')
-   pageNumberEight.classList.add('displayNone')
-   pageNumberNine.classList.add('displayNone')
-   pageNumberTen.classList.add('displayNone')
    app.showCounter.classList.add('displayNone');
    showPageTitle.classList.add('displayNone');
 
@@ -636,151 +758,135 @@ searchByName.addEventListener('click', function(){
 
 
 
-// ~ 1st page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ //
-pageNumberOne.addEventListener('click', function(){
-   // storing html button element in variable 
-   const input = document.querySelector('#pageNumberOne');
 
-   // new search params
-   urlTwo.search = new URLSearchParams({
-      page: input.value
+// array containing the data necessary to create page buttons using forEach loops //
+app.pageClickers = [
+   {
+      value: 1,
+      name: 1,
+      class: 'pageNumberOne',
+      classTwo: 'page'
+   },
+   {
+      value: 2,
+      name: 2,
+      class: 'pageNumberTwo',
+      classTwo: 'page'
+   },
+   {
+      value: 3,
+      name: 3,
+      class: 'pageNumberThree',
+      classTwo: 'page'
+   },
+   {
+      value: 4,
+      name: 4,
+      class: 'pageNumberFour',
+      classTwo: 'page'
+   },
+   {
+      value: 5,
+      name: 5,
+      class: 'pageNumberFive',
+      classTwo: 'page'
+   },
+   {
+      value: 6,
+      name: 6,
+      class: 'pageNumberSix',
+      classTwo: 'page'
+   },
+   {
+      value: 7,
+      name: 7,
+      class: 'pageNumberSeven',
+      classTwo: 'page'
+   },
+   {
+      value: 8,
+      name: 8,
+      class: 'pageNumberEight',
+      classTwo: 'page'
+   },
+   {
+      value: 9,
+      name: 9,
+      class: 'pageNumberNine',
+      classTwo: 'page'
+   },
+   {
+      value: 10,
+      name: 10,
+      class: 'pageNumberTen',
+      classTwo: 'page',
+   }
+];
+
+
+
+// empty array for use later below //
+app.buttonArray = [];
+
+
+
+// forEach method that loops through each array to create a button for each page and append/fetch data according to which newly created button is clicked by user // 
+app.pageClickers.forEach((button) => {
+   // html element creation stored in variable //
+   const listItem = document.createElement('li');
+   listItem.classList.add('listedButtons');
+   const pageButtons = document.createElement('button');
+
+
+   // adding data to html element values with pageClicker information // 
+   pageButtons.value = button.value;
+   pageButtons.className = `${button.class} ${button.classTwo} displayNone`;
+   pageButtons.id = button.class;
+
+   // page number being appended into the DOM of each button // 
+   pageButtons.innerHTML = ` ${button.name} `;
+
+   // append each button in the array to the html element within the DOM //
+   listItem.appendChild(pageButtons)
+   pages.appendChild(listItem);
+
+   // addEventListener that fetches all tv show pages depending on which user clicks //
+   pageButtons.addEventListener('click', function() {
+      // changing the query value of the url according to what page user clicks // 
+      urlTwo.search = new URLSearchParams({
+         page: button.value
+      });
+      // fetch all show functions //
+      app.fetchAllShows(urlTwo, button.value);
+      // if statement that chercks if array is empty, if it is, then add a class and push info to array. This is to check if a page button is already clicked. //
+      if(app.buttonArray.length === 0) {
+         // add a class to the selected page button //
+         pageButtons.classList.add('selected');
+         // pushing data into array
+         app.buttonArray.push(button, pageButtons);
+      // else if there is something in the array, remove the class from the previous click, and then add the class to the new button clicked //
+      } else if (app.buttonArray.length !== 0) {
+         const thisButton = document.getElementById(`${app.buttonArray[1].id}`);
+         // adding/removing classes from html element //
+         thisButton.classList.remove('selected');
+         pageButtons.classList.add('selected');
+         // clear the array //
+         app.buttonArray = [];
+         // push new info into the array //
+         app.buttonArray.push(button, pageButtons);
+      };
    });
 
-   // function call //
-   app.fetchAllShows(urlTwo, input.value);
-});
-
-
-// ~ 2nd page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ //
-pageNumberTwo.addEventListener('click', function(){
-   // storing html button element in variable //
-   const input = document.querySelector('#pageNumberTwo');
-
-   // new search params
-   urlTwo.search = new URLSearchParams({
-      page: input.value
+   // remove class in a html element when button is clicked //
+   showPagesButton.addEventListener('click', function(){
+      pageButtons.className = `${button.class} ${button.classTwo}`;
    });
 
-   // function call //
-   app.fetchAllShows(urlTwo, input.value);
-});
-
-
-// ~ 3rd page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
-pageNumberThree.addEventListener('click', function(){
-   // storing html button element in variable  //
-   const input = document.querySelector('#pageNumberThree');
-
-   // new search params //
-   urlTwo.search = new URLSearchParams({
-      page: input.value
+   // add class in a html element when button is clicked // 
+   searchByName.addEventListener('click', function(){
+      pageButtons.className = `${button.class} ${button.classTwo} displayNone`;
    });
-
-   // function call //
-   app.fetchAllShows(urlTwo, input.value);
 });
-
-
-// ~ 4th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
-pageNumberFour.addEventListener('click', function () {
-   // storing html button element in variable  //
-   const input = document.querySelector('#pageNumberFour');
-
-   // new search params //
-   urlTwo.search = new URLSearchParams({
-      page: input.value
-   });
-
-   // function call //
-   app.fetchAllShows(urlTwo, input.value);
-});
-
-
-// ~ 5th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
-pageNumberFive.addEventListener('click', function () {
-   // storing html button element in variable  //
-   const input = document.querySelector('#pageNumberFive');
-
-   // new search params //
-   urlTwo.search = new URLSearchParams({
-      page: input.value
-   });
-
-   // function call //
-   app.fetchAllShows(urlTwo, input.value);
-});
-
-
-// ~ 6th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
-pageNumberSix.addEventListener('click', function () {
-   // storing html button element in variable  //
-   const input = document.querySelector('#pageNumberSix');
-
-   // new search params //
-   urlTwo.search = new URLSearchParams({
-      page: input.value
-   });
-
-   // function call //
-   app.fetchAllShows(urlTwo, input.value);
-});
-
-// ~ 7th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
-pageNumberSeven.addEventListener('click', function () {
-   // storing html button element in variable  //
-   const input = document.querySelector('#pageNumberSeven');
-
-   // new search params //
-   urlTwo.search = new URLSearchParams({
-      page: input.value
-   });
-
-   // function call //
-   app.fetchAllShows(urlTwo, input.value);
-});
-
-// ~ 8th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
-pageNumberEight.addEventListener('click', function () {
-   // storing html button element in variable  //
-   const input = document.querySelector('#pageNumberEight');
-
-   // new search params //
-   urlTwo.search = new URLSearchParams({
-      page: input.value
-   });
-
-   // function call //
-   app.fetchAllShows(urlTwo, input.value);
-});
-
-// ~ 9th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
-pageNumberNine.addEventListener('click', function () {
-   // storing html button element in variable  //
-   const input = document.querySelector('#pageNumberNine');
-
-   // new search params //
-   urlTwo.search = new URLSearchParams({
-      page: input.value
-   });
-
-   // function call //
-   app.fetchAllShows(urlTwo, input.value);
-});
-
-// ~ 10th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
-pageNumberTen.addEventListener('click', function () {
-   // storing html button element in variable  //
-   const input = document.querySelector('#pageNumberTen');
-
-   // new search params //
-   urlTwo.search = new URLSearchParams({
-      page: input.value
-   });
-
-   // function call //
-   app.fetchAllShows(urlTwo, input.value);
-});
-
 
 
 
@@ -801,8 +907,8 @@ app.fetchAllShows = (urlTwo, form) => {
          // calling secondary display function for the next app feature // 
          app.displayAllShowPages(jsonResult, form);
       });
-
 };
+
 
 
 
@@ -810,7 +916,6 @@ app.fetchAllShows = (urlTwo, form) => {
 app.displayAllShowPages = (allShows, userInput) => {
    // clear gallery in the DOM //
    gallery.innerHTML = ``;
-   console.log(app.ratingValue)
    // creating a changable variable with a value of 0 //
    let tvShowsCounter = 0;
 
@@ -825,7 +930,8 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
+            // app.appendAllShowsToDom(show);
          };
          // if userInput is 1 but app.ratingValue isnt empty
       } else if (userInput == '1' && app.ratingValue !== '') {
@@ -833,7 +939,7 @@ app.displayAllShowPages = (allShows, userInput) => {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          };
       } else if (userInput == '2' && app.ratingValue == '') {
          userInput = '9';
@@ -842,14 +948,14 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
          // otherwise, if userInput is not = 1, then still check as usual.
       } else if (userInput == '2' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '3' && app.ratingValue == ''){
          userInput = '9';
@@ -858,13 +964,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '3' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '4' && app.ratingValue == '') {
          userInput = '9';
@@ -873,13 +979,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '4' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '5' && app.ratingValue == '') {
          userInput = '9';
@@ -888,13 +994,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '5' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '6' && app.ratingValue == '') {
          userInput = '9';
@@ -903,13 +1009,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '6' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '7' && app.ratingValue == '') {
          userInput = '9';
@@ -918,13 +1024,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '7' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '8' && app.ratingValue == '') {
          userInput = '9';
@@ -933,13 +1039,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '8' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '9' && app.ratingValue == '') {
          userInput = '9';
@@ -948,13 +1054,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '9' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '10' && app.ratingValue == '') {
          userInput = '9';
@@ -963,20 +1069,20 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '10' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else {
          if (tvShowsCounter > userInput) {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       };
 
@@ -990,54 +1096,7 @@ app.displayAllShowPages = (allShows, userInput) => {
       
       // add + 1 to the tvShowCounter // 
       tvShowsCounter = tvShowsCounter + 1;
-      // console.log(userInput)
    });
-};
-
-
-
-// ~ creation of new html elements, and appending information to DOM ~ //
-app.appendAllShowsToDom = (show) => {
-
-   // creating an html element, storing it in a variable //
-   const newListItem = document.createElement('li');
-   newListItem.classList.add('showContainer');
-
-   // destructured objects // 
-   const { image, rating, summary, name, language, status, averageRuntime, genres } = show;
-
-   // image path variable for use in new element creation, includes conditions for null image //
-   const imagePath = image ? image.original : 'https://placekitten.com/200/300';
-
-   // alt text path variable for use in new element creation, includes conditions for placeholder image //
-   let altPath;
-   // if statement that checks to see and adds placeholder if the object image is null //
-   if (image != null) {
-      altPath = `Poster for ${name}`;
-   } else {
-      altPath = `placeholder image`;
-   };
-
-   // console.log(show)
-
-   // adding content to the li element // 
-   newListItem.innerHTML = `
-      <h2 class="tvTitle">${name}</h2>
-      <div class="imgContainer"><img src="${imagePath}" alt="${altPath}" /></div>
-      <div class="infoContainer">
-         <div class="summaryContainer displayNone">
-         <p><span class="showInfo">Summary:</span> ${summary}</p>
-         </div>
-         <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
-         <p><span class="showInfo">Language:</span>  ${language}</p>
-         <p><span class="showInfo">Genres:</span>  ${genres}</p>
-         <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
-         <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
-      </div>
-      `;
-
-   // append li element to the gallery in the DOM // 
-   gallery.appendChild(newListItem);
 };
 
 // ------ ** SHOW ALL SHOWS IN PAGES FEATURE BRANCH ENDS ** ------ //
@@ -1058,15 +1117,8 @@ app.init();
 
 // ------- ** ISSUES / FIXES ** ------- // 
 
-// 1. 2nd feature branch, should show/append the page # the user is currently on. (ex: when page 1 is clicked, the DOM should show that "You are currently on Page: 1") ORRRR onClick eventListener that changes the css color on the page button clicked. 
-
-// maybe create an empty page array that has all the page # values and append it to the dom using for each loop, and somehow use a user click to check which button was clicked, and append data according to which page number is clicked. SOME HOW
-
 // 2. when you freestyle and alternate/click all the buttons, eventually the app gets bogged down w/ so much data, that it slows the browser. it even requests you kill the app. Also happens on the fetch for the 2nd feature branch
-// example - it usually happens between the rating filter followed by the language filter. 
-
-// 3. PARTIAL COMPLETION -  styling - making the correct page thats click to have a blue color on the font when its clicks, and adjusts when its clicked. 
-
+// example - it usually happens between the rating filter followed by the language filter.
 
 
 // -----------------------------------------------------
@@ -1076,33 +1128,26 @@ app.init();
 
 // 1. app.init() calls app.addListeners()
 // 2. app.addListeners() waits for user change
-// 3. if user submits, it calls app.getTvShow() & lets the language form appear on DOM
+// 3. if user submits, it calls app.getTvShow() & lets the language & rating form appear on DOM
 // 4. app.getTvShow calls app.checkForm()
 // 5. app.checkForm() calls app.fetch()
 // 6. app.fetch() passes info to app.addListeners, & calls app.displayTvShows()
 // 7. app.displayTvShows() calls app.showUserResults() & app.appendToDom()
 // 8. app.appendToDom() appends the data to DOM
 // 9. when language form appears on DOM (see 3.), user changes form and calls app.checkLanguage()
-// 10. app.checkLanguage() calls app.displayLanguageShows()
-// 11. app.displayLanguageShows calls app.showUserResults(), & calls app.appendToDom()
+// 10. app.checkLanguage() calls app.displayTvShows()
+// 11. onChange listener waits for user selection to change the rating. it then calls app.checkRating()
+// 12. app.checkRating() clears gallery, calls app.showUserResults, and then calls app.appendToDom()
 // -- ** app ends & loops through these on user change ** -- //
 
-// ** NEW ** 
-// 12. onChange listener waits for user selection to change the rating. it then calls app.checkRating()
-// 13. app.checkRating() clears gallery, calls app.showUserResults, and then calls app.appendToDom()
-
 // -- ** 2nd feature branch : show tvShows in pages ** -- // 
-
-// 14. on click event listener that takes api data, and calls app.fetchAllShows()
-// 15. app.fetchAllShows() get API data, & calls app.displayAllTvShows()
-// 16. app.displayAllTvShows loops through the array, and calls app.appendAllShowsToDom();
-// 17. app.appendAllShowsToDom() takes the passed data and appends every tvShow in the loop
-
-// 18. page button addEventListener, waits for user click, and then fetches the API data with new search params, based on page #. It calls fetch, then displayAllTvShows, then appendAllShowsToDom.
-// 19. a tvCounter form is created, and has an onChange eventListener that waits for user selection. When changed, it calls fetchAllShows but takes the value of the counter and uses it as a counter stopper in an if statement. that way it cuts the loop once the counter and the userInput value match. 
-// 20. there for is appends number of shows user requests. 
-
-
+// 13. on click event listener that takes api data, and calls app.fetchAllShows()
+// 14. app.fetchAllShows() get API data, & calls app.displayAllTvShows()
+// 15. app.displayAllTvShows loops through the array, and calls app.appendToDom();
+// 16. app.appendToDom() takes the passed data and appends every tvShow in the loop
+// 17. page button addEventListener, waits for user click, and then fetches the API data with new search params, based on page #. It calls fetch, then displayAllTvShows, then appendAllShowsToDom.
+// 18. a tvCounter form is created, and has an onChange eventListener that waits for user selection. When changed, it calls fetchAllShows but takes the value of the counter and uses it as a counter stopper in an if statement. that way it cuts the loop once the counter and the userInput value match. 
+// 19. there for is appends number of shows user requests. 
 
 
 
@@ -1110,6 +1155,9 @@ app.init();
 
 // ** PHASE FOUR STEPS ** //
 
+// 3. COMPLETED PARTIAL COMPLETION -  styling - making the correct page thats click to have a alternate color on the font when its clicks, and adjusts when its clicked. 
+// COMPLETED - 2nd feature branch, should show/append the page # the user is currently on. (ex: when page 1 is clicked, the DOM should show that "You are currently on Page: 1") ORRRR onClick eventListener that changes the css color on the page button clicked. 
+// COMPLETED - create an empty page array that has all the page # values and append it to the dom using for each loop, and somehow use a user click to check which button was clicked, and append data according to which page number is clicked
 // 1. COMPLETED - Filter by rating, does not allow you to filter by language first, it doesnt take the language filtered array and filter through that too : what it does is, it takes the original appended 10 shows, and changes by rating
 // Connect the two forms! what works: if user decides to click rating first, then language, it should filter both, by rating and by language
 
