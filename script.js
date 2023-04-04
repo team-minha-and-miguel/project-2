@@ -16,7 +16,7 @@ app.apiUrlTwo = 'https://proxy.junocollege.com/https://api.tvmaze.com/shows';
 const url = new URL(app.apiUrl);
 const urlTwo = new URL(app.apiUrlTwo);
 
-// empty variables to use for data within local scoped functions
+// empty variables to use for data within local scoped functions //
 app.englishArray = [];
 app.noEnglishArray = [];
 app.ratingValue = '';
@@ -37,7 +37,6 @@ app.addListeners = (jsonResult, form) => {
    // connecting the showCounter id in html to a variable //
    app.selectCounter = document.querySelector(`#showCounter`);
    
-
    // event listener that waits for user submission //
    document.querySelector('form').addEventListener('submit', function (e) {
       
@@ -66,7 +65,6 @@ app.addListeners = (jsonResult, form) => {
       app.getTvShows();
    });
 
-
    // event listener that calls checkLanguage() on any user changes if theres data in the parameter //
    app.selectLanguage.addEventListener(`change`, function () {
       // if there's an arguement in the parameters, call function //
@@ -74,7 +72,6 @@ app.addListeners = (jsonResult, form) => {
          app.checkLanguage(jsonResult, this.value, form);
       };
    });
-
 
    // show how many shows in a page event listener // 
    app.selectCounter.addEventListener(`change`, function(){
@@ -95,8 +92,6 @@ app.addListeners = (jsonResult, form) => {
       app.languageForm.classList.remove('displayNone');
    });
 };
-
-
 
 
 // ~ check rating changes the search depending on users choice of highest or lowest rated shows ~ //
@@ -293,8 +288,6 @@ app.checkRating = (jsonResult, userInput, form) => {
 };
 
 
-
-
 // ~ function contains key API information which is used throughout app ~ //
 app.getTvShows = () => {
    // storing input tag in a variable //
@@ -311,8 +304,6 @@ app.getTvShows = () => {
    // clears out search bar after submit after we have passed the data to the next function //
    input.value = ``;
 };
-
-
 
 
 // ~ check form function that checks for any special characters or no entry in the form ~ //
@@ -336,9 +327,6 @@ app.checkUserForm = (form, url) => {
       app.ratingForm.classList.remove('displayNone');
    };
 };
-
-
-
 
 
 // ~ fetching information from the API ~ //
@@ -368,10 +356,6 @@ app.fetch = (url, form) => {
          };
       });
    };
-
-
-
-
 
 
 // ~ function that checks to see which the language is selected by the user and creates an array, to push to the next function ~ //
@@ -414,10 +398,6 @@ app.checkLanguage = (jsonResult, userInput, form) => {
 };
 
 
-
-
-
-
 // ~ function that displays shows to the DOM ~ //
 app.displayTvShows = (tvShows, form, userInput) => {
    // clear gallery before displaying new search results //
@@ -446,7 +426,6 @@ app.displayTvShows = (tvShows, form, userInput) => {
 };
 
 
-
 // ~ appends the data to the dom every time the loop runs in the previous function ~ //
 app.appendToDom = (tvShow) => {
 
@@ -455,7 +434,8 @@ app.appendToDom = (tvShow) => {
    // adding class to html element //
    newListItem.classList.add('showContainer');
 
-   // if there is no data in the tvShow.show // 
+   // if statement that checks to see which endpoint information is being used // 
+   // if there is no data in the tvShow.show (i.e 2nd endpoint data) // 
    if (tvShow.show === undefined) {
       // destructured objects // 
       const { image, name, summary, rating, genres, averageRuntime, status, language } = tvShow;
@@ -545,6 +525,7 @@ app.showUserResults = (tvShows, form) => {
       Total Results for "<span class="bold">${userSearch}</span>" Found: ${tvResults}
    `;
 
+   // if the tvShow.length is equal to 0, call function // 
    if(tvResults == 0) {
       app.noSearchFound();
    };
@@ -555,7 +536,7 @@ app.showUserResults = (tvShows, form) => {
 
 
 
-// function that shuffles array and returns new value when called //
+// ~ function that shuffles array and returns new value when called ~ //
 app.shuffle = (array) => {
    let currentIndex = array.length, randomIndex;
 
@@ -575,15 +556,13 @@ app.shuffle = (array) => {
 };
 
 
-// function that is called when 0 results are found //
+// ~ function that is called when 0 results are found ~ //
 app.noSearchFound = () => {
    gallery.innerHTML = ` <h3 class="searchMessage"> OOPS... SORRY, NOTHING FOUND. TRY AGAIN :( </h3> `;
-}
+};
 
 
 // ------ SHOW ALL TV SHOWS BY PAGES FEATURE BRANCH ------ // 
-
-
 
 // ~ globally scoped variables that connect to html elements ~ // 
 
@@ -678,6 +657,7 @@ searchByName.addEventListener('click', function () {
    showPagesButton.classList.remove('displayNone');
    showSearchTitle.classList.remove('displayNone');
 });
+
 
 // ~ 1st page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ //
 pageNumberOne.addEventListener('click', function () {
@@ -859,11 +839,10 @@ app.displayAllShowPages = (allShows, userInput) => {
             return;
          } else {
             app.appendToDom(show, allShows);
-            // app.appendAllShowsToDom(show);
          };
-         // if userInput is 1 but app.ratingValue isnt empty
+         // if userInput is 1 but app.ratingValue isnt empty //
       } else if (userInput == '1' && app.ratingValue !== '') {
-         // then compare tvShowsCounter to the app.ratingValue instead of userInput
+         // then compare tvShowsCounter to the app.ratingValue instead of userInput //
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
@@ -878,7 +857,6 @@ app.displayAllShowPages = (allShows, userInput) => {
          } else {
             app.appendToDom(show, allShows);
          };
-         // otherwise, if userInput is not = 1, then still check as usual.
       } else if (userInput == '2' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
@@ -1014,10 +992,10 @@ app.displayAllShowPages = (allShows, userInput) => {
          };
       };
 
-      // shuffle allShows Array every time function is called to give variety. 
+      // shuffle allShows Array every time function is called to give variety //
       app.shuffle(allShows);
 
-      // stops the forEach method from continuing to append data after userChoice
+      // stops the forEach method from continuing to append data after userChoice //
       if (tvShowsCounter === userInput) {
          return;
       };
@@ -1026,7 +1004,6 @@ app.displayAllShowPages = (allShows, userInput) => {
       tvShowsCounter = tvShowsCounter + 1;
    });
 };
-
 // ------ ** SHOW ALL SHOWS IN PAGES FEATURE BRANCH ENDS ** ------ //
 
 
@@ -1035,8 +1012,6 @@ app.displayAllShowPages = (allShows, userInput) => {
 app.init = () => {
    app.addListeners();
 };
-
-
 
 // initial function call to start the app //
 app.init();
