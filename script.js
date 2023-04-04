@@ -511,10 +511,6 @@ app.appendToDom = (tvShow) => {
       <img src="${imagePath}" alt="${altPath}" id="img"/>
       ${summary}
       </div>
-      <div class="infoContainer">
-         <div class="summaryContainer displayNone">
-            <p><span class="showInfo">Summary:</span> ${summary}</p>
-         </div>
          <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
          <p><span class="showInfo">Language:</span>  ${language}</p>
          <p><span class="showInfo">Genres:</span>  ${genres}</p>
@@ -1061,11 +1057,11 @@ app.appendAllShowsToDom = (show) => {
    // adding content to the li element // 
    newListItem.innerHTML = `
       <h2 class="tvTitle">${name}</h2>
-      <div class="imgContainer"><img src="${imagePath}" alt="${altPath}" /></div>
+      <div class="imgContainer">
+         <img src="${imagePath}" alt="${altPath}" />
+         ${summary}
+      </div>
       <div class="infoContainer">
-         <div class="summaryContainer displayNone">
-         <p><span class="showInfo">Summary:</span> ${summary}</p>
-         </div>
          <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
          <p><span class="showInfo">Language:</span>  ${language}</p>
          <p><span class="showInfo">Genres:</span>  ${genres}</p>
