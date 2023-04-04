@@ -17,12 +17,14 @@
 </head>
 
 <body>
+   <!-- header starts here -->
    <header>
       <div class="wrapper">
          <h1 class="appTitle">THE ULTIMATE WATCH LIST </h1>
          <p class="motto">What will you watch next?</p>
       </div>
    </header>
+
    <!-- navigation starts here -->
    <nav>
       <div class="wrapper">
@@ -37,8 +39,11 @@
       </div>
    </nav>
    
+   <!-- main starts here  -->
    <main>
+
       <div class="wrapper">
+         <!-- page buttons -->
          <div class="pages">
             <button class="pageNumberOne displayNone page" id="pageNumberOne" value="1">1</button>
             <button class="pageNumberTwo displayNone page" id="pageNumberTwo" value="2">2</button>
@@ -51,16 +56,14 @@
             <button class="pageNumberNine displayNone page" id="pageNumberNine" value="9">9</button>
             <button class="pageNumberTen displayNone page" id="pageNumberTen" value="10">10</button>
          </div>
+
          <!-- search bar for user input  -->
          <form action="#" id="searchBar">
-            
             <label for="showSearch">Search Here : </label>
             <input type="text" id="showSearch" class="userInput" placeholder="search anything">
             <button type="submit" for="showSearch" id="showSearch" class="showSearch">Submit</button>
          </form>
-   
-   
-         
+
          <!-- rating form for user selection -->
          <form action="#" id="ratingFilter" class="displayNone ratingForm">
             <label for="rating">Filter by Rating:</label>
@@ -70,7 +73,7 @@
                <option value="lowest">Low To High</option>
             </select>
          </form>
-         
+
          <!-- language form for user selection -->
          <form action="#" id="languageFilter" class="displayNone languageForm">
             <label for="language">Filter by Language:</label>
@@ -80,7 +83,7 @@
                <option value="noEnglish">No English</option>
             </select>
          </form>
-         
+
          <!-- show all shows form for user selection -->
          <form action="#" id="showFilter" class="displayNone">
             <label for="showCounter">Number of Shows Per Page:</label>
@@ -93,17 +96,22 @@
                <option value="245">All</option>
             </select>
          </form>
-         
-         <div class="results"></div>
+
+         <div class="results">
+            <!-- user results data goes here -->
+         </div>
+
          <div class="gallery flex">
             <!-- api data goes here -->
          </div>
       </div>
+
    </main>
 
+   <!-- footer starts here -->
    <footer>
       <p class="copyright">
-         <a href="https://junocollege.com/">© Copyright 2023. All Rights Reserved | Designed by Minha Lee & Miguel Cabrera</a>
+         <a href="https://junocollege.com/">© 2023. TV MAZE API | Designed by Minha Lee & Miguel Cabrera</a>
       </p>
    </footer>
    <script src="script.js"></script>

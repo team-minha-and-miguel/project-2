@@ -479,9 +479,6 @@ app.appendToDom = (tvShow) => {
          ${summary}
          </div>
          <div class="infoContainer">
-            <div class="summaryContainer displayNone">
-               <p><span class="showInfo">Summary:</span> ${summary}</p>
-            </div>
             <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
             <p><span class="showInfo">Language:</span>  ${language}</p>
             <p><span class="showInfo">Genres:</span>  ${genres}</p>
@@ -491,10 +488,10 @@ app.appendToDom = (tvShow) => {
    } else {
       // destructured objects from tvShow array //
       const { show } = tvShow;
-      const { image, name, summary, rating, genres, averageRuntime, status, language } = show; 
+      const { image, name, summary, rating, genres, averageRuntime, status, language } = show;
       // image path variable for use in new element creation, includes conditions for null image //
       const imagePath = image ? image.original : 'https://placekitten.com/200/300';
-   
+
       // alt text path variable for use in new element creation, includes conditions for placeholder image //
       let altPath;
       // if statement that checks to see and adds placeholder if the object image is null //
@@ -503,7 +500,7 @@ app.appendToDom = (tvShow) => {
       } else {
          altPath = 'placeholder image';
       };
-      
+
       // adding content into the li variable //
       newListItem.innerHTML = `
       <h2 class="tvTitle">${name}</h2>
@@ -511,19 +508,18 @@ app.appendToDom = (tvShow) => {
       <img src="${imagePath}" alt="${altPath}" id="img"/>
       ${summary}
       </div>
+      <div class="infoContainer">
          <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
          <p><span class="showInfo">Language:</span>  ${language}</p>
          <p><span class="showInfo">Genres:</span>  ${genres}</p>
          <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
          <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
-      </div> `;
+      </div>
+         `;
    };
 
    // append each entry to the gallery //
    gallery.appendChild(newListItem);
-   
-   // adding +1 to the counter variable every time it loops //
-   app.domCounter++;
 };
 
 
@@ -862,7 +858,8 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
+            // app.appendAllShowsToDom(show);
          };
          // if userInput is 1 but app.ratingValue isnt empty
       } else if (userInput == '1' && app.ratingValue !== '') {
@@ -870,7 +867,7 @@ app.displayAllShowPages = (allShows, userInput) => {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          };
       } else if (userInput == '2' && app.ratingValue == '') {
          userInput = '9';
@@ -879,14 +876,14 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
          // otherwise, if userInput is not = 1, then still check as usual.
       } else if (userInput == '2' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '3' && app.ratingValue == '') {
          userInput = '9';
@@ -895,13 +892,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '3' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '4' && app.ratingValue == '') {
          userInput = '9';
@@ -910,13 +907,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '4' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '5' && app.ratingValue == '') {
          userInput = '9';
@@ -925,13 +922,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '5' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '6' && app.ratingValue == '') {
          userInput = '9';
@@ -940,13 +937,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '6' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '7' && app.ratingValue == '') {
          userInput = '9';
@@ -955,13 +952,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '7' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '8' && app.ratingValue == '') {
          userInput = '9';
@@ -970,13 +967,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '8' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '9' && app.ratingValue == '') {
          userInput = '9';
@@ -985,13 +982,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '9' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else if (userInput == '10' && app.ratingValue == '') {
          userInput = '9';
@@ -1000,20 +997,20 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       } else if (userInput == '10' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendAllShowsToDom(show)
+            app.appendToDom(show, allShows)
          }
       } else {
          if (tvShowsCounter > userInput) {
             // stop the loop //
             return;
          } else {
-            app.appendAllShowsToDom(show);
+            app.appendToDom(show, allShows);
          };
       };
 
@@ -1028,50 +1025,6 @@ app.displayAllShowPages = (allShows, userInput) => {
       // add + 1 to the tvShowCounter // 
       tvShowsCounter = tvShowsCounter + 1;
    });
-};
-
-
-
-// ~ creation of new html elements, and appending information to DOM ~ //
-app.appendAllShowsToDom = (show) => {
-
-   // creating an html element, storing it in a variable //
-   const newListItem = document.createElement('li');
-   newListItem.classList.add('showContainer');
-
-   // destructured objects // 
-   const { image, rating, summary, name, language, status, averageRuntime, genres } = show;
-
-   // image path variable for use in new element creation, includes conditions for null image //
-   const imagePath = image ? image.original : 'https://placekitten.com/200/300';
-
-   // alt text path variable for use in new element creation, includes conditions for placeholder image //
-   let altPath;
-   // if statement that checks to see and adds placeholder if the object image is null //
-   if (image != null) {
-      altPath = `Poster for ${name}`;
-   } else {
-      altPath = `placeholder image`;
-   };
-
-   // adding content to the li element // 
-   newListItem.innerHTML = `
-      <h2 class="tvTitle">${name}</h2>
-      <div class="imgContainer">
-         <img src="${imagePath}" alt="${altPath}" />
-         ${summary}
-      </div>
-      <div class="infoContainer">
-         <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
-         <p><span class="showInfo">Language:</span>  ${language}</p>
-         <p><span class="showInfo">Genres:</span>  ${genres}</p>
-         <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
-         <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
-      </div>
-      `;
-
-   // append li element to the gallery in the DOM // 
-   gallery.appendChild(newListItem);
 };
 
 // ------ ** SHOW ALL SHOWS IN PAGES FEATURE BRANCH ENDS ** ------ //
