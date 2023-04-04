@@ -8,7 +8,6 @@
 // ~ flex items ~ //
 .flex {
    display: flex;
-   // justify-content: space-between;
    flex-wrap: wrap;
 }
 
@@ -41,7 +40,6 @@ h2 {
 
 html {
    font-family: $bodyFont;
-   // font-size:125%;
    background-color: $primaryColor;
 };
 

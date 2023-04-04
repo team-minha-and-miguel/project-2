@@ -448,7 +448,7 @@ app.displayTvShows = (tvShows, form, userInput) => {
 
 
 // ~ appends the data to the dom every time the loop runs in the previous function ~ //
-app.appendToDom = (tvShow, jsonResult) => {
+app.appendToDom = (tvShow) => {
 
    // create li element stored in a variable //
    const newListItem = document.createElement('li');
@@ -589,30 +589,36 @@ app.noSearchFound = () => {
 }
 
 
-
-
 // ------ SHOW ALL TV SHOWS BY PAGES FEATURE BRANCH ------ // 
-
 
 
 
 // ~ globally scoped variables that connect to html elements ~ // 
 
 // search by name feature branch variables //
-const pages = document.querySelector('.pages');
 const showSearchTitle = document.querySelector('.searchShowByName');
 const searchByName = document.querySelector('.searchByName');
 
 // show all shows in pages feature branch variables
 const showPageTitle = document.querySelector('.searchShowByPages');
 const showPagesButton = document.querySelector('.showAllPages');
-
-
+const pageNumberOne = document.querySelector('.pageNumberOne');
+const pageNumberTwo = document.querySelector('.pageNumberTwo');
+const pageNumberThree = document.querySelector('.pageNumberThree');
+const pageNumberFour = document.querySelector('.pageNumberFour');
+const pageNumberFive = document.querySelector('.pageNumberFive');
+const pageNumberSix = document.querySelector('.pageNumberSix');
+const pageNumberSeven = document.querySelector('.pageNumberSeven');
+const pageNumberEight = document.querySelector('.pageNumberEight');
+const pageNumberNine = document.querySelector('.pageNumberNine');
+const pageNumberTen = document.querySelector('.pageNumberTen');
 
 // ~ show pages button that listens for user click, display:none elements and fetch's 2nd endpoint data ~ // 
-showPagesButton.addEventListener('click', function(){
+showPagesButton.addEventListener('click', function () {
+
    // data needed for specific end point fetch //
    const input = document.querySelector('#pageNumberOne');
+
    // new search params with values based on user choice //
    urlTwo.search = new URLSearchParams({
       page: input.value
@@ -623,6 +629,7 @@ showPagesButton.addEventListener('click', function(){
 
    // storing search bar to a variable //
    app.searchBar = document.querySelector(`#searchBar`);
+
    // clearing the gallery in the DOM // 
    gallery.innerHTML = ``;
 
@@ -633,26 +640,44 @@ showPagesButton.addEventListener('click', function(){
    results.classList.add('displayNone');
    showPagesButton.classList.add('displayNone');
    showSearchTitle.classList.add('displayNone');
-   
+
    // removing a class to html elements //
    results.classList.remove('displayNone');
    searchByName.classList.remove('displayNone');
+   pageNumberOne.classList.remove('displayNone');
+   pageNumberTwo.classList.remove('displayNone');
+   pageNumberThree.classList.remove('displayNone');
+   pageNumberFour.classList.remove('displayNone');
+   pageNumberFive.classList.remove('displayNone');
+   pageNumberSix.classList.remove('displayNone');
+   pageNumberSeven.classList.remove('displayNone');
+   pageNumberEight.classList.remove('displayNone');
+   pageNumberNine.classList.remove('displayNone');
+   pageNumberTen.classList.remove('displayNone');
    showPageTitle.classList.remove('displayNone');
    app.showCounter.classList.remove('displayNone');
-
-   // clear the result element // 
    results.innerHTML = ``;
 });
 
-
-
 // ~ search by name button that appears when show all page button is clicked, when searchByName is clicked by user, clear gallery, and return app to original state ~ //
-searchByName.addEventListener('click', function(){
+searchByName.addEventListener('click', function () {
    // clear the gallery in the DOM //
-   gallery.innerHTML = ` <p class="searchMessage"> Waiting for a search...</p> `;
+   gallery.innerHTML = `
+      <p class="searchMessage">Waiting for a search ..</p>
+   `;
 
    // adding a class to html elements //
    searchByName.classList.add('displayNone');
+   pageNumberOne.classList.add('displayNone');
+   pageNumberTwo.classList.add('displayNone');
+   pageNumberThree.classList.add('displayNone');
+   pageNumberFour.classList.add('displayNone')
+   pageNumberFive.classList.add('displayNone')
+   pageNumberSix.classList.add('displayNone')
+   pageNumberSeven.classList.add('displayNone')
+   pageNumberEight.classList.add('displayNone')
+   pageNumberNine.classList.add('displayNone')
+   pageNumberTen.classList.add('displayNone')
    app.showCounter.classList.add('displayNone');
    showPageTitle.classList.add('displayNone');
 
@@ -662,136 +687,145 @@ searchByName.addEventListener('click', function(){
    showSearchTitle.classList.remove('displayNone');
 });
 
+// ~ 1st page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ //
+pageNumberOne.addEventListener('click', function () {
+   // storing html button element in variable 
+   const input = document.querySelector('#pageNumberOne');
 
-
-
-// array containing the data necessary to create page buttons using forEach loops //
-app.pageClickers = [
-   {
-      value: 1,
-      name: 1,
-      class: 'pageNumberOne',
-      classTwo: 'page'
-   },
-   {
-      value: 2,
-      name: 2,
-      class: 'pageNumberTwo',
-      classTwo: 'page'
-   },
-   {
-      value: 3,
-      name: 3,
-      class: 'pageNumberThree',
-      classTwo: 'page'
-   },
-   {
-      value: 4,
-      name: 4,
-      class: 'pageNumberFour',
-      classTwo: 'page'
-   },
-   {
-      value: 5,
-      name: 5,
-      class: 'pageNumberFive',
-      classTwo: 'page'
-   },
-   {
-      value: 6,
-      name: 6,
-      class: 'pageNumberSix',
-      classTwo: 'page'
-   },
-   {
-      value: 7,
-      name: 7,
-      class: 'pageNumberSeven',
-      classTwo: 'page'
-   },
-   {
-      value: 8,
-      name: 8,
-      class: 'pageNumberEight',
-      classTwo: 'page'
-   },
-   {
-      value: 9,
-      name: 9,
-      class: 'pageNumberNine',
-      classTwo: 'page'
-   },
-   {
-      value: 10,
-      name: 10,
-      class: 'pageNumberTen',
-      classTwo: 'page',
-   }
-];
-
-
-// empty array for use later below //
-app.buttonArray = [];
-
-
-// forEach method that loops through each array to create a button for each page and append/fetch data according to which newly created button is clicked by user // 
-app.pageClickers.forEach((button) => {
-   // html element creation stored in variable //
-   const listItem = document.createElement('li');
-   listItem.classList.add('listedButtons');
-   const pageButtons = document.createElement('button');
-
-
-   // adding data to html element values with pageClicker information // 
-   pageButtons.value = button.value;
-   pageButtons.className = `${button.class} ${button.classTwo} displayNone`;
-   pageButtons.id = button.class;
-
-   // page number being appended into the DOM of each button // 
-   pageButtons.innerHTML = ` ${button.name} `;
-
-   // append each button in the array to the html element within the DOM //
-   listItem.appendChild(pageButtons)
-   pages.appendChild(listItem);
-
-   // addEventListener that fetches all tv show pages depending on which user clicks //
-   pageButtons.addEventListener('click', function() {
-      // changing the query value of the url according to what page user clicks // 
-      urlTwo.search = new URLSearchParams({
-         page: button.value
-      });
-      // fetch all show functions //
-      app.fetchAllShows(urlTwo, button.value);
-      // if statement that checks if array is empty, if it is, then add a class and push info to array. This is to check if a page button is already clicked. //
-      if(app.buttonArray.length === 0) {
-         // add a class to the selected page button //
-         pageButtons.classList.add('selected');
-         // pushing data into array
-         app.buttonArray.push(button, pageButtons);
-      // else if there is something in the array, remove the class from the previous click, and then add the class to the new button clicked //
-      } else if (app.buttonArray.length !== 0) {
-         const thisButton = document.getElementById(`${app.buttonArray[1].id}`);
-         // adding/removing classes from html element //
-         thisButton.classList.remove('selected');
-         pageButtons.classList.add('selected');
-         // clear the array //
-         app.buttonArray = [];
-         // push new info into the array //
-         app.buttonArray.push(button, pageButtons);
-      };
+   // new search params
+   urlTwo.search = new URLSearchParams({
+      page: input.value
    });
 
-   // remove class in a html element when button is clicked //
-   showPagesButton.addEventListener('click', function(){
-      pageButtons.className = `${button.class} ${button.classTwo}`;
-   });
-
-   // add class in a html element when button is clicked // 
-   searchByName.addEventListener('click', function(){
-      pageButtons.className = `${button.class} ${button.classTwo} displayNone`;
-   });
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
 });
 
+// ~ 2nd page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ //
+pageNumberTwo.addEventListener('click', function () {
+   // storing html button element in variable //
+   const input = document.querySelector('#pageNumberTwo');
+
+   // new search params
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 3rd page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberThree.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberThree');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 4th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberFour.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberFour');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 5th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberFive.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberFive');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 6th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberSix.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberSix');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 7th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberSeven.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberSeven');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 8th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberEight.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberEight');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 9th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberNine.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberNine');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
+
+// ~ 10th page event listener button that waits for user click, and fetches 2nd endpoint data, with a different query value ~ // 
+pageNumberTen.addEventListener('click', function () {
+   // storing html button element in variable  //
+   const input = document.querySelector('#pageNumberTen');
+
+   // new search params //
+   urlTwo.search = new URLSearchParams({
+      page: input.value
+   });
+
+   // function call //
+   app.fetchAllShows(urlTwo, input.value);
+});
 
 
 
@@ -807,12 +841,10 @@ app.fetchAllShows = (urlTwo, form) => {
          };
       })
       .then(function (jsonResult) {
-
          // calling secondary display function for the next app feature // 
          app.displayAllShowPages(jsonResult, form);
       });
 };
-
 
 
 
@@ -834,8 +866,7 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendToDom(show, allShows);
-            // app.appendAllShowsToDom(show);
+            app.appendAllShowsToDom(show);
          };
          // if userInput is 1 but app.ratingValue isnt empty
       } else if (userInput == '1' && app.ratingValue !== '') {
@@ -843,7 +874,7 @@ app.displayAllShowPages = (allShows, userInput) => {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendToDom(show, allShows)
+            app.appendAllShowsToDom(show)
          };
       } else if (userInput == '2' && app.ratingValue == '') {
          userInput = '9';
@@ -852,29 +883,29 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendToDom(show, allShows);
+            app.appendAllShowsToDom(show);
          };
          // otherwise, if userInput is not = 1, then still check as usual.
       } else if (userInput == '2' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendToDom(show, allShows)
+            app.appendAllShowsToDom(show)
          }
-      } else if (userInput == '3' && app.ratingValue == ''){
+      } else if (userInput == '3' && app.ratingValue == '') {
          userInput = '9';
          // after userInput has been changes, check to see if tvShowCounter is greater than userInput, then stop the loop //
          if (tvShowsCounter > userInput) {
             // stop the loop //
             return;
          } else {
-            app.appendToDom(show, allShows);
+            app.appendAllShowsToDom(show);
          };
       } else if (userInput == '3' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendToDom(show, allShows)
+            app.appendAllShowsToDom(show)
          }
       } else if (userInput == '4' && app.ratingValue == '') {
          userInput = '9';
@@ -883,13 +914,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendToDom(show, allShows);
+            app.appendAllShowsToDom(show);
          };
       } else if (userInput == '4' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendToDom(show, allShows)
+            app.appendAllShowsToDom(show)
          }
       } else if (userInput == '5' && app.ratingValue == '') {
          userInput = '9';
@@ -898,13 +929,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendToDom(show, allShows);
+            app.appendAllShowsToDom(show);
          };
       } else if (userInput == '5' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendToDom(show, allShows)
+            app.appendAllShowsToDom(show)
          }
       } else if (userInput == '6' && app.ratingValue == '') {
          userInput = '9';
@@ -913,13 +944,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendToDom(show, allShows);
+            app.appendAllShowsToDom(show);
          };
       } else if (userInput == '6' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendToDom(show, allShows)
+            app.appendAllShowsToDom(show)
          }
       } else if (userInput == '7' && app.ratingValue == '') {
          userInput = '9';
@@ -928,13 +959,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendToDom(show, allShows);
+            app.appendAllShowsToDom(show);
          };
       } else if (userInput == '7' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendToDom(show, allShows)
+            app.appendAllShowsToDom(show)
          }
       } else if (userInput == '8' && app.ratingValue == '') {
          userInput = '9';
@@ -943,13 +974,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendToDom(show, allShows);
+            app.appendAllShowsToDom(show);
          };
       } else if (userInput == '8' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendToDom(show, allShows)
+            app.appendAllShowsToDom(show)
          }
       } else if (userInput == '9' && app.ratingValue == '') {
          userInput = '9';
@@ -958,13 +989,13 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendToDom(show, allShows);
+            app.appendAllShowsToDom(show);
          };
       } else if (userInput == '9' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendToDom(show, allShows)
+            app.appendAllShowsToDom(show)
          }
       } else if (userInput == '10' && app.ratingValue == '') {
          userInput = '9';
@@ -973,34 +1004,78 @@ app.displayAllShowPages = (allShows, userInput) => {
             // stop the loop //
             return;
          } else {
-            app.appendToDom(show, allShows);
+            app.appendAllShowsToDom(show);
          };
       } else if (userInput == '10' && app.ratingValue !== '') {
          if (tvShowsCounter > app.ratingValue) {
             return;
          } else {
-            app.appendToDom(show, allShows)
+            app.appendAllShowsToDom(show)
          }
       } else {
          if (tvShowsCounter > userInput) {
             // stop the loop //
             return;
          } else {
-            app.appendToDom(show, allShows);
+            app.appendAllShowsToDom(show);
          };
       };
 
       // shuffle allShows Array every time function is called to give variety. 
       app.shuffle(allShows);
-      
+
       // stops the forEach method from continuing to append data after userChoice
       if (tvShowsCounter === userInput) {
          return;
       };
-      
+
       // add + 1 to the tvShowCounter // 
       tvShowsCounter = tvShowsCounter + 1;
    });
+};
+
+
+
+// ~ creation of new html elements, and appending information to DOM ~ //
+app.appendAllShowsToDom = (show) => {
+
+   // creating an html element, storing it in a variable //
+   const newListItem = document.createElement('li');
+   newListItem.classList.add('showContainer');
+
+   // destructured objects // 
+   const { image, rating, summary, name, language, status, averageRuntime, genres } = show;
+
+   // image path variable for use in new element creation, includes conditions for null image //
+   const imagePath = image ? image.original : 'https://placekitten.com/200/300';
+
+   // alt text path variable for use in new element creation, includes conditions for placeholder image //
+   let altPath;
+   // if statement that checks to see and adds placeholder if the object image is null //
+   if (image != null) {
+      altPath = `Poster for ${name}`;
+   } else {
+      altPath = `placeholder image`;
+   };
+
+   // adding content to the li element // 
+   newListItem.innerHTML = `
+      <h2 class="tvTitle">${name}</h2>
+      <div class="imgContainer"><img src="${imagePath}" alt="${altPath}" /></div>
+      <div class="infoContainer">
+         <div class="summaryContainer displayNone">
+         <p><span class="showInfo">Summary:</span> ${summary}</p>
+         </div>
+         <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
+         <p><span class="showInfo">Language:</span>  ${language}</p>
+         <p><span class="showInfo">Genres:</span>  ${genres}</p>
+         <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
+         <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
+      </div>
+      `;
+
+   // append li element to the gallery in the DOM // 
+   gallery.appendChild(newListItem);
 };
 
 // ------ ** SHOW ALL SHOWS IN PAGES FEATURE BRANCH ENDS ** ------ //
