@@ -2,51 +2,49 @@
 main {
    background-color: $tertiaryColor;
    color: $secondaryColor;
-
    .pages {
       display: flex;
       flex-wrap: wrap;
-
       .page {
          margin: 0 .2rem 1rem .2rem;
-      }
+      };
       .page:hover {
          background-color: $secondaryColor;
          color: $tertiaryColor;
          transition: 0.7s all;
-      }
+      };
       .page:focus {
          background-color: $secondaryColor;
          color: $tertiaryColor;
          transition: 0.7s all;
-      }
-   }
+      };
+   };
    .userInput {
       padding: 0.4rem 10rem 0.4rem 1rem;
-   }
+   };
    .showSearch {
       &:hover {
          background-color: $secondaryColor;
          color: $tertiaryColor;
          transition: 1s all;
-      }
+      };
       &:focus {
          background-color: $secondaryColor;
          color: $tertiaryColor;
          transition: 1s all;
-      }
-   }
+      };
+   };
    .ratingForm,
    .languageForm {
       padding-top: .5rem;
-   }
-}
+   };
+};
 
 .results {
    font-weight: 400;
    padding-top: 2rem;
    text-transform: uppercase;
-}
+};
 
 .gallery {
    margin-top: 2rem;
@@ -57,7 +55,7 @@ main {
       font-size: 1.5rem;
       text-transform: uppercase;
       font-weight: 400;
-   }
+   };
    .showContainer {
       border-radius: .4rem;
       padding: 1rem .5rem;
@@ -69,11 +67,10 @@ main {
       &:hover {
          transform: scale(1.05);
          transition: 1s all;
-      }
+      };
       &:hover .imgContainer p {
          display: block;
-      }
-
+      };
       .tvTitle {
          font-size: 1.1rem;
          font-weight: 700;
@@ -81,7 +78,7 @@ main {
          margin-bottom: 1rem;
          color: $tertiaryColor;
          text-shadow: 1px 1px 1px $secondaryColor;
-      }
+      };
       .imgContainer {
          margin: 0 auto;
          width: 95%;
@@ -90,14 +87,14 @@ main {
             height: 22rem;
             object-fit: cover;
             border: 1px solid $tertiaryColor;
-         }
+         };
          p {
             display: none;
             b {
                color: $tertiaryColor;
-            }
-         }
-      }
+            };
+         };
+      };
       .infoContainer {
          width: 95%;
          margin: 0 auto;
@@ -105,10 +102,10 @@ main {
          .showInfo {
             font-weight: 700;
             color: $tertiaryColor;
-         }
-      }
-   }
-}
+         };
+      };
+   };
+};
 
 .pages {
    display: flex;
@@ -116,9 +113,9 @@ main {
    .listedButtons {
       text-decoration: none;
    };
-}
+};
 
 .selected {
    background-color: $secondaryColor;
    color: $primaryColor;
-}
+};

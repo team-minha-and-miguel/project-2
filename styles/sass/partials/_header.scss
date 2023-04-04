@@ -2,7 +2,7 @@ header {
    .appTitle {
       text-align: center;
       text-shadow: 1px 1px 5px $secondaryColor;
-   }
+   };
    .motto {
          color: $secondaryColor;
          padding: 0 0 2rem 0;
@@ -10,17 +10,16 @@ header {
          text-align: center;
          font-weight: 400;
          text-transform: uppercase;
-   }
-}
+   };
+};
 
 nav {
    background-color: $tertiaryColor;
    color: $secondaryColor;
-
    .wrapper {
       display: flex;
       flex-direction: row;
-   }
+   };
 
    .textContainer {
       width: 50%;
@@ -30,9 +29,8 @@ nav {
          padding: 2rem 0;
          font-weight: 400;
          text-align: right;
-      }
-   }
-
+      };
+   };
 
    .buttonContainer{
       width: 50%;
@@ -47,7 +45,7 @@ nav {
             background-color: $secondaryColor;
             color: $tertiaryColor;
             transition: 1s all;
-         }
-      } 
-   }    
-}
+         };
+      };
+   }; 
+};
