@@ -3,32 +3,51 @@ header {
       text-align: center;
       text-shadow: 1px 1px 5px $quaternaryColor;
    }
-}
-
-.searchShowByName,
-.searchShowByPages {
-   padding-bottom: 2rem;
-   font-weight: 400;
-}
-
-.showAllPages,
-.searchByName {
-   margin-bottom: 1.5rem;
-   &:hover {
-      background-color: $quaternaryColor;
-      color: $quinaryColor;
-      transition: 1s all;
+   .motto {
+         color: $quaternaryColor;
+         padding: 0 0 2rem 0;
+         font-size: 1.5rem;
+         text-align: center;
+         font-weight: 400;
+         text-transform: uppercase;
    }
 }
 
 nav {
-   background-color:$quinaryColor;
+   background-color: $quinaryColor;
    color: $quaternaryColor;
-   .motto {
-      padding: 2rem 0;
-      font-size: 1.5rem;
-      text-align: center;
-      font-weight: 400;
-      text-transform: uppercase;
+
+   .wrapper {
+      display: flex;
+      flex-direction: row;
    }
+
+   .textContainer {
+      width: 50%;
+      padding-right: 2rem;
+      .searchShowByName,
+      .searchShowByPages {
+         padding: 2rem 0;
+         font-weight: 400;
+         text-align: right;
+      }
+   }
+
+
+   .buttonContainer{
+      width: 50%;
+      display: flex;
+      align-items: center;
+   
+      .showAllPages,
+      .searchByName {
+         margin-top: .1rem;
+         font-size: 1.2rem;
+         &:hover {
+            background-color: $quaternaryColor;
+            color: $quinaryColor;
+            transition: 1s all;
+         }
+      } 
+   }    
 }

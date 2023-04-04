@@ -237,7 +237,7 @@ html {
 
 .wrapper {
   max-width: 1400px;
-  width: 95%;
+  width: 90%;
   margin: 0 auto;
 }
 
@@ -332,35 +332,58 @@ header .appTitle {
   text-align: center;
   text-shadow: 1px 1px 5px white;
 }
-
-.searchShowByName,
-.searchShowByPages {
-  padding-bottom: 2rem;
+header .motto {
+  color: white;
+  padding: 0 0 2rem 0;
+  font-size: 1.5rem;
+  text-align: center;
   font-weight: 400;
-}
-
-.showAllPages,
-.searchByName {
-  margin-bottom: 1.5rem;
-}
-.showAllPages:hover,
-.searchByName:hover {
-  background-color: white;
-  color: black;
-  -webkit-transition: 1s all;
-  transition: 1s all;
+  text-transform: uppercase;
 }
 
 nav {
   background-color: black;
   color: white;
 }
-nav .motto {
+nav .wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+nav .textContainer {
+  width: 50%;
+  padding-right: 2rem;
+}
+nav .textContainer .searchShowByName,
+nav .textContainer .searchShowByPages {
   padding: 2rem 0;
-  font-size: 1.5rem;
-  text-align: center;
   font-weight: 400;
-  text-transform: uppercase;
+  text-align: right;
+}
+nav .buttonContainer {
+  width: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+nav .buttonContainer .showAllPages,
+nav .buttonContainer .searchByName {
+  margin-top: 0.1rem;
+  font-size: 1.2rem;
+}
+nav .buttonContainer .showAllPages:hover,
+nav .buttonContainer .searchByName:hover {
+  background-color: white;
+  color: black;
+  -webkit-transition: 1s all;
+  transition: 1s all;
 }
 
 main {
@@ -390,7 +413,7 @@ main .page:hover {
   transition: 0.7s all;
 }
 main .userInput {
-  padding: 0.4rem 3rem 0.4rem 1rem;
+  padding: 0.4rem 10rem 0.4rem 1rem;
 }
 main .showSearch:hover {
   background-color: white;
@@ -516,4 +539,100 @@ footer .copyright {
   text-align: center;
   color: white;
   padding: 1rem 0;
+}
+
+@media (max-width: 1260px) {
+  nav h2 {
+    font-size: 2rem;
+  }
+  nav .buttonContainer .showAllPages,
+  nav .buttonContainer .searchByName {
+    font-size: 1.09rem;
+  }
+  .gallery .showContainer {
+    width: 32%;
+  }
+}
+@media (max-width: 940px) {
+  nav h2 {
+    font-size: 1.6rem;
+  }
+  nav .buttonContainer .showAllPages,
+  nav .buttonContainer .searchByName {
+    font-size: 0.85rem;
+  }
+  .gallery .showContainer {
+    width: 49%;
+  }
+}
+@media (max-width: 768px) {
+  nav .wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  nav .wrapper .textContainer {
+    width: 100%;
+    padding: 0;
+  }
+  nav .wrapper .textContainer h2 {
+    padding: 1.3rem;
+    text-align: center;
+  }
+  nav .wrapper .buttonContainer {
+    width: 100%;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    margin-bottom: 1.6rem;
+  }
+  nav .wrapper .buttonContainer .showAllPages,
+  nav .wrapper .buttonContainer .searchByName {
+    font-size: 1.12rem;
+  }
+  main .pages {
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+  main .pages .listedButtons {
+    width: 9%;
+  }
+  main form {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+  main .gallery .showContainer {
+    width: 98%;
+  }
+}
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 2rem;
+    line-height: 3.3rem;
+  }
+  header .motto {
+    font-size: 1.3rem;
+  }
+  nav .wrapper h2 {
+    font-size: 1.3rem;
+    line-height: 0.8rem;
+  }
+  nav .wrapper .buttonContainer .showAllPages,
+  nav .wrapper .buttonContainer .searchByName {
+    font-size: 0.85rem;
+  }
 }
