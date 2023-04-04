@@ -289,11 +289,29 @@ button {
   -webkit-transition: 0.3s;
   transition: 0.3s;
   text-transform: uppercase;
-  padding: 0.5rem 1rem;
-  border-radius: 0.2rem;
   border: none;
   background-color: #C70404;
   color: white;
+}
+button:hover {
+  cursor: pointer;
+}
+button:focus {
+  cursor: pointer;
+}
+
+.buttonContainer button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
+}
+
+.listedButtons button {
+  border-radius: 50%;
+  padding: 0.5rem 0.8rem;
+}
+
+.listedButtons .pageNumberTen {
+  padding: 0.5rem 0.52rem;
 }
 
 form button,
@@ -390,23 +408,23 @@ main {
   background-color: black;
   color: white;
 }
-main .pageNumberOne,
-main .pageNumberTwo,
-main .pageNumberThree,
-main .pageNumberFour,
-main .pageNumberFive,
-main .pageNumberSix,
-main .pageNumberSeven,
-main .pageNumberEight,
-main .pageNumberNine,
-main .pageNumberTen {
-  margin-bottom: 1rem;
-  border-radius: 50%;
+main .pages {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
-main .page {
+main .pages .page {
   margin: 0 0.2rem 1rem 0.2rem;
 }
-main .page:hover {
+main .pages .page:hover {
+  background-color: white;
+  color: black;
+  -webkit-transition: 0.7s all;
+  transition: 0.7s all;
+}
+main .pages .page:focus {
   background-color: white;
   color: black;
   -webkit-transition: 0.7s all;
@@ -416,6 +434,12 @@ main .userInput {
   padding: 0.4rem 10rem 0.4rem 1rem;
 }
 main .showSearch:hover {
+  background-color: white;
+  color: black;
+  -webkit-transition: 1s all;
+  transition: 1s all;
+}
+main .showSearch:focus {
   background-color: white;
   color: black;
   -webkit-transition: 1s all;
@@ -459,24 +483,6 @@ main .languageForm {
   transition: 1s all;
 }
 .gallery .showContainer:hover .imgContainer p {
-  display: block;
-}
-.gallery .showContainer .exitButtonContainer {
-  display: none;
-  width: 100%;
-  -webkit-box-align: right;
-      -ms-flex-align: right;
-          align-items: right;
-  text-align: right;
-}
-.gallery .showContainer .exitButtonContainer .exitButton {
-  color: white;
-  margin: 0 auto;
-  padding: 0.2rem 0.6rem;
-  z-index: 1;
-  cursor: pointer;
-}
-.gallery .showContainer .exitButtonContainer .exitDisplay {
   display: block;
 }
 .gallery .showContainer .tvTitle {
@@ -541,6 +547,11 @@ footer .copyright {
   padding: 1rem 0;
 }
 
+@media (max-width: 1400px) {
+  .gallery .showContainer {
+    width: 24%;
+  }
+}
 @media (max-width: 1260px) {
   nav h2 {
     font-size: 2rem;
@@ -597,15 +608,6 @@ footer .copyright {
   nav .wrapper .buttonContainer .searchByName {
     font-size: 1.12rem;
   }
-  main .pages {
-    width: 100%;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-  }
-  main .pages .listedButtons {
-    width: 9%;
-  }
   main form {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -614,6 +616,9 @@ footer .copyright {
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
+  }
+  main form .userInput {
+    padding: 0.4rem 1rem;
   }
   main .gallery .showContainer {
     width: 98%;
