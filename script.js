@@ -525,8 +525,6 @@ app.appendToDom = (tvShow, jsonResult) => {
 
    // append each entry to the gallery //
    gallery.appendChild(newListItem);
-
-   app.array = document.querySelectorAll('li');
    
    // adding +1 to the counter variable every time it loops //
    app.domCounter++;
@@ -642,6 +640,7 @@ showPagesButton.addEventListener('click', function(){
    showPageTitle.classList.remove('displayNone');
    app.showCounter.classList.remove('displayNone');
 
+   // clear the result element // 
    results.innerHTML = ``;
 });
 
@@ -731,10 +730,8 @@ app.pageClickers = [
 ];
 
 
-
 // empty array for use later below //
 app.buttonArray = [];
-
 
 
 // forEach method that loops through each array to create a button for each page and append/fetch data according to which newly created button is clicked by user // 
