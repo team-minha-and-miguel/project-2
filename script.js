@@ -577,27 +577,26 @@ app.appendToDom = (tvShow, jsonResult) => {
       newListItem.addEventListener('click', function () {
          // variable to use in attempt to have an onclick to append summary
          const clickedShow = document.querySelector(`.tvShow${newListItem.value}`)
-         exitButtonContainer.style.display = 'block';
          // adding content into the li variable //
-         // clickedShow.innerHTML = `
-         // <div class="exitButtonContainer" id="exit">
-         //    <button class="exitButton">X</button>
-         // </div>
-         // <h2 class="tvTitle">${name}</h2>
-         // <div class="imgContainer">
-         //    <p class=""summaryContainer>${summary}</p>
-         // </div>
-         // <div class="infoContainer">
-         //    <div class="summaryContainer displayNone">
-         //    <p><span class="showInfo">Summary:</span> ${summary}</p>
-         //    </div>
-         //    <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
-         //    <p><span class="showInfo">Language:</span>  ${language}</p>
-         //    <p><span class="showInfo">Genres:</span>  ${genres}</p>
-         //    <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
-         //    <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
-         // </div>
-         // `
+         clickedShow.innerHTML = `
+         <div class="exitButtonContainer" id="exit">
+            <button class="exitButton">X</button>
+         </div>
+         <h2 class="tvTitle">${name}</h2>
+         <div class="imgContainer">
+            <p class=""summaryContainer>${summary}</p>
+         </div>
+         <div class="infoContainer">
+            <div class="summaryContainer displayNone">
+            <p><span class="showInfo">Summary:</span> ${summary}</p>
+            </div>
+            <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
+            <p><span class="showInfo">Language:</span>  ${language}</p>
+            <p><span class="showInfo">Genres:</span>  ${genres}</p>
+            <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
+            <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
+         </div>
+         `
          // exit button variable that stored html element
          const exitButton = document.querySelector('.exitButtonContainer');
          const exit = document.getElementById('exit');
