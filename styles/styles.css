@@ -237,7 +237,7 @@ html {
 
 .wrapper {
   max-width: 1400px;
-  width: 95%;
+  width: 90%;
   margin: 0 auto;
 }
 
@@ -289,11 +289,29 @@ button {
   -webkit-transition: 0.3s;
   transition: 0.3s;
   text-transform: uppercase;
-  padding: 0.5rem 1rem;
-  border-radius: 0.2rem;
   border: none;
   background-color: #C70404;
   color: white;
+}
+button:hover {
+  cursor: pointer;
+}
+button:focus {
+  cursor: pointer;
+}
+
+.buttonContainer button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
+}
+
+.listedButtons button {
+  border-radius: 50%;
+  padding: 0.5rem 0.8rem;
+}
+
+.listedButtons .pageNumberTen {
+  padding: 0.5rem 0.52rem;
 }
 
 form button,
@@ -332,67 +350,96 @@ header .appTitle {
   text-align: center;
   text-shadow: 1px 1px 5px white;
 }
-
-.searchShowByName,
-.searchShowByPages {
-  padding-bottom: 2rem;
-  font-weight: 400;
-}
-
-.showAllPages,
-.searchByName {
-  margin-bottom: 1.5rem;
-}
-.showAllPages:hover,
-.searchByName:hover {
-  background-color: white;
-  color: black;
-  -webkit-transition: 1s all;
-  transition: 1s all;
-}
-
-nav {
-  background-color: black;
+header .motto {
   color: white;
-}
-nav .motto {
-  padding: 2rem 0;
+  padding: 0 0 2rem 0;
   font-size: 1.5rem;
   text-align: center;
   font-weight: 400;
   text-transform: uppercase;
 }
 
+nav {
+  background-color: black;
+  color: white;
+}
+nav .wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+nav .textContainer {
+  width: 50%;
+  padding-right: 2rem;
+}
+nav .textContainer .searchShowByName,
+nav .textContainer .searchShowByPages {
+  padding: 2rem 0;
+  font-weight: 400;
+  text-align: right;
+}
+nav .buttonContainer {
+  width: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+nav .buttonContainer .showAllPages,
+nav .buttonContainer .searchByName {
+  margin-top: 0.1rem;
+  font-size: 1.2rem;
+}
+nav .buttonContainer .showAllPages:hover,
+nav .buttonContainer .searchByName:hover {
+  background-color: white;
+  color: black;
+  -webkit-transition: 1s all;
+  transition: 1s all;
+}
+
 main {
   background-color: black;
   color: white;
 }
-main .pageNumberOne,
-main .pageNumberTwo,
-main .pageNumberThree,
-main .pageNumberFour,
-main .pageNumberFive,
-main .pageNumberSix,
-main .pageNumberSeven,
-main .pageNumberEight,
-main .pageNumberNine,
-main .pageNumberTen {
-  margin-bottom: 1rem;
-  border-radius: 50%;
+main .pages {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
-main .page {
+main .pages .page {
   margin: 0 0.2rem 1rem 0.2rem;
 }
-main .page:hover {
+main .pages .page:hover {
+  background-color: white;
+  color: black;
+  -webkit-transition: 0.7s all;
+  transition: 0.7s all;
+}
+main .pages .page:focus {
   background-color: white;
   color: black;
   -webkit-transition: 0.7s all;
   transition: 0.7s all;
 }
 main .userInput {
-  padding: 0.4rem 3rem 0.4rem 1rem;
+  padding: 0.4rem 10rem 0.4rem 1rem;
 }
 main .showSearch:hover {
+  background-color: white;
+  color: black;
+  -webkit-transition: 1s all;
+  transition: 1s all;
+}
+main .showSearch:focus {
   background-color: white;
   color: black;
   -webkit-transition: 1s all;
@@ -436,24 +483,6 @@ main .languageForm {
   transition: 1s all;
 }
 .gallery .showContainer:hover .infoContainer .summaryContainer p {
-  display: block;
-}
-.gallery .showContainer .exitButtonContainer {
-  display: none;
-  width: 100%;
-  -webkit-box-align: right;
-      -ms-flex-align: right;
-          align-items: right;
-  text-align: right;
-}
-.gallery .showContainer .exitButtonContainer .exitButton {
-  color: white;
-  margin: 0 auto;
-  padding: 0.2rem 0.6rem;
-  z-index: 1;
-  cursor: pointer;
-}
-.gallery .showContainer .exitButtonContainer .exitDisplay {
   display: block;
 }
 .gallery .showContainer .tvTitle {
@@ -519,4 +548,99 @@ footer .copyright {
   text-align: center;
   color: white;
   padding: 1rem 0;
+}
+
+@media (max-width: 1400px) {
+  .gallery .showContainer {
+    width: 24%;
+  }
+}
+@media (max-width: 1260px) {
+  nav h2 {
+    font-size: 2rem;
+  }
+  nav .buttonContainer .showAllPages,
+  nav .buttonContainer .searchByName {
+    font-size: 1.09rem;
+  }
+  .gallery .showContainer {
+    width: 32%;
+  }
+}
+@media (max-width: 940px) {
+  nav h2 {
+    font-size: 1.6rem;
+  }
+  nav .buttonContainer .showAllPages,
+  nav .buttonContainer .searchByName {
+    font-size: 0.85rem;
+  }
+  .gallery .showContainer {
+    width: 49%;
+  }
+}
+@media (max-width: 768px) {
+  nav .wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+  nav .wrapper .textContainer {
+    width: 100%;
+    padding: 0;
+  }
+  nav .wrapper .textContainer h2 {
+    padding: 1.3rem;
+    text-align: center;
+  }
+  nav .wrapper .buttonContainer {
+    width: 100%;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    margin-bottom: 1.6rem;
+  }
+  nav .wrapper .buttonContainer .showAllPages,
+  nav .wrapper .buttonContainer .searchByName {
+    font-size: 1.12rem;
+  }
+  main form {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+  main form .userInput {
+    padding: 0.4rem 1rem;
+  }
+  main .gallery .showContainer {
+    width: 98%;
+  }
+}
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 2rem;
+    line-height: 3.3rem;
+  }
+  header .motto {
+    font-size: 1.3rem;
+  }
+  nav .wrapper h2 {
+    font-size: 1.3rem;
+    line-height: 0.8rem;
+  }
+  nav .wrapper .buttonContainer .showAllPages,
+  nav .wrapper .buttonContainer .searchByName {
+    font-size: 0.85rem;
+  }
 }

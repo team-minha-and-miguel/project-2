@@ -1,0 +1,113 @@
+// 1400px screen size to 1260px - fewer shows on each row of gallery to prevent awkward line breaks
+@media (max-width: 1400px) {
+    .gallery .showContainer {
+        width: 24%;
+    }
+}
+
+
+// 1260px screen size and smaller to 940px- fewer shows on each row of gallery to prevent awkward line breaks, resize header & mode button in nav
+@media (max-width: 1260px) {
+    nav{
+        h2 {
+            font-size: 2rem;
+        }
+        .buttonContainer .showAllPages,
+        .buttonContainer .searchByName {
+            font-size: 1.09rem;
+        }
+    }
+
+    .gallery .showContainer {
+        width: 32%;
+    }
+
+}
+
+// 940px screen size and smaller to 768px - fewer shows on each row of gallery to prevent awkward line breaks, resize header & mode button in nav
+
+@media (max-width: 940px) {
+    nav {
+        h2 {
+            font-size: 1.6rem;
+        }
+        .buttonContainer .showAllPages,
+        .buttonContainer .searchByName {
+            font-size: 0.85rem;
+        }
+    }
+    .gallery .showContainer {
+        width: 49%;
+    }
+
+}
+
+// 768px screen size and smaller to 480px - fewer shows on each row of gallery to prevent awkward line breaks
+
+@media (max-width: 768px) {
+    nav .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+            .textContainer {
+                width: 100%;
+                padding: 0;
+                h2 {
+                    padding: 1.3rem;
+                    text-align: center;
+                }
+            }
+
+            .buttonContainer {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 1.6rem;
+                .showAllPages,
+                .searchByName {
+                    font-size: 1.12rem;
+                }
+            }
+
+    }
+    main {
+        form {
+            display: flex;
+            flex-direction: column;
+
+            .userInput {
+                padding: 0.4rem 1rem;
+            }
+        }
+
+        .gallery .showContainer {
+            width: 98%;
+        }
+    }
+
+}
+
+// 480px screen size and smaller - font size & centering
+
+@media (max-width: 480px) {
+    header {
+        h1 {
+            font-size: 2rem;
+            line-height: 3.3rem;
+        }
+        .motto {
+            font-size: 1.3rem;
+        }
+    }
+    nav .wrapper{
+        h2 {
+            font-size: 1.3rem;
+            line-height: 0.8rem;
+        }
+
+        .buttonContainer .showAllPages,
+        .buttonContainer .searchByName {
+            font-size: 0.85rem;
+        }
+    }
+}

@@ -156,7 +156,6 @@ app.checkRating = (jsonResult, userInput, form) => {
    } else if (app.englishArray.length !== 0 || app.noEnglishArray.length !== 0) {
       // if user clicked english and highest rated shows 
       if (app.languageValue === 'english' && userInput === 'highest') {
-         console.log('english highest');
          // sort the array //
          app.englishArray.sort((a, b) => {
             return b.show.rating.average - a.show.rating.average;
@@ -187,7 +186,6 @@ app.checkRating = (jsonResult, userInput, form) => {
             // function call to append data to DOM // 
             app.appendToDom(tvShow, jsonResult);
          });
-         console.log('no english highest');
       // if user clicked english and lowest rated shows //
       } else if(app.languageValue === 'english' && userInput === 'lowest') {
          // sort the array //
@@ -204,7 +202,6 @@ app.checkRating = (jsonResult, userInput, form) => {
             // function call to append data to DOM
             app.appendToDom(tvShow, jsonResult);
          });
-         console.log('english lowest');
       // if user clicked non english shows and lowest rated shows //
       } else if (app.languageValue === 'noEnglish' && userInput === 'lowest') {
          // sort the array //
@@ -222,7 +219,6 @@ app.checkRating = (jsonResult, userInput, form) => {
             // function call to append data to DOM //
             app.appendToDom(tvShow, jsonResult);
          });
-         console.log('no english lowest');
       } else if (app.languageValue === 'english' && userInput === 'all'){
          // shuffle the array //
          app.shuffle(app.englishArray);
@@ -236,7 +232,6 @@ app.checkRating = (jsonResult, userInput, form) => {
             // function call that appends data to DOM // 
             app.appendToDom(tvShow, jsonResult);
          });
-         console.log('english all')
       } else if (app.languageValue === 'noEnglish' && userInput === 'all') {
          // shuffle the array //
          app.shuffle(app.noEnglishArray);
@@ -250,7 +245,6 @@ app.checkRating = (jsonResult, userInput, form) => {
             // function call that appends data to DOM // 
             app.appendToDom(tvShow, jsonResult);
          });
-         console.log('no english all')
       } else if (app.languageValue === 'all' && userInput === 'all') {
          // shuffle the array //
          app.shuffle(jsonResult);
@@ -364,7 +358,6 @@ app.fetch = (url, form) => {
          app.addListeners(jsonResult, form);
          // calls displayTvShows using the jsonResult data //
          app.displayTvShows(jsonResult, form);
-         console.log(jsonResult[0].show.id);
       })
       // catch function that alerts user depending on the type of error //
       .catch((error) => {
@@ -416,7 +409,6 @@ app.checkLanguage = (jsonResult, userInput, form) => {
       // app.addListeners(jsonResult, form, englishArray);
    } else if (userInput === 'all') {
    // if user does not select english or noEnglish, then call the original displayTvShows function //
-   console.log('heyyyyyyyyy')
    app.displayTvShows(jsonResult, form, userInput);
    };
 };
@@ -455,11 +447,6 @@ app.displayTvShows = (tvShows, form, userInput) => {
 
 
 
-// empty variables to use below // 
-app.domCounter = 0;
-app.innerHTML = [];
-
-
 // ~ appends the data to the dom every time the loop runs in the previous function ~ //
 app.appendToDom = (tvShow, jsonResult) => {
 
@@ -467,13 +454,6 @@ app.appendToDom = (tvShow, jsonResult) => {
    const newListItem = document.createElement('li');
    // adding class to html element //
    newListItem.classList.add('showContainer');
-   // adding a counter to the value of each showContainer to give specificity to each show //
-   newListItem.value = app.domCounter;
-   // adding class to each show to determine which one was clicked //
-   newListItem.className = `showContainer tvShow${app.domCounter}`;
-   
-   
-    console.log(app.domCounter, newListItem.className);
 
    // if there is no data in the tvShow.show // 
    if (tvShow.show === undefined) {
@@ -508,33 +488,6 @@ app.appendToDom = (tvShow, jsonResult) => {
             <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
             <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
          </div> `;
-
-      // show container event listener that appends new data on click // 
-      newListItem.addEventListener('click', function(){
-         // variable to use in attempt to have an onclick to append summary
-         const clickedShow = document.querySelector(`.tvShow${newListItem.value}`)
-         // adding content into the li variable //
-         clickedShow.innerHTML = `
-         <div class="exitButtonContainer" id="exit">
-            <button class="exitButton">X</button>
-         </div>
-         <h2 class="tvTitle">${name}</h2>
-         <div class="imgContainer">
-            <p class=""summaryContainer>${summary}</p>
-         </div>
-         <div class="infoContainer">
-            <div class="summaryContainer displayNone">
-            <p><span class="showInfo">Summary:</span> ${summary}</p>
-            </div>
-            <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
-            <p><span class="showInfo">Language:</span>  ${language}</p>
-            <p><span class="showInfo">Genres:</span>  ${genres}</p>
-            <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
-            <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
-         </div>
-         `
-
-      });
    } else {
       // destructured objects from tvShow array //
       const { show } = tvShow;
@@ -553,9 +506,6 @@ app.appendToDom = (tvShow, jsonResult) => {
       
       // adding content into the li variable //
       newListItem.innerHTML = `
-      <div class="exitButtonContainer" id="exit">
-         <button class="exitButton">X</button>
-      </div>
       <h2 class="tvTitle">${name}</h2>
       <div class="imgContainer">
       <img src="${imagePath}" alt="${altPath}" id="img"/>
@@ -570,54 +520,13 @@ app.appendToDom = (tvShow, jsonResult) => {
          <p><span class="showInfo">Genres:</span>  ${genres}</p>
          <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
          <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
-      </div>
-         `;
 
-      // show container event listener that appends data on click // 
-      newListItem.addEventListener('click', function () {
-         // variable to use in attempt to have an onclick to append summary
-         const clickedShow = document.querySelector(`.tvShow${newListItem.value}`)
-         // adding content into the li variable //
-         clickedShow.innerHTML = `
-         <div class="exitButtonContainer" id="exit">
-            <button class="exitButton">X</button>
-         </div>
-         <h2 class="tvTitle">${name}</h2>
-         <div class="imgContainer">
-            <p class=""summaryContainer>${summary}</p>
-         </div>
-         <div class="infoContainer">
-            <div class="summaryContainer displayNone">
-            <p><span class="showInfo">Summary:</span> ${summary}</p>
-            </div>
-            <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
-            <p><span class="showInfo">Language:</span>  ${language}</p>
-            <p><span class="showInfo">Genres:</span>  ${genres}</p>
-            <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
-            <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
-         </div>
-         `
-         // exit button variable that stored html element
-         const exitButton = document.querySelector('.exitButtonContainer');
-         const exit = document.getElementById('exit');
-         // exit button event listener that should return show container to original state on click // 
-         exitButton.addEventListener('click', function (event) {
-            // this.parentNode.removeChild(this);
-            exitButton.style.display = `none`;
-            console.log(exit.style.display)
-          // this doesnt work!!!!! //
-            // gallery.innerHTML = `WHY IS IT NOT WORKING`;
-            // to show that the button works on click // 
-            console.log(newListItem, 'clicked X', exit);
-         });
-      });
    };
 
    // append each entry to the gallery //
    gallery.appendChild(newListItem);
 
    app.array = document.querySelectorAll('li');
-   console.log(app.array)
    
    // adding +1 to the counter variable every time it loops //
    app.domCounter++;
@@ -647,7 +556,6 @@ app.showUserResults = (tvShows, form) => {
    `;
 
    if(tvResults == 0) {
-      console.log('nothing');
       app.noSearchFound();
    };
 
@@ -679,7 +587,7 @@ app.shuffle = (array) => {
 
 // function that is called when 0 results are found //
 app.noSearchFound = () => {
-   gallery.innerHTML = ` <h3 class="searchMessage"> OOPS.. SORRY, NOTHING FOUND. TRY AGAIN :( </h3> `;
+   gallery.innerHTML = ` <h3 class="searchMessage"> OOPS... SORRY, NOTHING FOUND. TRY AGAIN :( </h3> `;
 }
 
 
@@ -742,7 +650,7 @@ showPagesButton.addEventListener('click', function(){
 // ~ search by name button that appears when show all page button is clicked, when searchByName is clicked by user, clear gallery, and return app to original state ~ //
 searchByName.addEventListener('click', function(){
    // clear the gallery in the DOM //
-   gallery.innerHTML = ` <p class="searchMessage"> Waiting for a search ..</p> `;
+   gallery.innerHTML = ` <p class="searchMessage"> Waiting for a search...</p> `;
 
    // adding a class to html elements //
    searchByName.classList.add('displayNone');
@@ -857,7 +765,7 @@ app.pageClickers.forEach((button) => {
       });
       // fetch all show functions //
       app.fetchAllShows(urlTwo, button.value);
-      // if statement that chercks if array is empty, if it is, then add a class and push info to array. This is to check if a page button is already clicked. //
+      // if statement that checks if array is empty, if it is, then add a class and push info to array. This is to check if a page button is already clicked. //
       if(app.buttonArray.length === 0) {
          // add a class to the selected page button //
          pageButtons.classList.add('selected');
@@ -1112,111 +1020,3 @@ app.init = () => {
 // initial function call to start the app //
 app.init();
 
-
-
-// ------- ** ISSUES / FIXES ** ------- // 
-
-// 2. when you freestyle and alternate/click all the buttons, eventually the app gets bogged down w/ so much data, that it slows the browser. it even requests you kill the app. Also happens on the fetch for the 2nd feature branch
-// example - it usually happens between the rating filter followed by the language filter.
-
-
-// -----------------------------------------------------
-
-
-// GUIDE ON HOW APP WORKS SUMMARIZED (ORGANIZATION):
-
-// 1. app.init() calls app.addListeners()
-// 2. app.addListeners() waits for user change
-// 3. if user submits, it calls app.getTvShow() & lets the language & rating form appear on DOM
-// 4. app.getTvShow calls app.checkForm()
-// 5. app.checkForm() calls app.fetch()
-// 6. app.fetch() passes info to app.addListeners, & calls app.displayTvShows()
-// 7. app.displayTvShows() calls app.showUserResults() & app.appendToDom()
-// 8. app.appendToDom() appends the data to DOM
-// 9. when language form appears on DOM (see 3.), user changes form and calls app.checkLanguage()
-// 10. app.checkLanguage() calls app.displayTvShows()
-// 11. onChange listener waits for user selection to change the rating. it then calls app.checkRating()
-// 12. app.checkRating() clears gallery, calls app.showUserResults, and then calls app.appendToDom()
-// -- ** app ends & loops through these on user change ** -- //
-
-// -- ** 2nd feature branch : show tvShows in pages ** -- // 
-// 13. on click event listener that takes api data, and calls app.fetchAllShows()
-// 14. app.fetchAllShows() get API data, & calls app.displayAllTvShows()
-// 15. app.displayAllTvShows loops through the array, and calls app.appendToDom();
-// 16. app.appendToDom() takes the passed data and appends every tvShow in the loop
-// 17. page button addEventListener, waits for user click, and then fetches the API data with new search params, based on page #. It calls fetch, then displayAllTvShows, then appendAllShowsToDom.
-// 18. a tvCounter form is created, and has an onChange eventListener that waits for user selection. When changed, it calls fetchAllShows but takes the value of the counter and uses it as a counter stopper in an if statement. that way it cuts the loop once the counter and the userInput value match. 
-// 19. there for is appends number of shows user requests. 
-
-
-
-// ---------------------- ** OLD GOALS ** ----------------------------//
-
-// ** PHASE FOUR STEPS ** //
-
-// 3. COMPLETED PARTIAL COMPLETION -  styling - making the correct page thats click to have a alternate color on the font when its clicks, and adjusts when its clicked. 
-// COMPLETED - 2nd feature branch, should show/append the page # the user is currently on. (ex: when page 1 is clicked, the DOM should show that "You are currently on Page: 1") ORRRR onClick eventListener that changes the css color on the page button clicked. 
-// COMPLETED - create an empty page array that has all the page # values and append it to the dom using for each loop, and somehow use a user click to check which button was clicked, and append data according to which page number is clicked
-// 1. COMPLETED - Filter by rating, does not allow you to filter by language first, it doesnt take the language filtered array and filter through that too : what it does is, it takes the original appended 10 shows, and changes by rating
-// Connect the two forms! what works: if user decides to click rating first, then language, it should filter both, by rating and by language
-
-// COMPLETED - the tvshow form to append the amount of shows per pages, if statement needs to be fixed. when you select "25" shows, and then click a new page, it only appends 10 shows (as the if statement states userInput = '10'), you need to change that with the app.ratingValue and using that in the if statement to fix it.
-
-// 3. COMPLETED - I just noticed that when you click a page number on the 2nd feature branch, it only appends 3 on the second and third page until you change the show form. the if statement to check if user click is 1 works, but if you use || then it breaks. 
-
-// 5. COMPLETED - when you search multiple times after using the language rating, it puts empty string alert on check form, when theres a search on the submit. FIXED - took away the addListeners() in the checkLanguage(), 
-
-// 6. COMPLETED - show all tv shows in pages branch, when you click the button, it initially only appends 3 shows first, then adjusts when you click the change how many shows correctly. 
-
-// --------------------------------------------- //
-
-// *** PHASE THREE - NEXT STEPS ***
-
-// POSSIBLE NEW GOAL: 
-
-// 2. COMPLETED - we have the skeleton for creating a form to filter through any type of value in the API array, we could create it for others (i.e genre, etc)ALMOST COMPLETE! - adding a form that sorts by highest or lowest rating? we would need to take the array of objects, look at the rating, and sort() it
-// 3. COMPLETED possible fetch a new end point and see what we can add to our app with specific end point. Was able to get the second end point, showing pages of shows (242 shows per page). 
-// 4. COMPLETED - I was thinking of maybe adding a second page that appends all shows and it changes by user changing the page number. 
-// 5. COMPLETED - we would need to have a button thats like "all shows" when you click it, it either takes you to a new HTML page, orrrr
-// 6. COMPLETED - it display:nones all the html, and display: block the page number, while appending the first page of shows. 
-// 7. COMPLETED - then it waits for the onchange listener to change and append a new set of 242 shows to the DOM.
-// Last - styling via SCSS. 
-
-
-// -------------------------------------------------------
-
-// *** PHASE TWO - COMPLETED ***
-// 1. COMPLETED - Find out what else we want to append to DOM (average run time, genres, statue, ended, etc);
-// 4. COMPLETED: find out why the second if statement is true, passes information, but does not clear the gallery like the "english" statement does
-// 5. COMPLETED: fix the language form to always be at "all results", with every search & even when you refresh. 
-// 6. COMPLETED - add a "how many results have shown : ${results}" shown on the DOM to let users know what was found. 
-// 6a. COMPLETED - written twice in both displayLanguageShows & displayTvShows (maybe create a function to append results, to keep code clean?)
-// 7. COMPLETED - Also same things here, create an appendData function that will append data once, instead of having it written twice in displayLanguageShows & displayTvShows - the newListItem.innerHTML & gallery.appendChild(newListItem);
-// 8. COMPLETED - on submit, input value = ""
-// 8a. COMPLETED -  change "total results found" to include input value
-
-// ---------------------------------------------------------- //
-
-// *** PHASE ONE - OLD STEPS ***
-// ALMOST COMPLETED: STRETCH GOAL: adding additional input to filter by languages
-// COMPLETED - error handling the forms for any incorrect user inputs 
-// COMPLETED - pop up if there are no results.
-// NOT NEEDED - API considers & appends anything remotely close to the user input (i.e submit and gives "summit, sbit, sunmi, subat");
-// NOT NEEDED - reset button (and display: none the search tab when a user searches once) MAYBEEE
-// NOT POSSIBLE? - api only gives out 10 recommendations per search, coincidence?? (find a way to display more than 10+ recco's)
-// NO NEED, IT ONLY DISPLAYS 10 anyways - limit the reccomendations to (maybe 5?)
-
-// ----------------------** MVP **-------------------------------- //
-
-// ORIGINAL PSUEDO CODE MVP:
-// User gets to landing page, start button. ( no start button necessary )
-// when user clicks start button, several buttons with keywords will populate the DOM.
-// user will have options (created by us) to click which words they would like to choose from, which will then search the API according to that word.
-// app displays the first 5 results of search.
-// we will choose which key values to populate into each reccomendation (i.e. image, name, cast, etc).
-// button (disabled for now) will appear after recommendations have been given out, to reset the app and send user back to main start page.
-
-// *** STRETCH GOALS: ***
-// NOT NECESSARY - Rather than giving out 5 reccomendations, it will randomly spit out 1 choice using Math.floor + Math.random();
-// POSSIBLE - second level tier of filtering after previous query search, allowing user to get a more detailed reccomendation.
-// COMPLETED - figuring out how to put an input as the query search params, allowing users to type what they want instead of clicking our given choices.
