@@ -456,8 +456,8 @@ app.displayTvShows = (tvShows, form, userInput) => {
 
 
 // empty variables to use below // 
-app.domCounter = 0;
-app.innerHTML = [];
+// app.domCounter = 0;
+// app.innerHTML = [];
 
 
 // ~ appends the data to the dom every time the loop runs in the previous function ~ //
@@ -468,9 +468,9 @@ app.appendToDom = (tvShow, jsonResult) => {
    // adding class to html element //
    newListItem.classList.add('showContainer');
    // adding a counter to the value of each showContainer to give specificity to each show //
-   newListItem.value = app.domCounter;
+   // newListItem.value = app.domCounter;
    // adding class to each show to determine which one was clicked //
-   newListItem.className = `showContainer tvShow${app.domCounter}`;
+   // newListItem.className = `showContainer tvShow${app.domCounter}`;
    
    
     console.log(app.domCounter, newListItem.className);
@@ -510,31 +510,31 @@ app.appendToDom = (tvShow, jsonResult) => {
          </div> `;
 
       // show container event listener that appends new data on click // 
-      newListItem.addEventListener('click', function(){
-         // variable to use in attempt to have an onclick to append summary
-         const clickedShow = document.querySelector(`.tvShow${newListItem.value}`)
-         // adding content into the li variable //
-         clickedShow.innerHTML = `
-         <div class="exitButtonContainer" id="exit">
-            <button class="exitButton">X</button>
-         </div>
-         <h2 class="tvTitle">${name}</h2>
-         <div class="imgContainer">
-            <p class=""summaryContainer>${summary}</p>
-         </div>
-         <div class="infoContainer">
-            <div class="summaryContainer displayNone">
-            <p><span class="showInfo">Summary:</span> ${summary}</p>
-            </div>
-            <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
-            <p><span class="showInfo">Language:</span>  ${language}</p>
-            <p><span class="showInfo">Genres:</span>  ${genres}</p>
-            <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
-            <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
-         </div>
-         `
+      // newListItem.addEventListener('click', function(){
+      //    // variable to use in attempt to have an onclick to append summary
+      //    const clickedShow = document.querySelector(`.tvShow${newListItem.value}`)
+      //    // adding content into the li variable //
+      //    clickedShow.innerHTML = `
+      //    <div class="exitButtonContainer" id="exit">
+      //       <button class="exitButton">X</button>
+      //    </div>
+      //    <h2 class="tvTitle">${name}</h2>
+      //    <div class="imgContainer">
+      //       <p class=""summaryContainer>${summary}</p>
+      //    </div>
+      //    <div class="infoContainer">
+      //       <div class="summaryContainer displayNone">
+      //       <p><span class="showInfo">Summary:</span> ${summary}</p>
+      //       </div>
+      //       <p><span class="showInfo">Rating:</span>  ${rating.average}</p>
+      //       <p><span class="showInfo">Language:</span>  ${language}</p>
+      //       <p><span class="showInfo">Genres:</span>  ${genres}</p>
+      //       <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
+      //       <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
+      //    </div>
+      //    `
 
-      });
+      // });
    } else {
       // destructured objects from tvShow array //
       const { show } = tvShow;
@@ -574,10 +574,10 @@ app.appendToDom = (tvShow, jsonResult) => {
          `;
 
       // show container event listener that appends data on click // 
-      newListItem.addEventListener('click', function () {
-         // variable to use in attempt to have an onclick to append summary
-         const clickedShow = document.querySelector(`.tvShow${newListItem.value}`)
-         exitButtonContainer.style.display = 'block';
+      // newListItem.addEventListener('click', function () {
+      //    // variable to use in attempt to have an onclick to append summary
+      //    const clickedShow = document.querySelector(`.tvShow${newListItem.value}`)
+      //    exitButtonContainer.style.display = 'block';
          // adding content into the li variable //
          // clickedShow.innerHTML = `
          // <div class="exitButtonContainer" id="exit">
@@ -599,19 +599,19 @@ app.appendToDom = (tvShow, jsonResult) => {
          // </div>
          // `
          // exit button variable that stored html element
-         const exitButton = document.querySelector('.exitButtonContainer');
-         const exit = document.getElementById('exit');
-         // exit button event listener that should return show container to original state on click // 
-         exitButton.addEventListener('click', function (event) {
-            // this.parentNode.removeChild(this);
-            exitButton.style.display = `none`;
-            console.log(exit.style.display)
-          // this doesnt work!!!!! //
-            // gallery.innerHTML = `WHY IS IT NOT WORKING`;
-            // to show that the button works on click // 
-            console.log(newListItem, 'clicked X', exit);
-         });
-      });
+   //       const exitButton = document.querySelector('.exitButtonContainer');
+   //       const exit = document.getElementById('exit');
+   //       // exit button event listener that should return show container to original state on click // 
+   //       exitButton.addEventListener('click', function (event) {
+   //          // this.parentNode.removeChild(this);
+   //          exitButton.style.display = `none`;
+   //          console.log(exit.style.display)
+   //        // this doesnt work!!!!! //
+   //          // gallery.innerHTML = `WHY IS IT NOT WORKING`;
+   //          // to show that the button works on click // 
+   //          console.log(newListItem, 'clicked X', exit);
+   //       });
+   //    });
    };
 
    // append each entry to the gallery //
@@ -743,7 +743,7 @@ showPagesButton.addEventListener('click', function(){
 // ~ search by name button that appears when show all page button is clicked, when searchByName is clicked by user, clear gallery, and return app to original state ~ //
 searchByName.addEventListener('click', function(){
    // clear the gallery in the DOM //
-   gallery.innerHTML = ` <p class="searchMessage"> Waiting for a search ..</p> `;
+   gallery.innerHTML = ` <p class="searchMessage"> Waiting for a search...</p> `;
 
    // adding a class to html elements //
    searchByName.classList.add('displayNone');
@@ -858,7 +858,7 @@ app.pageClickers.forEach((button) => {
       });
       // fetch all show functions //
       app.fetchAllShows(urlTwo, button.value);
-      // if statement that chercks if array is empty, if it is, then add a class and push info to array. This is to check if a page button is already clicked. //
+      // if statement that checks if array is empty, if it is, then add a class and push info to array. This is to check if a page button is already clicked. //
       if(app.buttonArray.length === 0) {
          // add a class to the selected page button //
          pageButtons.classList.add('selected');

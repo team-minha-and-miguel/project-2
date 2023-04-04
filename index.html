@@ -20,16 +20,20 @@
    <header>
       <div class="wrapper">
          <h1 class="appTitle">THE ULTIMATE WATCH LIST </h1>
+         <p class="motto">What will you watch next?</p>
       </div>
    </header>
    
    <nav>
       <div class="wrapper">
-         <p class="motto">What will you watch next?</p>
-         <h2 class="searchShowByName">Search A Show:</h2>
-         <h2 class="searchShowByPages displayNone">Shows by Pages:</h2>
-         <button class="showAllPages" id="showAllPages">Show all shows by page</button>
-         <button class="searchByName displayNone" id="searchByName">Search By Show Name</button>
+         <div class="textContainer">
+            <h2 class="searchShowByName">Search For A Show:</h2>
+            <h2 class="searchShowByPages displayNone">Shows by Pages:</h2>
+         </div>
+         <div class="buttonContainer">
+            <button class="showAllPages" id="showAllPages">...or browse all shows by page instead</button>
+            <button class="searchByName displayNone" id="searchByName">... or search shows by title instead</button>
+         </div>
       </div>
    </nav>
    
@@ -72,7 +76,7 @@
          
          <!-- show all shows form for user selection -->
          <form action="#" id="showFilter" class="displayNone">
-            <label for="showCounter">Amount of Shows Per Page:</label>
+            <label for="showCounter">Number of Shows Per Page:</label>
             <select name="showCounter" id="showCounter" autocomplete="off" value="9">
                <option value="9" selected>10</option>
                <option value="24">25</option>
