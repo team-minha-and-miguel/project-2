@@ -1,35 +1,38 @@
 
 main {
-   background-color: $quinaryColor;
-   color: $quaternaryColor;
-   .pageNumberOne,
-   .pageNumberTwo,
-   .pageNumberThree,
-   .pageNumberFour,
-   .pageNumberFive,
-   .pageNumberSix,
-   .pageNumberSeven,
-   .pageNumberEight,
-   .pageNumberNine,
-   .pageNumberTen {
-      margin-bottom: 1rem;
-      border-radius: 50%;
-   }
-   .page {
-      margin: 0 .2rem 1rem .2rem;
-   }
-   .page:hover {
-      background-color: $quaternaryColor;
-      color: $quinaryColor;
-      transition: 0.7s all;
+   background-color: $tertiaryColor;
+   color: $secondaryColor;
+
+   .pages {
+      display: flex;
+      flex-wrap: wrap;
+
+      .page {
+         margin: 0 .2rem 1rem .2rem;
+      }
+      .page:hover {
+         background-color: $secondaryColor;
+         color: $tertiaryColor;
+         transition: 0.7s all;
+      }
+      .page:focus {
+         background-color: $secondaryColor;
+         color: $tertiaryColor;
+         transition: 0.7s all;
+      }
    }
    .userInput {
       padding: 0.4rem 10rem 0.4rem 1rem;
    }
    .showSearch {
       &:hover {
-         background-color: $quaternaryColor;
-         color: $quinaryColor;
+         background-color: $secondaryColor;
+         color: $tertiaryColor;
+         transition: 1s all;
+      }
+      &:focus {
+         background-color: $secondaryColor;
+         color: $tertiaryColor;
          transition: 1s all;
       }
    }
@@ -62,7 +65,7 @@ main {
       text-align: center;
       margin: 0 auto 1rem auto;
       width: 19%;
-      background-color: grey;
+      background-color: $quaternaryColor;
       &:hover {
          transform: scale(1.05);
          transition: 1s all;
@@ -70,29 +73,14 @@ main {
       &:hover .imgContainer p {
          display: block;
       }
-      .exitButtonContainer {
-         display: none;
-         width: 100%;
-         align-items: right;
-         text-align: right;
-         .exitButton {
-            color: $quaternaryColor;
-            margin: 0 auto;
-            padding: .2rem .6rem;
-            z-index: 1;
-            cursor: pointer;
-         }
-         .exitDisplay {
-            display: block;
-         }
-      }
+
       .tvTitle {
          font-size: 1.1rem;
          font-weight: 700;
          line-height: 1.3rem;
          margin-bottom: 1rem;
-         color: $quinaryColor;
-         text-shadow: 1px 1px 1px $quaternaryColor;
+         color: $tertiaryColor;
+         text-shadow: 1px 1px 1px $secondaryColor;
       }
       .imgContainer {
          margin: 0 auto;
@@ -101,12 +89,12 @@ main {
             width: 100%;
             height: 22rem;
             object-fit: cover;
-            border: 1px solid black;
+            border: 1px solid $tertiaryColor;
          }
          p {
             display: none;
             b {
-               color: $quinaryColor;
+               color: $tertiaryColor;
             }
          }
       }
@@ -116,11 +104,9 @@ main {
          text-align: left;
          .showInfo {
             font-weight: 700;
-            color: $quinaryColor;
+            color: $tertiaryColor;
          }
       }
-      // .summaryContainer {
-      // }
    }
 }
 
@@ -133,6 +119,6 @@ main {
 }
 
 .selected {
-   background-color: $quaternaryColor;
+   background-color: $secondaryColor;
    color: $primaryColor;
 }

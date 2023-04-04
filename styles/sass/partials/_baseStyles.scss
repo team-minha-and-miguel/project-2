@@ -45,9 +45,6 @@ html {
    background-color: $primaryColor;
 };
 
-// main {
-//    background: $primaryColor;
-// }
 
 .appTitle {
    font-family: $headingFont;
@@ -58,11 +55,32 @@ button {
    line-height: 1.2rem;
    transition: 0.3s;
    text-transform: uppercase;
-   padding: .5rem 1rem;
-   border-radius: .2rem;
    border: none;
    background-color: $primaryColor;
-   color: $quaternaryColor;
+   color: $secondaryColor;
+
+   &:hover {
+      cursor: pointer;
+   }
+
+   &:focus {
+      cursor: pointer;
+   }
+}
+
+.buttonContainer button {
+   padding: .5rem 1rem;
+   border-radius: .2rem;
+}
+
+.listedButtons button {
+   border-radius: 50%;
+   padding: 0.5rem 0.8rem;
+
+}
+
+.listedButtons .pageNumberTen {
+   padding: 0.5rem 0.52rem;
 }
 
 form {
@@ -76,7 +94,7 @@ form {
       border-radius: .2rem;
       border: none;
       background-color: $primaryColor;
-      color: $quaternaryColor;
+      color: $secondaryColor;
    }
 }
 

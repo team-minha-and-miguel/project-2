@@ -1,10 +1,10 @@
 header {
    .appTitle {
       text-align: center;
-      text-shadow: 1px 1px 5px $quaternaryColor;
+      text-shadow: 1px 1px 5px $secondaryColor;
    }
    .motto {
-         color: $quaternaryColor;
+         color: $secondaryColor;
          padding: 0 0 2rem 0;
          font-size: 1.5rem;
          text-align: center;
@@ -14,8 +14,8 @@ header {
 }
 
 nav {
-   background-color: $quinaryColor;
-   color: $quaternaryColor;
+   background-color: $tertiaryColor;
+   color: $secondaryColor;
 
    .wrapper {
       display: flex;
@@ -44,8 +44,8 @@ nav {
          margin-top: .1rem;
          font-size: 1.2rem;
          &:hover {
-            background-color: $quaternaryColor;
-            color: $quinaryColor;
+            background-color: $secondaryColor;
+            color: $tertiaryColor;
             transition: 1s all;
          }
       } 

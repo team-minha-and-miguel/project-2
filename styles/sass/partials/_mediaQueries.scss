@@ -1,4 +1,12 @@
-// 1260px screen size and smaller to 940px- fewer shows on each row of gallery to prevent awkward line breaks
+// 1400px screen size to 1260px - fewer shows on each row of gallery to prevent awkward line breaks
+@media (max-width: 1400px) {
+    .gallery .showContainer {
+        width: 24%;
+    }
+}
+
+
+// 1260px screen size and smaller to 940px- fewer shows on each row of gallery to prevent awkward line breaks, resize header & mode button in nav
 @media (max-width: 1260px) {
     nav{
         h2 {
@@ -16,7 +24,7 @@
 
 }
 
-// 940px screen size and smaller to 768px - fewer shows on each row of gallery to prevent awkward line breaks
+// 940px screen size and smaller to 768px - fewer shows on each row of gallery to prevent awkward line breaks, resize header & mode button in nav
 
 @media (max-width: 940px) {
     nav {
@@ -63,17 +71,13 @@
 
     }
     main {
-        .pages {
-            width: 100%;
-            display: flex;
-            
-            .listedButtons {
-                width: 9%;
-            }
-        }
         form {
             display: flex;
             flex-direction: column;
+
+            .userInput {
+                padding: 0.4rem 1rem;
+            }
         }
 
         .gallery .showContainer {
