@@ -3,39 +3,39 @@
    max-width: 1400px;
    width: 90%;
    margin: 0 auto;
-}
+};
 
 // ~ flex items ~ //
 .flex {
    display: flex;
    flex-wrap: wrap;
-}
+};
 
 .displayNone {
    display: none;
-}
+};
 
 * {
    padding: 0;
    margin: 0;
-}
+};
 
 // ~ header styles & sizes ~ //
 h1,
 h2 {
    text-transform: uppercase;
-}
+};
 
 h1 {
    font-size: 2.5rem;
    line-height: 4.3rem;
    font-weight: 700;
-}
+};
 
 h2 {
    font-size: 2.1rem;
    line-height: 2.4rem;
-}
+};
 
 
 html {
@@ -46,7 +46,7 @@ html {
 
 .appTitle {
    font-family: $headingFont;
-}
+};
 
 button {
    font-size: 1rem;
@@ -56,30 +56,27 @@ button {
    border: none;
    background-color: $primaryColor;
    color: $secondaryColor;
-
    &:hover {
       cursor: pointer;
-   }
-
+   };
    &:focus {
       cursor: pointer;
-   }
-}
+   };
+};
 
 .buttonContainer button {
    padding: .5rem 1rem;
    border-radius: .2rem;
-}
+};
 
 .pages button {
    border-radius: 50%;
    padding: 0.5rem 0.8rem;
-
-}
+};
 
 .pages .pageNumberTen {
    padding: 0.5rem 0.52rem;
-}
+};
 
 form {
    button,
@@ -93,23 +90,23 @@ form {
       border: none;
       background-color: $primaryColor;
       color: $secondaryColor;
-   }
-}
+   };
+};
 
 a {
    text-decoration: none;
    color: inherit;
    cursor: pointer;
-}
+};
 
 p {
    font-size: 1rem;
    line-height: 1.6rem;
    font-weight: 400;
-}
+};
 
 ul,
 li {
    text-decoration: none;
    list-style: none;
-}
+};
