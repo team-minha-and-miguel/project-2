@@ -70,7 +70,10 @@ main {
          transform: scale(1.05);
          transition: 1s all;
       }
-      &:hover .imgContainer p {
+      // &:hover .imgContainer p {
+      //    display: block;
+      // }
+      &:hover .infoContainer .summaryContainer p {
          display: block;
       }
 

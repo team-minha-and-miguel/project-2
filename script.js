@@ -520,7 +520,7 @@ app.appendToDom = (tvShow, jsonResult) => {
          <p><span class="showInfo">Genres:</span>  ${genres}</p>
          <p><span class="showInfo">Episode Length:</span>  ${averageRuntime} mins</p>
          <p><span class="showInfo">Show Current Status:</span>  ${status}</p>
-      </div> `;
+
    };
 
    // append each entry to the gallery //

@@ -482,7 +482,7 @@ main .languageForm {
   -webkit-transition: 1s all;
   transition: 1s all;
 }
-.gallery .showContainer:hover .imgContainer p {
+.gallery .showContainer:hover .infoContainer .summaryContainer p {
   display: block;
 }
 .gallery .showContainer .tvTitle {
@@ -518,6 +518,9 @@ main .languageForm {
 .gallery .showContainer .infoContainer .showInfo {
   font-weight: 700;
   color: black;
+}
+.gallery .showContainer .summaryContainer {
+  overflow: scroll;
 }
 
 .pages {
